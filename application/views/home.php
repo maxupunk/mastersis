@@ -1,17 +1,5 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link type="text/css" href="<?php base_url() .APPPATH ?>css/ss_bets.css" rel="stylesheet" />
-        <title></title>
-    </head>
-    <body>
-        <?php
-        // put your code here
-        ?>
-    </body>
-</html>
+<?php
+$this->load->view('includes/header');
+$this->load->view('includes/menu');
+if ($tela!="") $this->load->view('telas/'.$tela);
+$this->load->view('includes/footer');
