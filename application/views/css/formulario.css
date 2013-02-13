@@ -11,6 +11,13 @@ form {
     margin: 10px;
 }
 
+form p
+{
+	background-color: #CCCCCC;
+	border: solid #a1c67b 1px;
+	margin-bottom: 10px;
+}
+
 form label
 {
     display: block;

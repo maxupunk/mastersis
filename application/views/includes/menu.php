@@ -6,9 +6,9 @@
                     <ul class="menucontents">
                         <li><? echo anchor('produto/cadastro','PRODUTOS'); ?></li>
                         <li><? echo anchor('pessoa/cadastro','CLIENTES/FORNECEDOR'); ?></li>
-                        <li><a href="#">SERVI‚OS</a></li>
+                        <li><a href="#">SERVIÃ‡OS</a></li>
                         <li>|</li>
-                        <li><a href="#">ENDERE‚OS</a></li>
+                        <li><a href="#">ENDEREÃ‡OS</a></li>
                     </ul>
 
             <div class="menuheaders"><a href="javascript:;">VENDAS</a></div>
