@@ -16,59 +16,71 @@ class Produto extends CI_Controller {
             );
 		$this->load->view('home',$dados);
 	}
-        
-    public function cadastro()
+		
+//
+//Função Cadastrar
+//	    
+    public function cadastrar()
 	{
-            
+            // validar o formulario
             $this->form_validation->set_rules('PRO_DESCRICAO','DESCRIÇÃO DO PRODUTO','required|max_length[45]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
             $this->form_validation->set_message('is_unique','Essa %s já esta cadastrado no banco de dados!');
             $this->form_validation->set_rules('PRO_CARAC_TEC','CARACTERISTICA TECNICA','required');
 			$this->form_validation->set_rules('PRO_VAL_CUST','PREÇO DE CUSTO','required');
 			$this->form_validation->set_rules('PRO_VAL_VEND','PREÇO DE VENDA','required');
 			
+			// se for valido ele chama o inserir dentro do produto_model
             if ( $this->form_validation->run() == TRUE ):
                 $dados = elements(array('PRO_DESCRICAO','PRO_CARAC_TEC','PRO_VAL_CUST','PRO_VAL_VEND'),$this->input->post());
-				$dados = 
 				$this->produto_model->inserir($dados);
             endif;
             
-            $dados = array(
-              'titulo' => "Pagina de Cadastro.",
-              'tela' => "prod_cadastro",
-            );
-		$this->load->view('home',$dados);
+		$this->load->view('telas/prod_cadastro');
 	}
         
 	public function lista_todas()
 	{
             $dados = array(
-              'titulo' => "Produto lista todas",
-              'tela' => "prod_lista",
               'produtos' => $this->produto_model->pega_tudo()->result(),
             );
-		$this->load->view('home',$dados);
+		$this->load->view('telas/prod_lista',$dados);
 	}
 		
+//
+//Função Editar
+//	
+    public function editar()
+	{
+        // validar o formulario
+            $this->form_validation->set_rules('PRO_DESCRICAO','DESCRIÇÃO DO PRODUTO','required|max_length[45]|strtoupper');
+            $this->form_validation->set_rules('PRO_CARAC_TEC','CARACTERISTICA TECNICA','required');
+			$this->form_validation->set_rules('PRO_VAL_VEND','PREÇO DE VENDA','required');
+			
+			// se for valido ele chama o inserir dentro do produto_model
+            if ( $this->form_validation->run() == TRUE ):
+                $dados = elements(array('PRO_DESCRICAO','PRO_CARAC_TEC','PRO_VAL_CUST','PRO_VAL_VEND'),$this->input->post());
+				$this->produto_model->update($dados,array('PRO_ID' => $this->input->post('id_produto')));
+            endif;
+
+		$this->load->view('telas/prod_editar');
+	}
+    	
+//
+//Função Apagar
+//	    
+    public function excluir($id=NULL)
+	{
+		if($this->input->post('id_produto')>0):
+			$this->produto_model->excluir(array('PRO_ID' => $this->input->post('id_produto')));
+		endif;
+			
+		$this->load->view('telas/prod_excluir');
+	}
 		
-        public function editar($dados, $condicao)
-	{
-            $dados = array(
-              'titulo' => "Produto Atualiza",
-              'tela' => "",
-            );
-		$this->load->view('home',$dados);
-	}
-        
-        public function apagar($id=NULL)
-	{
-            $dados = array(
-              'titulo' => "Produto apagar",
-              'tela' => "",
-            );
-		$this->load->view('home',$dados);
-	}
-                
-        public function busca($busca=NULL, $condicao)
+//
+//Função Buscar
+//	            
+    public function busca($busca=NULL, $condicao)
 	{
             $dados = array(
               'titulo' => "Produto busca",
