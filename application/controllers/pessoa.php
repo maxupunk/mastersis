@@ -11,7 +11,7 @@ class Pessoa extends CI_Controller {
 		$this->load->view('home',$dados);
 	}
         
-        public function cadastrar()
+        public function cadastro()
 	{
             $dados = array(
               'titulo' => "Pagina de Cadastro de pessoa.",

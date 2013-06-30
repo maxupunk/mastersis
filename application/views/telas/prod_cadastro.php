@@ -1,29 +1,25 @@
 <?php
 
-echo validation_errors('<div class="alert-box alert">','</div>');
+echo form_open('produto/cadastro');
+
+echo validation_errors('<p>','</p>');
 
 	if ($this->session->flashdata('cad_prod_ok')):
-		echo '<div class="alert-box success">'.$this->session->flashdata('cad_prod_ok').'</div>';
+		echo '<p>'.$this->session->flashdata('cad_prod_ok').'</p>';
 	endif;
 
-?>
+echo form_label(' ESCRIÇÃO DO PRODUTO: ');
+echo form_input(array('name' => 'PRO_DESCRICAO','size' => '110','maxlength' => '45'),set_value('PRO_DESCRICAO'));
 
-<form action="produto/cadastrar" method="post" accept-charset="utf-8">
-  <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" size="110" maxlength="45" placeholder="ESCRIÇÃO DO PRODUTO." />
-  
-  <textarea name="PRO_CARAC_TEC" placeholder="ESPECIFIÇÃO TECNICA"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>
-  
-  <div class="row">
-    <div class="three columns">
-      <input type="text" name="PRO_VAL_CUST" value="<?php echo set_value('PRO_VAL_CUST'); ?>" placeholder="CUSTO R$" />
-    </div>
-    <div class="three columns end">
-      <input type="text" name="PRO_VAL_VEND" value="<?php echo set_value('PRO_VAL_VEND'); ?>" placeholder="VENDA R$" />
-    </div>
-  </div>
-  
-  <input type="submit" name="cadastra" value="CADASTRA"  />
+echo form_label(' ESPECIFIÇÃO TECNICA: ');
+echo form_textarea(array('name' => 'PRO_CARAC_TEC'),set_value('PRO_CARAC_TEC'));
 
-</form>
+echo form_label(' PREÇO DE CUSTO: ');
+echo form_input(array('name' => 'PRO_VAL_CUST'),set_value('PRO_VAL_CUST'));
 
-<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>
+echo form_label(' PREÇO DE VENDA: ');
+echo form_input(array('name' => 'PRO_VAL_VEND'),set_value('PRO_VAL_VEND'));
+
+echo form_submit(array('name'=>'cadastra'),'Cadastrar');
+
+echo form_close();

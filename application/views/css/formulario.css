@@ -1,0 +1,67 @@
+/* 
+    Document   : formulario
+    Created on : 24/12/2012, 17:11:03
+    Author     : maxuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* personalisaçoes */
+form {
+    margin: 10px;
+}
+
+form p
+{
+	background-color: #CCCCCC;
+	border: solid #a1c67b 1px;
+	margin-bottom: 10px;
+}
+
+form label
+{
+    display: block;
+}
+
+form input[type="text"]
+{
+    background-color: #fff;
+    border: solid #a1c67b 1px;
+    height: 25px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    font: 16px Georgia, "Times New Roman", Times, serif;
+}
+
+form input[type="submit"]
+{
+    background-color: #fff;
+    border: solid #a1c67b 1px;
+    height: 30px;
+    width: 100px;
+    padding: 5px;
+    margin-top: 10px;
+    display: block;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    font: 16px Georgia, "Times New Roman", Times, serif;
+    color: #a1c67b;
+}
+
+form textarea
+{
+    background-color: #fff;
+    width: 800px;
+    height: 300px;
+    border: solid #a1c67b 1px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    font: 13px Georgia, "Times New Roman", Times, serif;
+    font-size: 12pt
+}
