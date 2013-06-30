@@ -6,7 +6,6 @@ if ($id_produto == NULL) redirect('produto/lista_todas');
 
 	if ($this->session->flashdata('exclui_prod_ok')):
 		echo '<div class="alert-box success">'.$this->session->flashdata('exclui_prod_ok').'</div>';
-		echo '<script type="text/javascript"> $("#direita").load("produto/lista_todas"); </script>';
 	else:
 
 $query = $this->produto_model->pega_id($id_produto)->row();
@@ -30,10 +29,10 @@ $query = $this->produto_model->pega_id($id_produto)->row();
   <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
   
   <input type="submit" value="EXCLUIR CADASTRO"  />
-
+  
 </form>
 
-<!-- Inicializa o script de menu -->
-<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>
-
 <?php endif; ?>
+
+<!-- Inicializa o script de menu -->
+<script src="<?php echo base_url('application/views/javascripts/mastersis.scripts.js');?>"></script>

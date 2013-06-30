@@ -1,7 +1,17 @@
- <div class="row">
-    <div class="twelve columns">
-    	<ul class="nav-bar">
+<div id="menu">
+<!-- ///////////////////// Menu principal ////////////////////////-->
+<div class="arrowsidemenu">
+            <div><? echo anchor('home','HOME'); ?></div>
+            <div class="menuheaders"><a href="javascript:;">CADASTROS</a></div>
+                    <ul class="menucontents">
+                        <li><? echo anchor('produto/cadastro','PRODUTOS'); ?></li>
+                        <li><? echo anchor('pessoa/cadastro','CLIENTES/FORNECEDOR'); ?></li>
+                        <li><a href="#">SERVIÇOS</a></li>
+                        <li>|</li>
+                        <li><a href="#">ENDEREÇOS</a></li>
+                    </ul>
 
+<<<<<<< HEAD
     		<li class="has-flyout">
   				<a href="#">Cadastro</a>
   				<a href="#" class="flyout-toggle"><span> </span></a>
@@ -41,6 +51,16 @@
 			</li>
 			
 			<li class="has-flyout">
+  				<a href="#">Compra</a>
+  				<a href="#" class="flyout-toggle"><span> </span></a>
+  					<ul class="flyout">
+    					<li><a href="#">Cadastra compra</a></li>
+    					<li><a href="#">Receber compra</a></li>
+    					<li><a href="#">Compra em aberto</a></li>
+  					</ul>
+			</li>
+			
+			<li class="has-flyout">
   				<a href="#">OS</a>
   				<a href="#" class="flyout-toggle"><span> </span></a>
   					<ul class="flyout">
@@ -55,3 +75,21 @@
     	</ul>
     </div>
   </div>
+=======
+            <div class="menuheaders"><a href="javascript:;">VENDAS</a></div>
+                    <ul class="menucontents">
+                        <li><a href="#">Fazer uma Venda</a></li>
+                        <li><a href="#">Busca um Venda</a></li>
+                        <li><a href="#">Baixa Mensalidade</a></li>
+                    </ul>
+            
+            <div class="menuheaders"><a href="javascript:;">SERVIÇOS</a></div>
+                    <ul class="menucontents">
+                        <li><a href="#">Nova OS</a></li>
+                        <li><a href="#">Busca OS</a></li>
+                    </ul>
+</div>
+<!-- ///////////////////// Fim do menu ////////////////////////-->
+</div>
+<div id="centro">
+>>>>>>> parent of dd5c165... adicionado o faundation e ajax.
