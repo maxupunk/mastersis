@@ -4,10 +4,6 @@ class Home extends CI_Controller {
 
 	public function index()
 	{
-            $dados = array(
-              'titulo' => "Pagina principal",
-              'tela' => "",
-            );
-		$this->load->view('home',$dados);
+		$this->load->view('home');
 	}
 }

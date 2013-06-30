@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
   <div class="row">
     <div class="six columns">
@@ -14,18 +13,8 @@
   <!-- Initialize JS Plugins -->
   <script src="<?php echo base_url('application/views/javascripts/app.js');?>"></script>
   
-  <script>
-           $(".nav-bar a").click(function(){
-                  var href = $(this).attr('href');
-                  $("#centro").load( href );
-                  return false;
-           });
-  </script>
+  <!-- Inicializa o script de menu -->
+  <script src="<?php echo base_url('application/views/javascripts/mastersis.scripts.js');?>"></script>
   
-=======
-</div>
-<div id="rodape"><br>Criado por Maxuel Aguiar®</div>
-</div>
->>>>>>> parent of dd5c165... adicionado o faundation e ajax.
 </body>
 </html>
