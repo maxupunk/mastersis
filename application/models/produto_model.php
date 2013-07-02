@@ -1,20 +1,38 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Produto_model extends CI_Model {
-<<<<<<< HEAD
+
 
 //
 //Inserir dados
 //	
-=======
-		
->>>>>>> parent of dd5c165... adicionado o faundation e ajax.
 	public function inserir($dados=NULL)
 	{
             if ($dados!=NULL):
 				$this->db->insert('PRODUTOS',$dados);
 				$this->session->set_flashdata('cad_prod_ok','Cadastro efetuado com sucesso!');
-				redirect('produto/cadastro');
+				redirect(current_url());
+			endif;
+	}
+
+//
+//Update
+//
+	public function update($dados=NULL,$condicao=NULL)
+	{
+		if ($dados!=NULL && $condicao!=NULL):
+				$this->db->update('PRODUTOS',$dados,$condicao);
+				$this->session->set_flashdata('edit_prod_ok','Cadastro atualizado com sucesso!');
+				redirect(current_url());
+			endif;
+	}
+	
+	public function excluir($condicao=NULL)
+	{
+		if ($condicao!=NULL):
+				$this->db->delete('PRODUTOS',$condicao);
+				$this->session->set_flashdata('exclui_prod_ok','Cadastro excluido com sucesso!');
+				redirect(current_url());
 			endif;
 	}
 	
@@ -23,7 +41,6 @@ class Produto_model extends CI_Model {
 			return $this->db->get('PRODUTOS');
 	}
 	
-<<<<<<< HEAD
 	public function pega_id($id=NULL)
 	{
 		if($id!=NULL):
@@ -33,20 +50,4 @@ class Produto_model extends CI_Model {
 		endif;
 	}
 
-
-	public function buscar($busca=NULL)
-	{
-		if($busca!=NULL):
-			
-			$this->db->like('PRO_DESCRICAO', $busca);
-			
-			return $this->db->get('PRODUTOS');
-	
-		else:
-			return FALSE;
-		endif;
-	}
-
-=======
->>>>>>> parent of dd5c165... adicionado o faundation e ajax.
 }

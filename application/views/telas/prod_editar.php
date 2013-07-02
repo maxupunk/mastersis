@@ -1,4 +1,3 @@
-<<<<<<< HEAD:application/views/telas/produto/editar.php
 <?php
 
 $id_produto = $this->uri->segment(3);
@@ -35,6 +34,4 @@ echo validation_errors('<div class="alert-box alert">','</div>');
 </form>
 
 <!-- Inicializa o script de menu -->
-<script src="<?php echo base_url('application/views/javascripts/mastersis.scripts.js');?>"></script>
-=======
->>>>>>> parent of dd5c165... adicionado o faundation e ajax.:application/views/telas/prod_editar.php
+<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>

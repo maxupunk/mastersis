@@ -1,14 +1,15 @@
 <?php
 
-	$this->table->set_heading('ID|', 'DESCRIÇÃO|', 'CARACTERISTICAS|', 'VALOR R$|', 'SITUAÇÃO|', 'OPERAÇÃO');
+		$this->table->set_heading('DESCRIÇÃO', 'VALOR', 'OPERAÇÃO');
 
-	foreach ($produtos as $linha)
-	{
-		if ($linha->PRO_SITUACAO != '1'){ $situacao="Desativo"; }else{ $situacao="Ativo"; }
-		
-		$this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $linha->PRO_CARAC_TEC, $linha->PRO_VAL_VEND, $situacao, anchor("produto/editar/$linha->PRO_ID",'Editar').' - '.anchor("produto/excluir/$linha->PRO_ID",'Excluir'));	
-	}
+		foreach ($produtos as $linha)
+		{
+			$this->table->add_row($linha->PRO_DESCRICAO, $linha->PRO_VAL_VEND, anchor("produto/editar/$linha->PRO_ID",'Editar').' '.anchor("produto/excluir/$linha->PRO_ID",'Excluir'));	
+		}
 	
-	echo $this->table->generate();
-
-?>
+		echo $this->table->generate();
+ 
+ ?>
+ 
+<!-- Inicializa o script de menu -->
+<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>
