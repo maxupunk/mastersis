@@ -7,7 +7,6 @@ echo validation_errors('<div class="alert-box alert">','</div>');
 	endif;
 
 ?>
-
 <form action="produto/cadastrar" method="post" accept-charset="utf-8">
   <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" size="110" maxlength="45" placeholder="ESCRIÇÃO DO PRODUTO." />
   
@@ -25,5 +24,3 @@ echo validation_errors('<div class="alert-box alert">','</div>');
   <input type="submit" name="cadastra" value="CADASTRA"  />
 
 </form>
-
-<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>
