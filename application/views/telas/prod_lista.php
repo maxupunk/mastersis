@@ -8,7 +8,7 @@
 		}
 	
 		echo $this->table->generate();
- 
+                
  ?>
  
 <!-- Inicializa o script de menu -->
