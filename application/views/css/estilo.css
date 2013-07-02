@@ -1,0 +1,9 @@
+* { margin: 0; padding: 0; font: 14px verdana;}
+img { border: none; }
+body { text-decoration: none; background: white; text-align:center; }
+a:link, a:visited, a:hover, a:active { color: #000; text-decoration: none; }
+#geral { width: 100%; text-align:left; margin: 0 auto; border: 1px solid black;}
+#topo { width: 100%; height: 50px; border-bottom: 1px solid black; background-color: #a1c67b; font:bold 30px Verdana; color:#fff;}
+#centro { margin-left: 182px; padding: 4px;}
+#menu { width: 182px; float: left; border-right: 0px solid black;}
+#rodape { clear: both; text-align: center; height: 50px; border-top: 1px solid black; background-color: #a1c67b; font:bold 14px Verdana; }
