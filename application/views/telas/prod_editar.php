@@ -34,6 +34,8 @@ endif;
 
         <label>Valor de Venda:</label>
         <input type="text" name="PRO_VAL_VEND" value="<?php echo set_value('PRO_VAL_VEND', $query->PRO_VAL_VEND); ?>" class="span2" />
+        
+        <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
 
         <br><button type="submit" class="btn">ATUALIZAR</button>
 
