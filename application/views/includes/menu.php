@@ -22,6 +22,23 @@
                                         <li><a href="#">Avaria</a></li>
                                     </ul>
                                 </li>
+                                
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Editar/excluir</a>
+                                    <ul class="dropdown-menu">
+                                        <li><? echo anchor('produto/busca','Produto'); ?></li>
+                                        <li><a href="#">Serviço</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Cliente</a></li>
+                                        <li><a href="#">Fornecedor</a></li>
+                                        <li><a href="#">Usuario</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Endereços</a></li>
+                                        <li><a href="#">Unidade de medida</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">Avaria</a></li>
+                                    </ul>
+                                </li>
 
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vendas</a>
@@ -79,9 +96,6 @@
                                 <li><a href="#">Configurações</a></li>
 
                             </ul>
-                            <form class="navbar-search pull-right" action="">
-                                <input type="text" class="search-query span2" placeholder="Consulta preço">
-                            </form>
 
                     </div><!-- /navbar-inner -->
                 </div><!-- FIM DO MENU -->
