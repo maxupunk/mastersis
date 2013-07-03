@@ -8,8 +8,13 @@
 		}
 	
 		echo $this->table->generate();
-                
- ?>
+		
+?>
+		
+		<div class="pagination">
+  		<ul>
+  			
+		<? if ($paginacao) echo $paginacao; ?>
  
-<!-- Inicializa o script de menu -->
-<script src="<?php echo base_url('application/views/javascripts/mastersis2.scripts.js');?>"></script>
+		</ul>
+		</div>

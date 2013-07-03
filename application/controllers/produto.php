@@ -35,15 +35,42 @@ class Produto extends CI_Controller {
 				$this->produto_model->inserir($dados);
             endif;
             
-		$this->load->view('telas/prod_cadastro');
+		$dados = array(
+              'produtos' => $this->produto_model->pega_tudo()->result(),
+              'tela' => 'prod_cadastro',
+            );	
+		$this->load->view('home',$dados);
 	}
         
 	public function lista_todas()
 	{
+			$this->load->library('pagination');
+			$config['base_url'] = base_url('produto/lista_todas');
+			$config['total_rows'] = $this->produto_model->pega_tudo()->num_rows();
+			$config['per_page'] = 2;
+			$quant = $config['per_page'];
+			
+			$config['num_tag_open'] = '<li>';
+			$config['num_tag_close'] = '</li>';
+			$config['cur_tag_open'] = '<li class="disabled"><a>';
+			$config['cur_tag_close'] = '</a></li>';
+			$config['next_link'] = '&gt;';
+			$config['next_tag_open'] = '<li>';
+			$config['next_tag_close'] = '</li>';
+			$config['prev_link'] = '&lt;';
+			$config['prev_tag_open'] = '<li>';
+			$config['prev_tag_close'] = '</li>';
+			
+			$this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
+			
+			$this->pagination->initialize($config);
+			
             $dados = array(
-              'produtos' => $this->produto_model->pega_tudo()->result(),
+              'produtos' => $this->produto_model->pega_tudo($quant,$inicial)->result(),
+              'tela' => 'prod_lista',
+              'paginacao' => $this->pagination->create_links(),
             );
-		$this->load->view('telas/prod_lista',$dados);
+		$this->load->view('home',$dados);
 	}
 		
 //

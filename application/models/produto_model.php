@@ -36,8 +36,9 @@ class Produto_model extends CI_Model {
 			endif;
 	}
 	
-	public function pega_tudo()
+	public function pega_tudo($quant=0, $inicial=0)
 	{
+			if ($quant > 0) $this->db->limit($quant,$inicial);
 			return $this->db->get('PRODUTOS');
 	}
 	
