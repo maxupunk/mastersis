@@ -77,9 +77,8 @@ class Produto extends CI_Controller {
 //	
     public function editar() {
         // validar o formulario
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]|strtoupper');
-        $this->form_validation->set_rules('PRO_CARAC_TEC', 'CARACTERISTICA TECNICA', 'required');
-        $this->form_validation->set_rules('PRO_VAL_VEND', 'PREÇO DE VENDA', 'required');
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
+        $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
@@ -90,7 +89,7 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => "prod_editar",
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
 //
@@ -115,7 +114,7 @@ class Produto extends CI_Controller {
             'titulo' => "Produto busca",
             'tela' => "prod_busca",
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
 }

@@ -23,7 +23,7 @@ class Produto_model extends CI_Model {
         if ($dados != NULL && $condicao != NULL):
             $this->db->update('PRODUTOS', $dados, $condicao);
             $this->session->set_flashdata('edit_prod_ok', 'Cadastro atualizado com sucesso!');
-            redirect(current_url());
+            #redirect(current_url());
         endif;
     }
 
@@ -49,10 +49,11 @@ class Produto_model extends CI_Model {
         endif;
     }
 
-    public function buscar($busca="", $quant = 10, $inicial = 0) {
+    public function buscar($busca){
         
             $this->db->like('PRO_DESCRICAO', $busca);
-            $this->db->limit($quant, $inicial);
+            $this->db->or_like('PRO_ID', $busca);
+            $this->db->limit(10);
             return $this->db->get('PRODUTOS');
 
     }
