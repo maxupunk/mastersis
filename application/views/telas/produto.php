@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="span6">
+        <script src="<?php echo base_url('application/views/js/jquery.form.js'); ?>"></script>
+        <script src="<?php echo base_url('application/views/js/forms.js'); ?>"></script>
+        <script src="<?php echo base_url('application/views/js/cadastro.js'); ?>"></script>
+
+        <div class="btn-group" id="sub_menu">
+            <button class="btn" url="<?php echo base_url('produto'); ?>/cadastrar">Cadastro</button>
+            <button class="btn" url="<?php echo base_url('produto'); ?>/lista">Lista todos</button>
+        </div><hr>
+
+        <div class="well" id="cadastro"><!-- tabela de cadastro --></div>
+
+    </div>
+
+    <div class="span6">
+
+        <div class="well">
+            <input type="text" name="buscar" url="<?php echo base_url('produto'); ?>/busca?buscar=" id="busca"class="search-query span5" placeholder="Busca produto">
+        </div>
+        <hr>
+        <div id="resultado"></div><!--resultado da busca -->
+
+    </div>
+</div>

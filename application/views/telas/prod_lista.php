@@ -1,10 +1,9 @@
-<div class="row">
-    <div class="span8 offset2">
         <?php
-        $this->table->set_heading('ID', 'DESCRIÇÃO', 'VALOR', 'OPERAÇÃO');
+       
+        $this->table->set_heading('ID', '-', 'DESCRIÇÃO', 'VALOR');
 
         foreach ($produtos as $linha) {
-            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $linha->PRO_VAL_VEND, anchor("produto/editar/$linha->PRO_ID", 'Editar') . ' ' . anchor("produto/excluir/$linha->PRO_ID", 'Excluir'));
+            $this->table->add_row($linha->PRO_ID,"<img src=".base_url('produto')."/mostra_img?id=".$linha->PRO_ID."' height='100' width='120'>", $linha->PRO_DESCRICAO, $linha->PRO_VAL_VEND);
         }
 
         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -13,13 +12,20 @@
         echo $this->table->generate();
         ?>
 
-        <div class="pagination">
+        <div class="pagination" id="pagination">
             <ul>
 
                 <? if ($paginacao) echo $paginacao; ?>
 
             </ul>
         </div>
-
-    </div>
-</div>
+<?php
+function to_img($dados=NULL){
+    if ($dados=NULL):
+        return;
+    else:
+        header("Content-type: image/jpeg"); 
+        return $dados;
+    endif;
+    
+}

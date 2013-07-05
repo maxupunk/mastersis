@@ -2,22 +2,23 @@
 $id_produto = $this->uri->segment(3);
 
 if ($id_produto == NULL)
-    redirect('produto/lista_todas');
-
-$query = $this->produto_model->pega_id($id_produto)->row();
-
-echo validation_errors('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
-
-if ($this->session->flashdata('edit_prod_ok')):
-    echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>' . $this->session->flashdata('edit_prod_ok') . '</div>';
-endif;
+    redirect('produto/cadastrar');
 ?>
-
-<form method="post" id="editar" accept-charset="utf-8">
+<form method="post" action="<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
         <legend>EDIÇÃO DE PRODUTO</legend>
+
+        <?php
+        $query = $this->produto_model->pega_id($id_produto)->row();
+
+        echo validation_errors('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
+
+        if ($this->session->flashdata('edit_prod_ok')):
+            echo '<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>' . $this->session->flashdata('edit_prod_ok') . '</div>';
+        endif;
+        ?>
 
         <label>Descrição do produto:</label>
         <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" class="span5" />
@@ -33,25 +34,19 @@ endif;
 
         <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
 
-        <br><button type="submit" class="btn">ATUALIZAR</button>
+        <hr><button type="submit" class="btn">ATUALIZAR</button>
 
     </fieldset>
-    <script>
-        $("form").submit(function() {
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>",
-                dataType: "html",
-                data: $(this).serialize(),
-                // enviado com sucesso
-                success: function(response) {
-                    $("#cadastro").html(response);
-                },
-                // quando houver erro
-                error: function() {
-                    $("#cadastro").append("<p>- Ocoreu um erro na requisição! tente novamente mais tarde</p><?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>");
-                }
-            });
-            return false;
-        });
-    </script>
+</form>
+
+
+<form action="<?php echo base_url('produto'); ?>/adiciona_img" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
+    <fieldset>
+
+        <legend>ADICIONA IMAGEM AO PRODUTO:</legend>
+        <input type="file" class="btn" id="arq_select" name="userfile" />
+        <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
+        <button type="submit" id="img_botao" class="btn">Aplicar imagem</button>
+
+    </fieldset>
+</form>

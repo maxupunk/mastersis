@@ -39,14 +39,14 @@ class Produto extends CI_Controller {
             'produtos' => $this->produto_model->pega_tudo()->result(),
             'tela' => 'prod_cadastro',
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
-    public function lista_todas() {
+    public function lista() {
         $this->load->library('pagination');
-        $config['base_url'] = base_url('produto/lista_todas');
+        $config['base_url'] = base_url('produto/lista');
         $config['total_rows'] = $this->produto_model->pega_tudo()->num_rows();
-        $config['per_page'] = 2;
+        $config['per_page'] = 10;
         $quant = $config['per_page'];
 
         $config['num_tag_open'] = '<li>';
@@ -69,7 +69,7 @@ class Produto extends CI_Controller {
             'tela' => 'prod_lista',
             'paginacao' => $this->pagination->create_links(),
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
 //
@@ -93,9 +93,42 @@ class Produto extends CI_Controller {
     }
 
 //
-//Função Apagar
+//Função Editar
+//	
+    public function adiciona_img() {
+        // validar o formulario
+        $this->load->model('funcoes');
+
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['max_size'] = '2000';
+        #$config['max_width'] = '2000';
+        #$config['max_height'] = '2000';
+
+        $this->load->library('upload', $config);
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->upload->do_upload()):
+            $data = $this->upload->data();
+            $this->funcoes->createThumbnail($data['file_name']);
+            $img_cod = file_get_contents($config['upload_path'] . "/" . $data['raw_name'] . "_thumb" . $data['file_ext']);
+            $this->produto_model->update(array('PRO_IMG' => $img_cod), array('PRO_ID' => $this->input->post('id_produto')));
+            $mensagem = "Imagem alterada com sucesso!";
+        else:
+            $mensagem = $this->upload->display_errors();
+        endif;
+
+        $dados = array(
+            'tela' => "mensagem",
+            'mensagem' => $mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+//
+//Função Excluir
 //	    
-    public function excluir($id = NULL) {
+    public function excluir() {
         if ($this->input->post('id_produto') > 0):
             $this->produto_model->excluir(array('PRO_ID' => $this->input->post('id_produto')));
         endif;
@@ -103,7 +136,7 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => "prod_excluir",
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
 //
@@ -113,6 +146,13 @@ class Produto extends CI_Controller {
         $dados = array(
             'titulo' => "Produto busca",
             'tela' => "prod_busca",
+        );
+        $this->load->view('contente', $dados);
+    }
+    
+    public function mostra_img() {
+        $dados = array(
+            'tela' => "imagem",
         );
         $this->load->view('contente', $dados);
     }

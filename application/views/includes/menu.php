@@ -9,24 +9,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastros</a>
                         <ul class="dropdown-menu">
-                            <li><? echo anchor('produto/cadastrar', 'Produto'); ?></li>
-                            <li><a href="#">Serviço</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Cliente</a></li>
-                            <li><a href="#">Fornecedor</a></li>
-                            <li><a href="#">Usuario</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Endereços</a></li>
-                            <li><a href="#">Unidade de medida</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Avaria</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Busca/Editar</a>
-                        <ul class="dropdown-menu">
-                            <li><? echo anchor('produto/busca', 'Produto'); ?></li>
+                            <li><? echo anchor('produto', 'Produto'); ?></li>
                             <li><a href="#">Serviço</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Cliente</a></li>

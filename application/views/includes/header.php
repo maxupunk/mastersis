@@ -5,11 +5,11 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap -->
-        <link href="<?php echo base_url('application/views/css/bootstrap.min.css');?>" rel="stylesheet" media="screen">
-        
+        <link href="<?php echo base_url('application/views/css/bootstrap.min.css'); ?>" rel="stylesheet" media="screen">
+
         <!-- jquery -->
-        <script src="<?php echo base_url('application/views/js/jquery-1.10.2.min.js');?>"></script>
-        
+        <script src="<?php echo base_url('application/views/js/jquery-1.10.2.min.js'); ?>"></script>
+
         <style type="text/css">
 
 

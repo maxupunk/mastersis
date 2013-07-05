@@ -11,20 +11,17 @@ else:
     $query = $this->produto_model->pega_id($id_produto)->row();
     ?>
 
-    <div class="row">
-        <div class="span8 offset2">
-
-            <form action="produto/excluir/<?php echo $id_produto; ?>" method="post" accept-charset="utf-8">
+            <form action="produto/excluir/<?php echo $id_produto; ?>" method="post" name="grava" accept-charset="utf-8">
                 
                 <fieldset>
 
                 <legend>EXCLUSÃO DE PRODUTO. CODIGO: <?php echo $query->PRO_ID ?></legend>
                 
                 <label>Descrição do produto:</label>
-                <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" disabled class="span7" />
+                <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" disabled class="span5" />
 
                 <label>Caracteristica Tecnicas:</label>
-                <textarea name="PRO_CARAC_TEC" disabled class="span7"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
+                <textarea name="PRO_CARAC_TEC" disabled class="span5"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
                 <label>Valor de Custo:</label>
                 <input type="text" name="PRO_VAL_CUST" value="<?php echo set_value('PRO_VAL_CUST', $query->PRO_VAL_CUST); ?>" disabled class="span2" />
@@ -39,8 +36,5 @@ else:
                 </fieldset>
                 
             </form>
-
-        </div>
-    </div>
 
 <?php endif; ?>
