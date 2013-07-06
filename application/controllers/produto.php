@@ -29,9 +29,24 @@ class Produto extends CI_Controller {
         $this->form_validation->set_rules('PRO_VAL_CUST', 'PREÇO DE CUSTO');
         $this->form_validation->set_rules('PRO_VAL_VEND', 'PREÇO DE VENDA');
 
-        // se for valido ele chama o inserir dentro do produto_model
+        // se for valido ele chama o inserir dentro do produto_model        
         if ($this->form_validation->run() == TRUE):
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $this->input->post());
+            $formulario = $this->input->post();
+
+            $source = array('.', ',');
+            $replace = array('', '.');
+
+            $custo = $formulario['PRO_VAL_CUST'];
+            $custo = str_replace($source, $replace, $custo);
+
+            $venda = $formulario['PRO_VAL_VEND'];
+            $venda = str_replace($source, $replace, $venda);
+
+            $atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
+
+            $novo_form = array_replace($formulario, $atualiza);
+
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $novo_form);
             $this->produto_model->inserir($dados);
         endif;
 
@@ -99,20 +114,21 @@ class Produto extends CI_Controller {
         // validar o formulario
         $this->load->model('funcoes');
 
-        $config['upload_path'] = './uploads/';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '2000';
-        #$config['max_width'] = '2000';
-        #$config['max_height'] = '2000';
+        $config['upload_path'] = APPPATH . 'views/produto_img/';
+        $config['allowed_types'] = 'jpg';
+        $config['max_size'] = '2048';
+        $config['file_name'] = $this->input->post('id_produto');
+        $config['overwrite'] = TRUE;
+        $config['max_width'] = '1024';
+        $config['max_heigh'] = '768';
 
         $this->load->library('upload', $config);
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->upload->do_upload()):
             $data = $this->upload->data();
-            $this->funcoes->createThumbnail($data['file_name']);
-            $img_cod = file_get_contents($config['upload_path'] . "/" . $data['raw_name'] . "_thumb" . $data['file_ext']);
-            $this->produto_model->update(array('PRO_IMG' => $img_cod), array('PRO_ID' => $this->input->post('id_produto')));
+            $this->funcoes->createThumbnail($data['file_name'], $config['upload_path']);
+            $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
             $mensagem = "Imagem alterada com sucesso!";
         else:
             $mensagem = $this->upload->display_errors();
@@ -146,13 +162,6 @@ class Produto extends CI_Controller {
         $dados = array(
             'titulo' => "Produto busca",
             'tela' => "prod_busca",
-        );
-        $this->load->view('contente', $dados);
-    }
-    
-    public function mostra_img() {
-        $dados = array(
-            'tela' => "imagem",
         );
         $this->load->view('contente', $dados);
     }

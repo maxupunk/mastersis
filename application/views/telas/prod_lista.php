@@ -1,9 +1,12 @@
         <?php
-       
-        $this->table->set_heading('ID', '-', 'DESCRIÇÃO', 'VALOR');
+        #header("Pragma: no-cache"); 
+        $this->table->set_heading('', '', 'DESCRIÇÃO', 'VALOR');
 
         foreach ($produtos as $linha) {
-            $this->table->add_row($linha->PRO_ID,"<img src=".base_url('produto')."/mostra_img?id=".$linha->PRO_ID."' height='100' width='120'>", $linha->PRO_DESCRICAO, $linha->PRO_VAL_VEND);
+            setlocale(LC_MONETARY, 'pt_BR');
+            $valor = money_format('%.2n', $linha->PRO_VAL_VEND);
+            $icone = str_replace(".jpg", "_thumb.jpg", $linha->PRO_IMG);
+            $this->table->add_row($linha->PRO_ID,"<img src=".APPPATH."views/produto_img/".$icone." >", $linha->PRO_DESCRICAO, $valor);
         }
 
         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -19,13 +22,3 @@
 
             </ul>
         </div>
-<?php
-function to_img($dados=NULL){
-    if ($dados=NULL):
-        return;
-    else:
-        header("Content-type: image/jpeg"); 
-        return $dados;
-    endif;
-    
-}

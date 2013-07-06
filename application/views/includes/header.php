@@ -9,6 +9,8 @@
 
         <!-- jquery -->
         <script src="<?php echo base_url('application/views/js/jquery-1.10.2.min.js'); ?>"></script>
+        <script src="<?php echo base_url('application/views/js/jquery.maskMoney.js'); ?>"></script>
+        
 
         <style type="text/css">
 
