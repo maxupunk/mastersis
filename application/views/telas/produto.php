@@ -7,9 +7,9 @@
         <div class="btn-group" id="sub_menu">
             <button class="btn" url="<?php echo base_url('produto'); ?>/cadastrar">Cadastro</button>
             <button class="btn" url="<?php echo base_url('produto'); ?>/lista">Lista todos</button>
-        </div><hr>
+        </div>
 
-        <div class="well" id="cadastro"><!-- tabela de cadastro --></div>
+        <div id="cadastro"><!-- tabela de cadastro --></div>
 
     </div>
 

@@ -6,10 +6,12 @@
 
                 $query = $this->produto_model->buscar("$id_produto")->result();
 
-                $this->table->set_heading('COD', 'DESCRIÇÃO', 'VALOR', '');
+                $this->table->set_heading('COD', 'DESCRIÇÃO', 'VALOR', "OP's");
 
                 foreach ($query as $linha) {
-                    $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $linha->PRO_VAL_VEND, anchor("produto/editar/$linha->PRO_ID", '<i class="icon-edit"></i>') . ' ' . anchor("produto/excluir/$linha->PRO_ID", '<i class="icon-trash"></i>'));
+                    setlocale(LC_MONETARY, 'pt_BR');
+                    $valor = money_format('%.2n', $linha->PRO_VAL_VEND);
+                    $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $valor, anchor("produto/editar/$linha->PRO_ID", '<i class="icon-edit"></i>').' '.anchor("produto/excluir/$linha->PRO_ID", '<i class="icon-trash"></i>') . '<br>' .anchor("produto/exibir/$linha->PRO_ID", '<i class="icon-list-alt"></i>').' '.anchor("produto/imagem/$linha->PRO_ID", '<i class="icon-picture"></i>'));
                 }
 
                 $tmpl = array('table_open' => '<table class="table table-hover">');

@@ -13,9 +13,9 @@ class Funcoes extends CI_Model {
         $config['create_thumb'] = TRUE;
         $config['maintain_ratio'] = TRUE;
         $config['master_dim'] = "auto";
-        #$config['quality'] = "10%";
-        $config['width'] = "100";
-        $config['height'] = "100";
+        #$config['quality'] = "100%";
+        $config['width'] = "120";
+        $config['height'] = "120";
 
         $this->load->library('image_lib', $config);
 

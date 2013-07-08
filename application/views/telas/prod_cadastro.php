@@ -13,16 +13,16 @@
                     ?>
 
                     <label>Descrição do produto:</label>
-                    <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" maxlength="45" class="span5" />
+                    <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" maxlength="45" class="span6" />
 
                     <label>Caracteristica Tecnicas:</label>
-                    <textarea name="PRO_CARAC_TEC" class="span5"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>
+                    <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>
 
                     <label>Valor de Custo:</label>
-                    <input type="text" name="PRO_VAL_CUST" id="valor" value="<?php echo set_value('PRO_VAL_CUST'); ?>" class="span2" />
+                    <input type="text" name="PRO_VAL_CUST" maxlength="12" id="valor" value="<?php echo set_value('PRO_VAL_CUST'); ?>" class="span2" />
 
                     <label>Valor de Venda:</label>
-                    <input type="text" name="PRO_VAL_VEND" id="valor" value="<?php echo set_value('PRO_VAL_VEND'); ?>" class="span2" />
+                    <input type="text" name="PRO_VAL_VEND" maxlength="12" id="valor" value="<?php echo set_value('PRO_VAL_VEND'); ?>" class="span2" />
                     
 
                     <hr><button type="submit" class="btn">CADASTRAR</button>

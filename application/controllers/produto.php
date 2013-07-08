@@ -97,7 +97,23 @@ class Produto extends CI_Controller {
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $this->input->post());
+
+            $formulario = $this->input->post();
+
+            $source = array('.', ',');
+            $replace = array('', '.');
+
+            $custo = $formulario['PRO_VAL_CUST'];
+            $custo = str_replace($source, $replace, $custo);
+
+            $venda = $formulario['PRO_VAL_VEND'];
+            $venda = str_replace($source, $replace, $venda);
+
+            $atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
+
+            $novo_form = array_replace($formulario, $atualiza);
+
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $novo_form);
             $this->produto_model->update($dados, array('PRO_ID' => $this->input->post('id_produto')));
         endif;
 
@@ -162,6 +178,28 @@ class Produto extends CI_Controller {
         $dados = array(
             'titulo' => "Produto busca",
             'tela' => "prod_busca",
+        );
+        $this->load->view('contente', $dados);
+    }
+
+//
+//Função Exibir
+//	            
+    public function exibir() {
+        $dados = array(
+            'titulo' => "EXIBIÇÃO DE PRODUTO",
+            'tela' => "prod_exibir",
+        );
+        $this->load->view('contente', $dados);
+    }
+    
+//
+//Função Exibir
+//	            
+    public function imagem() {
+        $dados = array(
+            'titulo' => "EXIBIÇÃO DE PRODUTO",
+            'tela' => "prod_imagem",
         );
         $this->load->view('contente', $dados);
     }
