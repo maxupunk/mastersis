@@ -16,32 +16,38 @@ endif;
 
 if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe!</div>';
-else:
-    ?>
-    <form method="post" action="<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>" name="grava" accept-charset="utf-8">
+    exit();
+endif;
 
-        <fieldset>
+?>
 
-            <legend>EDIÇÃO DE PRODUTO</legend>
+<form method="get" action="<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>" name="grava" accept-charset="utf-8">
+
+    <fieldset>
+
+        <legend>EDIÇÃO DE PRODUTO</legend>
 
 
-            <label>Descrição do produto:</label>
-            <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" class="span6" />
+        <label>Descrição do produto:</label>
+        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" class="span6" readonly/>
 
-            <label>Caracteristica Tecnicas::</label>
-            <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
+        <label>Caracteristica Tecnicas::</label>
+        <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
-            <label>Valor de Custo:</label>
-            <input type="text" name="PRO_VAL_CUST" maxlength="12" value="<?php echo set_value('PRO_VAL_CUST', $query->PRO_VAL_CUST); ?>" class="span2" />
+        <label>Valor de Custo:</label>
+        <input type="text" name="PRO_VAL_CUST" maxlength="12" value="<?php echo set_value('PRO_VAL_CUST', $query->PRO_VAL_CUST); ?>" class="span2" />
 
-            <label>Valor de Venda:</label>
-            <input type="text" name="PRO_VAL_VEND" maxlength="12" value="<?php echo set_value('PRO_VAL_VEND', $query->PRO_VAL_VEND); ?>" class="span2" />
+        <label>Valor de Venda:</label>
+        <input type="text" name="PRO_VAL_VEND" maxlength="12" value="<?php echo set_value('PRO_VAL_VEND', $query->PRO_VAL_VEND); ?>" class="span2" />
+        
+        <label>Situacao:</label>
+        <input type="radio" name="PRO_SITUACAO" value="a" <?php if ($query->PRO_SITUACAO == "a") echo 'checked="checked"'; ?> />Ativo
+        <input type="radio" name="PRO_SITUACAO" value="d" <?php if ($query->PRO_SITUACAO == "d") echo 'checked="checked"'; ?> />Desativo
 
-            <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
+        <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
 
-            <hr><button type="submit" class="btn">ATUALIZAR</button>
+        <hr><button type="submit" class="btn">ATUALIZAR</button>
 
-        </fieldset>
-    </form>
-    <script type="text/javascript">$(".span2").maskMoney({thousands: '.', decimal: ','});</script>
-<?php endif; ?>
+    </fieldset>
+</form>
+<script type="text/javascript">$(".span2").maskMoney({thousands: '.', decimal: ','});</script>

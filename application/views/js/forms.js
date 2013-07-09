@@ -22,9 +22,7 @@ $(document).on("submit", '#upload_img', function() {
             $('#cadastro').append('Carregando...<br>');
         },
         success: function(data) {
-            $("#cadastro").append(data);
-            $("#img_botao").prop('disabled', true);
-            $("#arq_select").prop('disabled', true);
+            $("#cadastro").html(data);
         }
     });
     return false;

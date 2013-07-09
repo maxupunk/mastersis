@@ -7,15 +7,14 @@ if ($id_produto == NULL):
 endif;
 
 setlocale(LC_MONETARY, 'pt_BR');
-            
-$query = $this->produto_model->pega_id($id_produto)->row();
 
+$query = $this->produto_model->pega_id($id_produto)->row();
 if ($query == null) :
-        echo '<div class="alert alert-error">Esse item não existe!</div>';
-    else:
+    echo '<div class="alert alert-error">Esse item não existe!</div>';
+    exit();
+endif;
 
 $query->PRO_IMG != null ? $img = $query->PRO_IMG : $img = "sem_img.jpg";
-
 ?>
 
 
@@ -33,4 +32,3 @@ $query->PRO_IMG != null ? $img = $query->PRO_IMG : $img = "sem_img.jpg";
         </div>
     </li>
 </ul>
-<?php endif; ?>

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>MasterSis</title>
-        <META http-equiv="CACHE-CONTROL" content="NO-CACHE">
+        <?php header("Cache-Control: no-cache"); ?>
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Bootstrap -->

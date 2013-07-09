@@ -8,24 +8,24 @@ endif;
 
 $query = $this->produto_model->pega_id($id_produto)->row();
 
-if ($query == null) :
+if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
-else:
-    ?>
+    exit();
+endif;
+?>
 
-    <div class="row">
-        <form action="<?php echo base_url('produto'); ?>/adiciona_img" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
-            <fieldset>
-                <legend><?php echo $query->PRO_DESCRICAO ?></legend>
-                <input type="file" class="btn" id="arq_select" name="userfile" />
-                <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
-                <button type="submit" id="img_botao" class="btn">Aplicar imagem</button>
-            </fieldset>
-        </form>
-    </div>
+<div class="row">
+    <form action="<?php echo base_url('produto'); ?>/adiciona_img" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
+        <fieldset>
+            <legend><?php echo $query->PRO_DESCRICAO ?></legend>
+            <input type="file" class="btn" id="arq_select" name="userfile" />
+            <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
+            <button type="submit" id="img_botao" class="btn">Adiciona/Alterar</button>
+        </fieldset>
+    </form>
+    <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
+</div>
 
-    <div class="row">
+<div class="row">
     <?php if ($query->PRO_IMG != NULL) echo '<img src="' . APPPATH . 'views/produto_img/' . $query->PRO_IMG . '" >' ?>
-    </div>
-
-<?php endif ?>
+</div>

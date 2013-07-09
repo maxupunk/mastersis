@@ -31,22 +31,8 @@ class Produto extends CI_Controller {
 
         // se for valido ele chama o inserir dentro do produto_model        
         if ($this->form_validation->run() == TRUE):
-            $formulario = $this->input->post();
 
-            $source = array('.', ',');
-            $replace = array('', '.');
-
-            $custo = $formulario['PRO_VAL_CUST'];
-            $custo = str_replace($source, $replace, $custo);
-
-            $venda = $formulario['PRO_VAL_VEND'];
-            $venda = str_replace($source, $replace, $venda);
-
-            $atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
-
-            $novo_form = array_replace($formulario, $atualiza);
-
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $novo_form);
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC'), $this->input->post());
             $this->produto_model->inserir($dados);
         endif;
 
@@ -91,9 +77,8 @@ class Produto extends CI_Controller {
 //Função Editar
 //	
     public function editar() {
-        // validar o formulario
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
-        $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
+        
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
@@ -113,7 +98,7 @@ class Produto extends CI_Controller {
 
             $novo_form = array_replace($formulario, $atualiza);
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND'), $novo_form);
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND','PRO_SITUACAO'), $novo_form);
             $this->produto_model->update($dados, array('PRO_ID' => $this->input->post('id_produto')));
         endif;
 
