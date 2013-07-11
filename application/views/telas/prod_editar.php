@@ -2,7 +2,7 @@
 $id_produto = $this->uri->segment(3);
 
 if ($id_produto == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div?>';
+    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
     exit();
 endif;
 
@@ -18,7 +18,6 @@ if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
-
 ?>
 
 <form method="get" action="<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>" name="grava" accept-charset="utf-8">
@@ -34,15 +33,16 @@ endif;
         <label>Caracteristica Tecnicas::</label>
         <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
-        <label>Valor de Custo:</label>
-        <input type="text" name="PRO_VAL_CUST" maxlength="12" value="<?php echo set_value('PRO_VAL_CUST', $query->PRO_VAL_CUST); ?>" class="span2" />
 
-        <label>Valor de Venda:</label>
-        <input type="text" name="PRO_VAL_VEND" maxlength="12" value="<?php echo set_value('PRO_VAL_VEND', $query->PRO_VAL_VEND); ?>" class="span2" />
-        
-        <label>Situacao:</label>
-        <input type="radio" name="PRO_SITUACAO" value="a" <?php if ($query->PRO_SITUACAO == "a") echo 'checked="checked"'; ?> />Ativo
-        <input type="radio" name="PRO_SITUACAO" value="d" <?php if ($query->PRO_SITUACAO == "d") echo 'checked="checked"'; ?> />Desativo
+                <label class="radio">
+                    <input type="radio" name="PRO_ESTATUS" value="a" <?php if ($query->PRO_ESTATUS == "a") echo 'checked="checked"'; ?> />Ativo
+                </label>
+
+                <label class="radio">
+                    <input type="radio" name="PRO_ESTATUS" value="d" <?php if ($query->PRO_ESTATUS == "d") echo 'checked="checked"'; ?> />Desativo
+                </label>
+
+        </div>
 
         <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
 

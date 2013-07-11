@@ -30,13 +30,7 @@ endif;
         <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" readonly class="span6" />
 
         <label>Caracteristica Tecnicas:</label>
-        <textarea name="PRO_CARAC_TEC" readonly class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
-
-        <label>Valor de Custo:</label>
-        <input type="text" name="PRO_VAL_CUST" value="<?php echo set_value('PRO_VAL_CUST', $query->PRO_VAL_CUST); ?>" readonly class="span2" />
-
-        <label>Valor de Venda:</label>
-        <input type="text" name="PRO_VAL_VEND" value="<?php echo set_value('PRO_VAL_VEND', $query->PRO_VAL_VEND); ?>" readonly class="span2" />
+        <textarea name="PRO_CARAC_TEC" readonly rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
         <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
 

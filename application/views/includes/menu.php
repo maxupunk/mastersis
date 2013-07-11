@@ -17,6 +17,7 @@
                             <li><a href="#">Usuario</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Endereços</a></li>
+                            <li><? echo anchor('categoria', 'Categoria'); ?></li>
                             <li><a href="#">Unidade de medida</a></li>
                             <li class="divider"></li>
                             <li><a href="#">Avaria</a></li>

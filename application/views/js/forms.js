@@ -10,7 +10,7 @@ $(document).on("submit", 'form[name="grava"]', function() {
         },
         // quando houver erro
         error: function() {
-            $("#cadastro").append("<p>- Ocoreu um erro na requisição! tente novamente mais tarde</p>");
+            $("#cadastro").append("Ocoreu um erro na requisição! tente novamente mais tarde");
         }
     });
     return false;
@@ -18,9 +18,6 @@ $(document).on("submit", 'form[name="grava"]', function() {
 
 $(document).on("submit", '#upload_img', function() {
     $('#upload_img').ajaxForm({
-        beforeSubmit: function() {
-            $('#cadastro').append('Carregando...<br>');
-        },
         success: function(data) {
             $("#cadastro").html(data);
         }

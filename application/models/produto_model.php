@@ -22,8 +22,7 @@ class Produto_model extends CI_Model {
     public function update($dados = NULL, $condicao = NULL) {
         if ($dados != NULL && $condicao != NULL):
             $this->db->update('PRODUTOS', $dados, $condicao);
-            $this->session->set_flashdata('edit_prod_ok', 'Cadastro atualizado com sucesso!');
-            redirect(current_url());
+            $this->session->set_flashdata('edit_prod_ok', 'Alteração feita com sucesso!');
         endif;
     }
 
@@ -52,9 +51,9 @@ class Produto_model extends CI_Model {
     public function buscar($busca){        
             $this->db->like('PRO_DESCRICAO', $busca);
             $this->db->or_like('PRO_ID', $busca);
-            $this->db->limit(10);
+            $this->db->or_like('PRO_CARAC_TEC', $busca);
+            $this->db->limit(15);
             return $this->db->get('PRODUTOS');
-
     }
 
 }

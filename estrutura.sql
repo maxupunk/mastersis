@@ -8,8 +8,6 @@ USE `sgc` ;
 -- -----------------------------------------------------
 -- Table `sgc`.`ESTADOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`ESTADOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`ESTADOS` (
   `ESTA_ID` INT NOT NULL AUTO_INCREMENT ,
   `ESTA_NOME` VARCHAR(45) NOT NULL ,
@@ -22,8 +20,6 @@ PACK_KEYS = Default;
 -- -----------------------------------------------------
 -- Table `sgc`.`CIDADES`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`CIDADES` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`CIDADES` (
   `CIDA_ID` INT NOT NULL AUTO_INCREMENT ,
   `CIDA_NOME` VARCHAR(45) NOT NULL ,
@@ -41,8 +37,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`BAIRROS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`BAIRROS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`BAIRROS` (
   `BAIRRO_ID` INT NOT NULL AUTO_INCREMENT ,
   `BAIRRO_NOME` VARCHAR(45) NULL ,
@@ -60,8 +54,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`ENDERECOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`ENDERECOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`ENDERECOS` (
   `END_ID` INT NOT NULL AUTO_INCREMENT ,
   `END_LOGRA` VARCHAR(45) NOT NULL ,
@@ -82,8 +74,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`PESSOAS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`PESSOAS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`PESSOAS` (
   `PES_ID` INT NOT NULL AUTO_INCREMENT ,
   `PES_NOME` VARCHAR(45) NOT NULL ,
@@ -113,34 +103,31 @@ ROW_FORMAT = Default;
 -- -----------------------------------------------------
 -- Table `sgc`.`CATEGORIA`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`CATEGORIA` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`CATEGORIA` (
-  `CAT_ID` INT NOT NULL AUTO_INCREMENT ,
-  `CATEG_DESCRICAO` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`CAT_ID`) )
+  `CATE_ID` INT NOT NULL AUTO_INCREMENT ,
+  `CATE_NOME` VARCHAR(20) NOT NULL ,
+  `CATE_DESCRIC` TEXT NULL ,
+  `CATE_IMG` VARCHAR(20) NULL ,
+  `CATE_ESTATUS` ENUM('a','d') NULL ,
+  PRIMARY KEY (`CATE_ID`) )
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `sgc`.`PRODUTOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`PRODUTOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`PRODUTOS` (
   `PRO_ID` INT NOT NULL AUTO_INCREMENT ,
   `PRO_DESCRICAO` VARCHAR(45) NOT NULL ,
   `PRO_CARAC_TEC` TEXT NULL ,
-  `PRO_VAL_CUST` DECIMAL(10,2) NULL ,
-  `PRO_VAL_VEND` DECIMAL(10,2) NULL ,
-  `PRO_SITUACAO` ENUM('d','a') NOT NULL ,
-  `CAT_ID` INT NULL ,
+  `PRO_ESTATUS` ENUM('d','a') NOT NULL ,
+  `CATE_ID` INT NULL ,
   `PRO_IMG` VARCHAR(10) NULL ,
   PRIMARY KEY (`PRO_ID`) ,
-  INDEX `fk_PRODUTOS_CATEGORIA1_idx` (`CAT_ID` ASC) ,
+  INDEX `fk_PRODUTOS_CATEGORIA1_idx` (`CATE_ID` ASC) ,
   CONSTRAINT `fk_PRODUTOS_CATEGORIA1`
-    FOREIGN KEY (`CAT_ID` )
-    REFERENCES `sgc`.`CATEGORIA` (`CAT_ID` )
+    FOREIGN KEY (`CATE_ID` )
+    REFERENCES `sgc`.`CATEGORIA` (`CATE_ID` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -149,14 +136,14 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`ESTOQUE`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`ESTOQUE` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`ESTOQUE` (
-  `EST_ID` INT NOT NULL AUTO_INCREMENT ,
+  `ESTOQ_ID` INT NOT NULL AUTO_INCREMENT ,
   `PRO_ID` INT NOT NULL ,
-  `EST_ATUAL` DECIMAL(10,2) NOT NULL ,
-  `EST_MIN` DECIMAL(10,2) NULL ,
-  PRIMARY KEY (`EST_ID`) ,
+  `ESTOQ_ATUAL` DECIMAL(10,2) NOT NULL ,
+  `ESTOQ_MIN` DECIMAL(10,2) NULL ,
+  `ESTOQ_CUSTO` DECIMAL(10,2) NULL ,
+  `ESTOQ_PRECO` DECIMAL(10,2) NOT NULL ,
+  PRIMARY KEY (`ESTOQ_ID`) ,
   INDEX `fk_ESTOQUES_PRODUTOS1_idx` (`PRO_ID` ASC) ,
   CONSTRAINT `fk_ESTOQUES_PRODUTOS1`
     FOREIGN KEY (`PRO_ID` )
@@ -167,30 +154,26 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sgc`.`LISTA_PRODUTO`
+-- Table `sgc`.`LISTA_PEDIDO`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`LISTA_PRODUTO` ;
-
-CREATE  TABLE IF NOT EXISTS `sgc`.`LISTA_PRODUTO` (
-  `LIST_PRO_ID` INT NOT NULL AUTO_INCREMENT ,
-  `PRO_ID` INT NOT NULL ,
-  `LIST_PRO_QNT` DECIMAL(10,2) NOT NULL ,
-  `PRO_PRECO` DECIMAL(10,2) NOT NULL ,
-  PRIMARY KEY (`LIST_PRO_ID`) ,
-  INDEX `fk_LISTA_PROD_PRODUTOS1_idx` (`PRO_ID` ASC) ,
-  CONSTRAINT `fk_LISTA_PROD_PRODUTOS1`
-    FOREIGN KEY (`PRO_ID` )
-    REFERENCES `sgc`.`PRODUTOS` (`PRO_ID` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+CREATE  TABLE IF NOT EXISTS `sgc`.`LISTA_PEDIDO` (
+  `LiST_PED_ID` INT NOT NULL AUTO_INCREMENT ,
+  `ESTOQ_EST_ID` INT NOT NULL ,
+  `LIST_PED_QNT` DECIMAL(10,2) NOT NULL ,
+  `LIST_PED_PRECO` DECIMAL(10,2) NOT NULL ,
+  PRIMARY KEY (`LiST_PED_ID`) ,
+  INDEX `fk_LISTA_PRODUTO_ESTOQUE1_idx` (`ESTOQ_EST_ID` ASC) ,
+  CONSTRAINT `fk_LISTA_PRODUTO_ESTOQUE1`
+    FOREIGN KEY (`ESTOQ_EST_ID` )
+    REFERENCES `sgc`.`ESTOQUE` (`ESTOQ_ID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `sgc`.`CARGOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`CARGOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`CARGOS` (
   `CARG_ID` INT NOT NULL AUTO_INCREMENT ,
   `CARG_NOME` VARCHAR(45) NOT NULL ,
@@ -202,16 +185,14 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`USUARIO`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`USUARIO` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`USUARIO` (
-  `USU_ID` INT NOT NULL AUTO_INCREMENT ,
+  `USUARIO_ID` INT NOT NULL AUTO_INCREMENT ,
   `CARG_ID` INT NOT NULL ,
   `PES_ID` INT NOT NULL ,
-  `USU_LOGIN` VARCHAR(45) NOT NULL ,
-  `USU_SENHA` VARCHAR(45) NOT NULL ,
-  `USU_STATUS` VARCHAR(1) NOT NULL ,
-  PRIMARY KEY (`USU_ID`) ,
+  `USUARIO_LOGIN` VARCHAR(45) NOT NULL ,
+  `USUARIO_SENHA` VARCHAR(45) NOT NULL ,
+  `USUARIO_ESTATUS` ENUM('a','d') NOT NULL ,
+  PRIMARY KEY (`USUARIO_ID`) ,
   INDEX `fk_USUARIO_CARGOS1_idx` (`CARG_ID` ASC) ,
   INDEX `fk_USUARIO_PESSOAS1_idx` (`PES_ID` ASC) ,
   CONSTRAINT `fk_USUARIO_CARGOS1`
@@ -228,18 +209,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `sgc`.`VENDAS`
+-- Table `sgc`.`PEDIDO`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`VENDAS` ;
-
-CREATE  TABLE IF NOT EXISTS `sgc`.`VENDAS` (
-  `VEND_ID` INT NOT NULL AUTO_INCREMENT ,
+CREATE  TABLE IF NOT EXISTS `sgc`.`PEDIDO` (
+  `PEDIDO_ID` INT NOT NULL AUTO_INCREMENT ,
   `PES_ID` INT NOT NULL ,
   `LIST_PRO_ID` INT NOT NULL ,
   `USU_ID` INT NOT NULL ,
-  `VEND_DATA` DATETIME NOT NULL ,
-  `VEND_STATUS` VARCHAR(1) NOT NULL ,
-  PRIMARY KEY (`VEND_ID`) ,
+  `PEDIDO_DATA` DATETIME NOT NULL ,
+  `PEDIDO_ESTATUS` ENUM('1','2','3','4','5') NOT NULL COMMENT 'PEDIDO_ESTATUS PODE SER\\n1 = EM ABERTA\\n2 = AGUARDANDO PAGAMENTO\\n3 = ENVIADO\\n4 = CONCLUIDO\\n5 = CANCELADA' ,
+  `PEDIDO_TIPO` ENUM('v','c') NOT NULL ,
+  `PEDIDO_OBS` TEXT NULL ,
+  PRIMARY KEY (`PEDIDO_ID`) ,
   INDEX `fk_VENDAS_PESSOAS1_idx` (`PES_ID` ASC) ,
   INDEX `fk_VENDAS_LISTA_PROD1_idx` (`LIST_PRO_ID` ASC) ,
   INDEX `fk_VENDAS_USUARIO1_idx` (`USU_ID` ASC) ,
@@ -250,12 +231,12 @@ CREATE  TABLE IF NOT EXISTS `sgc`.`VENDAS` (
     ON UPDATE CASCADE,
   CONSTRAINT `fk_VENDAS_LISTA_PROD1`
     FOREIGN KEY (`LIST_PRO_ID` )
-    REFERENCES `sgc`.`LISTA_PRODUTO` (`LIST_PRO_ID` )
+    REFERENCES `sgc`.`LISTA_PEDIDO` (`LiST_PED_ID` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_VENDAS_USUARIO1`
     FOREIGN KEY (`USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -264,44 +245,42 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`ORDEM_SERV`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`ORDEM_SERV` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`ORDEM_SERV` (
   `OS_ID` INT NOT NULL AUTO_INCREMENT ,
-  `CLI_PES_ID` INT NOT NULL ,
-  `LIST_PRO_ID` INT NOT NULL ,
-  `RECEB_USU_ID` INT NOT NULL ,
-  `TECN_USU_ID` INT NOT NULL ,
-  `OS_PRODUTO` VARCHAR(45) NULL ,
+  `PES_ID` INT NOT NULL ,
+  `LIST_PED_ID` INT NULL ,
+  `USUARIO_ID` INT NOT NULL ,
+  `TECN_USU_ID` INT NULL ,
+  `OS_EQUIPAMENT` VARCHAR(45) NOT NULL COMMENT 'DADOS DO EQUIPAMENTO DO CLIENTE' ,
   `OS_DSC_DEFEIT` TEXT NOT NULL ,
   `OS_DSC_SOLUC` TEXT NULL ,
   `OS_DATA_ENT` DATETIME NOT NULL ,
   `OS_DATA_SAI` DATETIME NULL ,
-  `OS_OBSERVACAO` VARCHAR(45) NULL ,
-  `OS_STATUS` VARCHAR(1) NOT NULL ,
+  `OS_OBSERVACAO` TEXT NULL ,
+  `OS_ESTATUS` ENUM('1','2','3','4') NOT NULL COMMENT 'OS_ESTATUS PODE SER\\n1=EM ABERTO\\n2=EM ANALISE\\n3=EM ANDAMENTO\\n4=CONCLUIDO' ,
   PRIMARY KEY (`OS_ID`) ,
-  INDEX `fk_ORDEM_SERV_LISTA_PROD1_idx` (`LIST_PRO_ID` ASC) ,
-  INDEX `fk_ORDEM_SERV_PESSOAS1_idx` (`CLI_PES_ID` ASC) ,
-  INDEX `fk_ORDEM_SERV_USUARIO1_idx` (`RECEB_USU_ID` ASC) ,
+  INDEX `fk_ORDEM_SERV_LISTA_PROD1_idx` (`LIST_PED_ID` ASC) ,
+  INDEX `fk_ORDEM_SERV_PESSOAS1_idx` (`PES_ID` ASC) ,
+  INDEX `fk_ORDEM_SERV_USUARIO1_idx` (`USUARIO_ID` ASC) ,
   INDEX `fk_ORDEM_SERV_USUARIO2_idx` (`TECN_USU_ID` ASC) ,
   CONSTRAINT `fk_ORDEM_SERV_LISTA_PROD1`
-    FOREIGN KEY (`LIST_PRO_ID` )
-    REFERENCES `sgc`.`LISTA_PRODUTO` (`LIST_PRO_ID` )
+    FOREIGN KEY (`LIST_PED_ID` )
+    REFERENCES `sgc`.`LISTA_PEDIDO` (`LiST_PED_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ORDEM_SERV_PESSOAS1`
-    FOREIGN KEY (`CLI_PES_ID` )
+    FOREIGN KEY (`PES_ID` )
     REFERENCES `sgc`.`PESSOAS` (`PES_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ORDEM_SERV_USUARIO1`
-    FOREIGN KEY (`RECEB_USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    FOREIGN KEY (`USUARIO_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ORDEM_SERV_USUARIO2`
     FOREIGN KEY (`TECN_USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -310,8 +289,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`SERVICOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`SERVICOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`SERVICOS` (
   `SERV_ID` INT NOT NULL AUTO_INCREMENT ,
   `SERV_DESC` VARCHAR(45) NOT NULL ,
@@ -323,8 +300,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`LISTA_SERVICOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`LISTA_SERVICOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`LISTA_SERVICOS` (
   `LIST_SRV_ID` VARCHAR(45) NOT NULL ,
   `SERV_ID` INT NOT NULL ,
@@ -349,26 +324,24 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`AVARIA`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`AVARIA` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`AVARIA` (
   `AVA_ID` INT NOT NULL AUTO_INCREMENT ,
-  `PRO_ID` INT NOT NULL ,
   `USU_ID` INT NOT NULL ,
+  `ESTOQ_ID` INT NOT NULL ,
   `AVA_QNT` INT NOT NULL ,
   `AVA_MOTIVO` TEXT NOT NULL ,
   `AVA_DATA` DATETIME NOT NULL ,
   PRIMARY KEY (`AVA_ID`) ,
-  INDEX `fk_AVARIA_PRODUTOS1_idx` (`PRO_ID` ASC) ,
   INDEX `fk_AVARIA_USUARIO1_idx` (`USU_ID` ASC) ,
-  CONSTRAINT `fk_AVARIA_PRODUTOS1`
-    FOREIGN KEY (`PRO_ID` )
-    REFERENCES `sgc`.`PRODUTOS` (`PRO_ID` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+  INDEX `fk_AVARIA_ESTOQUE1_idx` (`ESTOQ_ID` ASC) ,
   CONSTRAINT `fk_AVARIA_USUARIO1`
     FOREIGN KEY (`USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_AVARIA_ESTOQUE1`
+    FOREIGN KEY (`ESTOQ_ID` )
+    REFERENCES `sgc`.`ESTOQUE` (`ESTOQ_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -377,26 +350,24 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`COMPRAS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`COMPRAS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`COMPRAS` (
   `COMP_ID` INT NOT NULL AUTO_INCREMENT ,
-  `LIST_PRO_ID` INT NOT NULL ,
+  `LIST_PED_ID` INT NOT NULL ,
+  `USUARIO_ID` INT NOT NULL ,
   `COMP_DT_CMP` DATETIME NOT NULL ,
   `COMP_DT_ENT` DATETIME NULL ,
-  `COMP_ESTATUS` ENUM('1','2','3','4') NOT NULL COMMENT 'COMP_ESTATUS PODE SER\\n1 = EFETUADA\\n2 = EM ABERTA\\n3 = CANCELADA\\n4 = CONCLUIDA' ,
-  `USU_ID` INT NOT NULL ,
+  `COMP_ESTATUS` ENUM('1','2','3') NOT NULL COMMENT 'COMP_ESTATUS PODE SER\\n1= EM ABERTA\\n2 = CANCELADA\\n3 = CONCLUIDA' ,
   PRIMARY KEY (`COMP_ID`) ,
-  INDEX `fk_ENTRADA_LISTA_PROD1_idx` (`LIST_PRO_ID` ASC) ,
-  INDEX `fk_COMPRAS_USUARIO1_idx` (`USU_ID` ASC) ,
+  INDEX `fk_ENTRADA_LISTA_PROD1_idx` (`LIST_PED_ID` ASC) ,
+  INDEX `fk_COMPRAS_USUARIO1_idx` (`USUARIO_ID` ASC) ,
   CONSTRAINT `fk_ENTRADA_LISTA_PROD1`
-    FOREIGN KEY (`LIST_PRO_ID` )
-    REFERENCES `sgc`.`LISTA_PRODUTO` (`LIST_PRO_ID` )
+    FOREIGN KEY (`LIST_PED_ID` )
+    REFERENCES `sgc`.`LISTA_PEDIDO` (`LiST_PED_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_COMPRAS_USUARIO1`
-    FOREIGN KEY (`USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    FOREIGN KEY (`USUARIO_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -405,8 +376,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`METODOS`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`METODOS` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`METODOS` (
   `PERM_ID` INT NOT NULL AUTO_INCREMENT ,
   `PERM_CLASSE` VARCHAR(45) NULL ,
@@ -420,8 +389,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `sgc`.`PERMICOES`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `sgc`.`PERMICOES` ;
-
 CREATE  TABLE IF NOT EXISTS `sgc`.`PERMICOES` (
   `SYS_P` INT NOT NULL AUTO_INCREMENT ,
   `USU_ID` INT NOT NULL ,
@@ -431,7 +398,7 @@ CREATE  TABLE IF NOT EXISTS `sgc`.`PERMICOES` (
   INDEX `fk_USUARIO_has_PERMICOES_USUARIO1_idx` (`USU_ID` ASC) ,
   CONSTRAINT `fk_USUARIO_has_PERMICOES_USUARIO1`
     FOREIGN KEY (`USU_ID` )
-    REFERENCES `sgc`.`USUARIO` (`USU_ID` )
+    REFERENCES `sgc`.`USUARIO` (`USUARIO_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_USUARIO_has_PERMICOES_PERMICOES1`

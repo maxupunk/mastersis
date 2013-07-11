@@ -1,6 +1,7 @@
 <?php
 $id_produto = $this->uri->segment(3);
 
+
 if ($id_produto == NULL):
     echo '<div class="alert alert-success">ERRO NA URL! Tente novamente.</div>';
     exit();
@@ -12,13 +13,24 @@ if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
+
+echo validation_errors('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
 ?>
 
+
 <div class="row">
-    <form action="<?php echo base_url('produto'); ?>/adiciona_img" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
+    <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
         <fieldset>
             <legend><?php echo $query->PRO_DESCRICAO ?></legend>
-            <input type="file" class="btn" id="arq_select" name="userfile" />
+
+            <?php
+            if (isset($upload))
+                print_r($upload);
+            if (isset($thumb))
+                print_r($thumb);
+            ?>
+
+            <input type="file" class="btn" name="userfile" />
             <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
             <button type="submit" id="img_botao" class="btn">Adiciona/Alterar</button>
         </fieldset>
@@ -27,5 +39,5 @@ endif;
 </div>
 
 <div class="row">
-    <?php if ($query->PRO_IMG != NULL) echo '<img src="' . APPPATH . 'views/produto_img/' . $query->PRO_IMG . '" >' ?>
+<?php if ($query->PRO_IMG != NULL) echo '<img src="' . APPPATH . 'views/img_produto/' . $query->PRO_IMG . '" >' ?>
 </div>

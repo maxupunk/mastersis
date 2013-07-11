@@ -1,15 +1,20 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Auth
-{
-    private $ci;    
-    public function __construct(){
-    	$this->ci = &get_instance();        
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Auth {
+
+    private $ci;
+
+    public function __construct() {
+        $this->ci = &get_instance();
     }
 
     function check_logged($classe,$metodo)
     {
     	/*
-    	* Criando uma instância do CodeIgniter para poder acessar
+    	* Criando uma instancia do CodeIgniter para poder acessar
     	* banco de dados, sessionns, models, etc... 
     	*/
     	$this->CI =& get_instance();
@@ -22,7 +27,7 @@ class Auth
 		$query = $this->CI->db->get('sys_metodos');		
 		$result = $query->result();
 		
-		// Se este metodo ainda não existir na tabela sera cadastrado
+		// Se este metodo ainda nao existir na tabela sera cadastrado
 		if(count($result)==0){
 			$data = array(
                	'classe' => $classe ,
@@ -59,8 +64,8 @@ class Auth
 					$query2 = $this->CI->db->get('sys_permissoes');		
 					$result2 = $query2->result();
 
-					// Se não vier nenhum resultado da consulta, manda para página de 
-					// usuario sem permissão.
+					// Se nï¿½o vier nenhum resultado da consulta, manda para pï¿½gina de 
+					// usuario sem permissï¿½o.
 					if(count($result2)==0){
 						redirect(base_url().'home/sempermissao', 'refresh');	
 					}
@@ -69,7 +74,7 @@ class Auth
 					}
 										
 		        } 
-		        // Se não estiver logado, sera redirecionado para o login.
+		        // Se nï¿½o estiver logado, sera redirecionado para o login.
 		        else{
 		            redirect(base_url().'home/login', 'refresh');
 		        }
@@ -78,8 +83,8 @@ class Auth
     }
     
     /**
-    * Método auxiliar para autenticar entradas em menu.
-    * Não faz parte do plugin como um todo.
+    * Metodo auxiliar para autenticar entradas em menu.
+    * Nao faz parte do plugin como um todo.
     */
     function check_menu($classe,$metodo){
     	$this->CI =& get_instance();

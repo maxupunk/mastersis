@@ -24,7 +24,7 @@ $query->PRO_IMG != null ? $img = $query->PRO_IMG : $img = "sem_img.jpg";
         <hr>
         <div class="thumbnail">
             <center><h3><?php echo $query->PRO_DESCRICAO ?></h3></center>
-            <img src="<? echo APPPATH . 'views/produto_img/' . $img ?>">
+            <img src="<? echo APPPATH . 'views/img_produto/' . $img ?>">
             <div class="caption">
                 VALOR: <?php echo money_format('%.2n', $query->PRO_VAL_VEND); ?>
                 <p><pre><?php echo $query->PRO_CARAC_TEC ?></pre></p>

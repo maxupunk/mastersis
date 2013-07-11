@@ -8,6 +8,7 @@ class Produto extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('produto_model');
+        $this->load->library(array('form_validation', 'table'));
     }
 
     public function index() {
@@ -67,7 +68,7 @@ class Produto extends CI_Controller {
 
         $dados = array(
             'produtos' => $this->produto_model->pega_tudo($quant, $inicial)->result(),
-            'tela' => 'prod_lista',
+            'tela' => 'prod_listar',
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);
@@ -77,28 +78,23 @@ class Produto extends CI_Controller {
 //Função Editar
 //	
     public function editar() {
-        
+
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $formulario = $this->input->post();
+            #$formulario = $this->input->post();
+            #$source = array('.', ',');
+            #$replace = array('', '.');
+            #$custo = $formulario['PRO_VAL_CUST'];
+            #$custo = str_replace($source, $replace, $custo);
+            #$venda = $formulario['PRO_VAL_VEND'];
+            #$venda = str_replace($source, $replace, $venda);
+            #$atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
+            #$novo_form = array_replace($formulario, $atualiza);
 
-            $source = array('.', ',');
-            $replace = array('', '.');
-
-            $custo = $formulario['PRO_VAL_CUST'];
-            $custo = str_replace($source, $replace, $custo);
-
-            $venda = $formulario['PRO_VAL_VEND'];
-            $venda = str_replace($source, $replace, $venda);
-
-            $atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
-
-            $novo_form = array_replace($formulario, $atualiza);
-
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_VAL_CUST', 'PRO_VAL_VEND','PRO_SITUACAO'), $novo_form);
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_SITUACAO'), $this->input->post());
             $this->produto_model->update($dados, array('PRO_ID' => $this->input->post('id_produto')));
         endif;
 
@@ -109,35 +105,46 @@ class Produto extends CI_Controller {
     }
 
 //
-//Função Editar
+//Função adciona img no produto
 //	
-    public function adiciona_img() {
+    public function imagem() {
         // validar o formulario
-        $this->load->model('funcoes');
+        $this->load->library(array('image_lib','upload'));
 
-        $config['upload_path'] = APPPATH . 'views/produto_img/';
-        $config['allowed_types'] = 'jpg';
-        $config['max_size'] = '2048';
-        $config['file_name'] = $this->input->post('id_produto');
-        $config['overwrite'] = TRUE;
-        $config['max_width'] = '1024';
-        $config['max_heigh'] = '768';
+            $img['upload_path'] = APPPATH . 'views/img_produto/';
+            $img['allowed_types'] = 'jpg';
+            $img['max_size'] = '2048';
+            $img['file_name'] = $this->input->post('id_produto');
+            $img['overwrite'] = TRUE;
+            $img['max_width'] = '1024';
+            $img['max_heigh'] = '768';
+            
+            $this->upload->initialize($img);
 
-        $this->load->library('upload', $config);
+            // se for valido ele chama o inserir dentro do produto_model
+            if ($this->upload->do_upload() == TRUE):
 
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->upload->do_upload()):
-            $data = $this->upload->data();
-            $this->funcoes->createThumbnail($data['file_name'], $config['upload_path']);
-            $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
-            $mensagem = "Imagem alterada com sucesso!";
-        else:
-            $mensagem = $this->upload->display_errors();
-        endif;
+                $data = $this->upload->data();
+
+                $thumb['image_library'] = "gd";
+                $thumb['source_image'] = $data['file_path'] . $data['file_name'];
+                $thumb['create_thumb'] = TRUE;
+                $thumb['maintain_ratio'] = TRUE;
+                $thumb['master_dim'] = "auto";
+                $thumb['quality'] = "100%";
+                $thumb['width'] = "120";
+                $thumb['height'] = "120";
+                $this->image_lib->initialize($thumb);
+                $this->image_lib->resize();
+
+                $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
+
+            endif;
 
         $dados = array(
-            'tela' => "mensagem",
-            'mensagem' => $mensagem,
+            'tela' => "prod_imagem",
+            'upload' => $this->upload->display_errors(),
+            'thumb' => $this->image_lib->display_errors(),
         );
         $this->load->view('contente', $dados);
     }
@@ -172,19 +179,7 @@ class Produto extends CI_Controller {
 //	            
     public function exibir() {
         $dados = array(
-            'titulo' => "EXIBIÇÃO DE PRODUTO",
             'tela' => "prod_exibir",
-        );
-        $this->load->view('contente', $dados);
-    }
-    
-//
-//Função Exibir
-//	            
-    public function imagem() {
-        $dados = array(
-            'titulo' => "EXIBIÇÃO DE PRODUTO",
-            'tela' => "prod_imagem",
         );
         $this->load->view('contente', $dados);
     }
