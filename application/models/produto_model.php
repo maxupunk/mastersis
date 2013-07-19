@@ -5,9 +5,6 @@ if (!defined('BASEPATH'))
 
 class Produto_model extends CI_Model {
 
-//
-//Inserir dados
-//	
     public function inserir($dados = NULL) {
         if ($dados != NULL):
             $this->db->insert('PRODUTOS', $dados);
@@ -16,9 +13,6 @@ class Produto_model extends CI_Model {
         endif;
     }
 
-//
-//Update
-//
     public function update($dados = NULL, $condicao = NULL) {
         if ($dados != NULL && $condicao != NULL):
             $this->db->update('PRODUTOS', $dados, $condicao);

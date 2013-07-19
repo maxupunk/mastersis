@@ -13,18 +13,14 @@ class Produto extends CI_Controller {
 
     public function index() {
         $dados = array(
-            'titulo' => "Paginas Index do Produto.",
             'tela' => "produto",
         );
         $this->load->view('home', $dados);
     }
 
-//
-//Função Cadastrar
-//	    
     public function cadastrar() {
         // validar o formulario
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
         $this->form_validation->set_rules('PRO_CARAC_TEC', 'CARACTERISTICA TECNICA');
         $this->form_validation->set_rules('PRO_VAL_CUST', 'PREÇO DE CUSTO');
@@ -44,7 +40,8 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function lista() {
+    public function listar() {
+
         $this->load->library('pagination');
         $config['base_url'] = base_url('produto/lista');
         $config['total_rows'] = $this->produto_model->pega_tudo()->num_rows();
@@ -74,12 +71,9 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-//
-//Função Editar
-//	
     public function editar() {
 
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[45]');
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
@@ -104,42 +98,40 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-//
-//Função adciona img no produto
-//	
+    
     public function imagem() {
         // validar o formulario
-        $this->load->library(array('image_lib','upload'));
+        $this->load->library(array('image_lib', 'upload'));
 
-            $img['upload_path'] = APPPATH . 'views/img_produto/';
-            $img['allowed_types'] = 'jpg';
-            $img['max_size'] = '2048';
-            $img['file_name'] = $this->input->post('id_produto');
-            $img['overwrite'] = TRUE;
-            $img['max_width'] = '1024';
-            $img['max_heigh'] = '768';
-            
-            $this->upload->initialize($img);
+        $img['upload_path'] = APPPATH . 'views/img_produto/';
+        $img['allowed_types'] = 'jpg';
+        $img['max_size'] = '2048';
+        $img['file_name'] = $this->input->post('id_produto');
+        $img['overwrite'] = TRUE;
+        $img['max_width'] = '1024';
+        $img['max_heigh'] = '768';
 
-            // se for valido ele chama o inserir dentro do produto_model
-            if ($this->upload->do_upload() == TRUE):
+        $this->upload->initialize($img);
 
-                $data = $this->upload->data();
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->upload->do_upload() == TRUE):
 
-                $thumb['image_library'] = "gd";
-                $thumb['source_image'] = $data['file_path'] . $data['file_name'];
-                $thumb['create_thumb'] = TRUE;
-                $thumb['maintain_ratio'] = TRUE;
-                $thumb['master_dim'] = "auto";
-                $thumb['quality'] = "100%";
-                $thumb['width'] = "120";
-                $thumb['height'] = "120";
-                $this->image_lib->initialize($thumb);
-                $this->image_lib->resize();
+            $data = $this->upload->data();
 
-                $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
+            $thumb['image_library'] = "gd";
+            $thumb['source_image'] = $data['file_path'] . $data['file_name'];
+            $thumb['create_thumb'] = TRUE;
+            $thumb['maintain_ratio'] = TRUE;
+            $thumb['master_dim'] = "auto";
+            $thumb['quality'] = "100%";
+            $thumb['width'] = "120";
+            $thumb['height'] = "120";
+            $this->image_lib->initialize($thumb);
+            $this->image_lib->resize();
 
-            endif;
+            $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
+
+        endif;
 
         $dados = array(
             'tela' => "prod_imagem",
@@ -149,9 +141,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-//
-//Função Excluir
-//	    
+    
     public function excluir() {
         if ($this->input->post('id_produto') > 0):
             $this->produto_model->excluir(array('PRO_ID' => $this->input->post('id_produto')));
@@ -163,20 +153,15 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-//
-//Função Buscar
-//	            
+    
     public function busca() {
         $dados = array(
-            'titulo' => "Produto busca",
             'tela' => "prod_busca",
         );
         $this->load->view('contente', $dados);
     }
 
-//
-//Função Exibir
-//	            
+
     public function exibir() {
         $dados = array(
             'tela' => "prod_exibir",

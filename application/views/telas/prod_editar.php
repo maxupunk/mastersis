@@ -50,4 +50,3 @@ endif;
 
     </fieldset>
 </form>
-<script type="text/javascript">$(".span2").maskMoney({thousands: '.', decimal: ','});</script>

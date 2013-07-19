@@ -6,7 +6,7 @@
 
         <div class="btn-group" id="sub_menu">
             <button class="btn" url="<?php echo base_url('categoria'); ?>/cadastrar">Cadastro</button>
-            <button class="btn" url="<?php echo base_url('categoria'); ?>/listar">Listar todas</button>
+            <button class="btn" url="<?php echo base_url('categoria'); ?>/listar">Lista todas</button>
         </div>
 
         <div id="cadastro"><!-- tabela de cadastro --></div>
@@ -14,6 +14,11 @@
     </div>
 
     <div class="span6">
-        <!-- lista -->
+        <div class="well">
+            <input type="text" name="buscar" url="<?php echo base_url('categoria'); ?>/busca?buscar=" id="busca"class="search-query span5" placeholder="Busca produto">
+        </div>
+        <hr>
+        <div id="resultado"></div><!--resultado da busca -->
+
     </div>
 </div>

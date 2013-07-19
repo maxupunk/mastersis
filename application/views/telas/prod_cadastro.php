@@ -13,7 +13,7 @@
         ?>
 
         <label>Descrição do produto:</label>
-        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" maxlength="45" class="span6" />
+        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO'); ?>" maxlength="100" class="span6" />
 
         <label>Caracteristica Tecnicas:</label>
         <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>                    
