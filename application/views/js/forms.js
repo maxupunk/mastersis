@@ -7,10 +7,6 @@ $(document).on("submit", 'form[name="grava"]', function() {
         // enviado com sucesso
         success: function(response) {
             $("#cadastro").html(response);
-        },
-        // quando houver erro
-        error: function() {
-            $("#cadastro").append("Ocoreu um erro na requisição! tente novamente mais tarde");
         }
     });
     return false;

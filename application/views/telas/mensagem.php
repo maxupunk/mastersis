@@ -1,3 +1,5 @@
+<pre>
 <?php
-if ($mensagem!="") echo $mensagem;
+if ($mensagem != "") echo $mensagem;
 ?>
+</pre>

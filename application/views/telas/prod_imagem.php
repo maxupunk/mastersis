@@ -1,3 +1,6 @@
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+
 <?php
 $id_produto = $this->uri->segment(3);
 
@@ -7,14 +10,13 @@ if ($id_produto == NULL):
     exit();
 endif;
 
-$query = $this->produto_model->pega_id($id_produto)->row();
+$query = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row();
 
 if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
 
-echo validation_errors('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
 ?>
 
 
@@ -28,6 +30,8 @@ echo validation_errors('<div class="alert alert-error"><button type="button" cla
                 print_r($upload);
             if (isset($thumb))
                 print_r($thumb);
+            if (isset($mensagem))
+                echo $mensagem;
             ?>
 
             <input type="file" class="btn" name="userfile" />

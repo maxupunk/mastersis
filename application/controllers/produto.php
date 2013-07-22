@@ -7,7 +7,7 @@ class Produto extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('produto_model');
+        $this->load->model('crud_model');
         $this->load->library(array('form_validation', 'table'));
     }
 
@@ -26,16 +26,23 @@ class Produto extends CI_Controller {
         $this->form_validation->set_rules('PRO_VAL_CUST', 'PREÇO DE CUSTO');
         $this->form_validation->set_rules('PRO_VAL_VEND', 'PREÇO DE VENDA');
 
+        $this->form_validation->set_error_delimiters('<span class="label label-important">', '</span>');
+        
         // se for valido ele chama o inserir dentro do produto_model        
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC'), $this->input->post());
-            $this->produto_model->inserir($dados);
+            if ($this->crud_model->inserir('PRODUTOS',$dados) === TRUE){
+                $mensagem = $this->lang->line("msg_alteracaos_sucesso");
+            } else {
+                $mensagem = $this->lang->line("msg_cadastro_erro");
+            }
+            
         endif;
 
         $dados = array(
-            'produtos' => $this->produto_model->pega_tudo()->result(),
             'tela' => 'prod_cadastro',
+            'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -43,8 +50,8 @@ class Produto extends CI_Controller {
     public function listar() {
 
         $this->load->library('pagination');
-        $config['base_url'] = base_url('produto/lista');
-        $config['total_rows'] = $this->produto_model->pega_tudo()->num_rows();
+        $config['base_url'] = base_url('produto/listar');
+        $config['total_rows'] = $this->crud_model->pega_tudo("PRODUTOS")->num_rows();
         $config['per_page'] = 10;
         $quant = $config['per_page'];
 
@@ -64,8 +71,9 @@ class Produto extends CI_Controller {
         $this->pagination->initialize($config);
 
         $dados = array(
-            'produtos' => $this->produto_model->pega_tudo($quant, $inicial)->result(),
+            'produtos' => $this->crud_model->pega_tudo("PRODUTOS", $quant, $inicial)->result(),
             'tela' => 'prod_listar',
+            'total'=> $this->crud_model->pega_tudo("PRODUTOS")->num_rows(),
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);
@@ -88,12 +96,17 @@ class Produto extends CI_Controller {
             #$atualiza = array('PRO_VAL_VEND' => $venda, 'PRO_VAL_CUST' => $custo);
             #$novo_form = array_replace($formulario, $atualiza);
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_SITUACAO'), $this->input->post());
-            $this->produto_model->update($dados, array('PRO_ID' => $this->input->post('id_produto')));
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS'), $this->input->post());
+            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE){
+                $mensagem = $this->lang->line("msg_editar_sucesso");
+            } else {
+                $mensagem = $this->lang->line("msg_editar_erro");
+            }
         endif;
 
         $dados = array(
             'tela' => "prod_editar",
+            'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -129,7 +142,11 @@ class Produto extends CI_Controller {
             $this->image_lib->initialize($thumb);
             $this->image_lib->resize();
 
-            $this->produto_model->update(array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto')));
+            if ($this->crud_model->update("PRODUTOS",array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto'))) === TRUE){
+                $mensagem = $this->lang->line("msg_imagem_sucesso");
+            } else {
+                $mensagem = $this->lang->line("msg_imagem_erro");
+            }
 
         endif;
 
@@ -137,6 +154,7 @@ class Produto extends CI_Controller {
             'tela' => "prod_imagem",
             'upload' => $this->upload->display_errors(),
             'thumb' => $this->image_lib->display_errors(),
+            'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -144,11 +162,16 @@ class Produto extends CI_Controller {
     
     public function excluir() {
         if ($this->input->post('id_produto') > 0):
-            $this->produto_model->excluir(array('PRO_ID' => $this->input->post('id_produto')));
+            if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE){
+                $mensagem = $this->lang->line("msg_excluir_sucesso");
+            }  else {
+                $mensagem = $this->lang->line("msg_excluir_sucesso");
+            }
         endif;
 
         $dados = array(
             'tela' => "prod_excluir",
+            'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
     }

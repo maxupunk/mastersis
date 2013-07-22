@@ -1,19 +1,19 @@
 <?php
 $id_produto = $this->uri->segment(3);
 
-if ($id_produto == NULL):
+if (isset($mensagem)):
+    echo '<div class="alert alert-info">' . $mensagem . '</div>';
+    exit();
+
+elseif ($id_produto == NULL):
     echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div?>';
     exit();
 endif;
 
-if ($this->session->flashdata('exclui_prod_ok')):
-    echo '<div class="alert alert-success">' . $this->session->flashdata('exclui_prod_ok') . '</div>';
-    exit();
-endif;
+$query = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row();
 
-$query = $this->produto_model->pega_id($id_produto)->row();
-if ($query == null) :
-    echo '<div class="alert alert-error">Esse item não existe!</div>';
+if ($query == NULL):
+    echo '<div class="alert alert-error">Esse item não existe ou foi excluido!</div>';
     exit();
 endif;
 ?>
@@ -24,9 +24,10 @@ endif;
 
         <legend>EXCLUIR O PRODUTO ABAIXO?</legend>
 
+
         <label>CODIGO: <?php echo $query->PRO_ID ?></label>
 
-        <label>Descrição do produto:</label>
+        <label>Descrição:</label>
         <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" readonly class="span6" />
 
         <label>Caracteristica Tecnicas:</label>
