@@ -1,5 +1,3 @@
-<div class="row">
-    <div class="span6" id="resultado">
         <?php
         if (isset($_GET['buscar'])) {
             $busca = $_GET['buscar'];
@@ -21,5 +19,3 @@
             echo $this->table->generate();
         }
         ?>
-    </div>
-</div>

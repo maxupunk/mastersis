@@ -17,6 +17,7 @@
         <style type="text/css">
             body
             {
+                position: relative;
                 margin:0;
                 padding:0;
             }
@@ -26,6 +27,7 @@
                 height: 60px;
                 background-color: #f5f5f5;
             }
+            
             #head {
                 height: 100px;
                 width: 100%;
@@ -35,10 +37,19 @@
             .container .credit {
                 margin: 20px 0;
             }
+            
             .container p {
                 margin: 20px 0;
             }
-
+            
+            .cep{
+                width: 80px;
+            }
+            
+            .valor{
+                width: 80px;
+            }
+            
             #mensagem {
                 position: absolute;
                 text-align: center;
@@ -51,16 +62,24 @@
                 left:calc(50% - 600px/2);
                 z-index:101;
             }
+            
             #screen {
                 position: absolute;
-                left: 0;
-                top: 0;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
                 background: #000;
                 display: none;
                 opacity: 0.7;
                 width: 100%;
                 height: 100%;
                 z-index:99;
+            }
+            
+            .bg_tabela_enderco{
+                color: #006dcc;
+                background: #f5f5f5;
             }
 
         </style>

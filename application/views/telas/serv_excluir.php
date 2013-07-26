@@ -18,7 +18,7 @@ if ($query == NULL):
 endif;
 ?>
 
-<form action="servico/excluir/<?php echo $id_servico; ?>" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('servico'); ?>/excluir/<?php echo $id_servico; ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 

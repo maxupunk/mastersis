@@ -34,7 +34,6 @@ endif;
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_VALOR'); ?>
-
         <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR', number_format($query->SERV_VALOR, 2, ',', '.')); ?>" class="valor" />
 
 
@@ -54,5 +53,4 @@ endif;
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/form_edit.js'); ?>"></script>
 <script src="<?php echo base_url('application/views/js/mascaras.js'); ?>"></script>

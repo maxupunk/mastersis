@@ -1,5 +1,4 @@
 <form action="<?php echo base_url('servico'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
-
     <fieldset>
 
         <legend>CADASTRO DE SERVIÇO</legend>
@@ -15,12 +14,12 @@
         <textarea name="SERV_DESC" rows="10" class="span6"><?php echo set_value('SERV_DESC'); ?></textarea>                    
 
         <label>Valor:</label>
-        <?php echo form_error('SERV_VALOR'); ?><br>
-        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR'); ?>" onkeyup="mask_moeda(this);" maxlength="11" class="span2" />
+        <?php echo form_error('SERV_VALOR'); ?>
+        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR'); ?>" class="valor" />
 
         
         <hr><button type="submit" class="btn">CADASTRAR</button>
 
     </fieldset>
-
 </form>
+<script src="<?php echo base_url('application/views/js/mascaras.js'); ?>"></script>

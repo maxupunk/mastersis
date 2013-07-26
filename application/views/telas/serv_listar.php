@@ -1,6 +1,6 @@
 <?php
 
-echo "<p>Total de categoria: ".$total."</p>";
+echo "<p>Total de serviços: ".$total."</p>";
 
 $this->table->set_heading('COD', 'SERVICO', 'VALOR');
 
@@ -16,8 +16,6 @@ echo $this->table->generate();
 
 <div class="pagination" id="pagination">
     <ul>
-
         <? if ($paginacao) echo $paginacao; ?>
-
     </ul>
 </div>

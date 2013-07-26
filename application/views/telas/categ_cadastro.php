@@ -14,7 +14,7 @@
         <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10" class="span6"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
 
-        <hr><button type="submit" class="btn">CADASTRAR</button>
+        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
 
     </fieldset>
 

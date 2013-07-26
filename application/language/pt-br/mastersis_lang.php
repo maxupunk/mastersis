@@ -1,5 +1,5 @@
 <?php
-$lang["msg_cadastro_sucesso"] = "Produto cadastrado com sucesso!";
+$lang["msg_cadastro_sucesso"] = "Cadastrado realizado com sucesso!";
 $lang["msg_cadastro_erro"] = "Erro ao grava no banco de dados!";
 
 $lang["msg_editar_sucesso"] = "Alteraçoes salvas com sucesso!";
@@ -8,7 +8,7 @@ $lang["msg_editar_erro"] = "Erro ao gravano banco de dados!";
 $lang["msg_imagem_sucesso"] = "Imagem alterada com sucesso!";
 $lang["msg_imagem_erro"] = "Erro ao grava no banco de dados!";
 
-$lang["msg_excluir_sucesso"] = "Imagem alterada com sucesso!";
+$lang["msg_excluir_sucesso"] = "exclusão realizada com sucesso!";
 $lang["msg_excluir_erro"] = "Erro ao grava no banco de dados!";
 
 //
@@ -19,8 +19,7 @@ $lang["menu_cadastro"] = "Cadastro";
 
 $lang["menu_cad_produto"] = "Produto";
 $lang["menu_cad_servico"] = "Serviço";
-$lang["menu_cad_cliente"] = "Cliente";
-$lang["menu_cad_fornecedor"] = "Fornecedor";
+$lang["menu_cad_pessoa"] = "Pessoa";
 $lang["menu_cad_usario"] = "Usuario";
 $lang["menu_cad_endereco"] = "Endereço";
 $lang["menu_cad_categoria"] = "Categoria";

@@ -23,9 +23,9 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_rules('SERV_NOME', 'DESCRIÇÃO DO SERVICO', 'required|max_length[45]|strtoupper|is_unique[SERVICOS.SERV_NOME]');
         $this->form_validation->set_rules('SERV_VALOR', 'VALOR', 'required|max_length[11]');
-        $this->form_validation->set_rules('SERV_DESC', 'VALOR', 'required');
+        $this->form_validation->set_rules('SERV_DESC', 'DESCERIÇÃO', 'required');
 
-        $this->form_validation->set_error_delimiters('<span class="label label-important">', '</span>');
+        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -95,6 +95,7 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_rules('SERV_NOME', 'NOME SERVICO', 'required|max_length[45]');
 
+        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):

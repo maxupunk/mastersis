@@ -16,7 +16,6 @@ if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
-
 ?>
 
 

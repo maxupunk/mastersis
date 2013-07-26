@@ -8,8 +8,6 @@ endif;
 
 $query = $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row();
 
-echo validation_errors('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>', '</div>');
-
 if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
@@ -27,9 +25,11 @@ endif;
 
 
         <label>Descrição do produto:</label>
+        <?php echo form_error('CATE_NOME'); ?>
         <input type="text" name="CATE_NOME" value="<?php echo set_value('CATE_NOME', $query->CATE_NOME); ?>" class="span6" />
 
         <label>Caracteristica Tecnicas:</label>
+        <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10" class="span6"><?php echo set_value('CATE_DESCRIC', $query->CATE_DESCRIC); ?></textarea>
 
 
@@ -49,4 +49,3 @@ endif;
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/form_edit.js'); ?>"></script>

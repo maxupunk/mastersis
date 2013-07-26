@@ -14,7 +14,7 @@ $(document).on("click", "#pagination a", function() {
 });
 
 $(document).on("keyup", "#busca", function() {
-    if ($(this).val().length > 1) {
+    if ($(this).val().length > 0) {
         $("#resultado").load($(this).attr('url') + encodeURI($(this).val()));
     }
 });
@@ -22,17 +22,14 @@ $(document).on("keyup", "#busca", function() {
 //Desbloquea atela preta e o aviso
 $(document).on("click", "#screen", function() {
     $("#mensagem").hide();
-    $('body').css({"overflow": "visible"});
     $("#screen").hide();
 });
-
 
 //
 // Regras de carregamentos
 //
 
 $(document).ajaxStart(function() {
-    $('body').css({"overflow": "hidden"});
     $("#mensagem").html("<img src='carregando.gif'>");
     $('#screen').show();
     $("#mensagem").show();
@@ -43,7 +40,6 @@ $(document).ajaxError(function(event, request, settings) {
 });
 
 $(document).ajaxSuccess(function(event, request, settings) {
-    $('body').css({"overflow": "visible"});
     $("#mensagem").hide();
     $('#screen').hide();
 });

@@ -19,7 +19,7 @@ class Crud_model extends CI_Model {
         endif;
     }
 
-    public function excluir($tabela,$condicao = NULL) {
+    public function excluir($tabela, $condicao = NULL) {
         if ($condicao != NULL):
             $this->db->delete($tabela, $condicao);
             return $this->db->trans_status();
@@ -34,7 +34,7 @@ class Crud_model extends CI_Model {
 
     public function pega($tabela, $id = NULL) {
         if ($id != NULL):
-            return $this->db->get_where($tabela, $id, 1);
+            return $this->db->get_where($tabela, $id);
         else:
             return FALSE;
         endif;

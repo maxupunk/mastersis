@@ -23,9 +23,11 @@ endif;
         <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Descrição do produto:</label>
+        <?php echo form_error('PRO_DESCRICAO'); ?>
         <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" class="span6"/>
 
-        <label>Caracteristica Tecnicas::</label>
+        <label>Caracteristica Tecnicas:</label>
+        <?php echo form_error('PRO_CARAC_TEC'); ?>
         <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
         <label class="radio">
@@ -44,4 +46,3 @@ endif;
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/form_edit.js'); ?>"></script>

@@ -52,20 +52,36 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `sgc`.`RUA`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `sgc`.`RUA` (
+  `RUA_ID` INT NOT NULL AUTO_INCREMENT ,
+  `RUA_NOME` VARCHAR(45) NULL ,
+  `RUA_CEP` VARCHAR(45) NULL ,
+  `BAIRRO_ID` INT NOT NULL ,
+  PRIMARY KEY (`RUA_ID`) ,
+  INDEX `fk_RUA_BAIRROS1_idx` (`BAIRRO_ID` ASC) ,
+  CONSTRAINT `fk_RUA_BAIRROS1`
+    FOREIGN KEY (`BAIRRO_ID` )
+    REFERENCES `sgc`.`BAIRROS` (`BAIRRO_ID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `sgc`.`ENDERECOS`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `sgc`.`ENDERECOS` (
   `END_ID` INT NOT NULL AUTO_INCREMENT ,
-  `END_LOGRA` VARCHAR(45) NOT NULL ,
-  `END_NUMERO` INT NOT NULL ,
-  `END_CEP` INT NOT NULL ,
+  `END_NUMERO` INT NULL ,
   `END_REFERENCIA` VARCHAR(45) NULL ,
-  `BAIRRO_ID` INT NOT NULL ,
+  `RUA_ID` INT NOT NULL ,
   PRIMARY KEY (`END_ID`) ,
-  INDEX `fk_ENDERECOS_BAIRROS1_idx` (`BAIRRO_ID` ASC) ,
-  CONSTRAINT `fk_ENDERECOS_BAIRROS1`
-    FOREIGN KEY (`BAIRRO_ID` )
-    REFERENCES `sgc`.`BAIRROS` (`BAIRRO_ID` )
+  INDEX `fk_ENDERECOS_RUA1_idx` (`RUA_ID` ASC) ,
+  CONSTRAINT `fk_ENDERECOS_RUA1`
+    FOREIGN KEY (`RUA_ID` )
+    REFERENCES `sgc`.`RUA` (`RUA_ID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -115,6 +131,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `sgc`.`MEDIDAS`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `sgc`.`MEDIDAS` (
+  `MEDI_ID` INT NOT NULL AUTO_INCREMENT ,
+  `MEDI_NOME` VARCHAR(45) NOT NULL ,
+  `MEDI_SIGLA` VARCHAR(4) NOT NULL ,
+  PRIMARY KEY (`MEDI_ID`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `sgc`.`PRODUTOS`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `sgc`.`PRODUTOS` (
@@ -123,15 +150,22 @@ CREATE  TABLE IF NOT EXISTS `sgc`.`PRODUTOS` (
   `PRO_CARAC_TEC` TEXT NULL ,
   `PRO_ESTATUS` ENUM('d','a') NOT NULL ,
   `CATE_ID` INT NULL ,
+  `UNID_ID` INT NOT NULL ,
   `PRO_IMG` VARCHAR(10) NULL ,
   PRIMARY KEY (`PRO_ID`) ,
   INDEX `fk_PRODUTOS_CATEGORIA1_idx` (`CATE_ID` ASC) ,
   UNIQUE INDEX `PRO_DESCRICAO_UNIQUE` (`PRO_DESCRICAO` ASC) ,
+  INDEX `fk_PRODUTOS_UNIDADE1_idx` (`UNID_ID` ASC) ,
   CONSTRAINT `fk_PRODUTOS_CATEGORIA1`
     FOREIGN KEY (`CATE_ID` )
     REFERENCES `sgc`.`CATEGORIA` (`CATE_ID` )
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_PRODUTOS_UNIDADE1`
+    FOREIGN KEY (`UNID_ID` )
+    REFERENCES `sgc`.`MEDIDAS` (`MEDI_ID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 

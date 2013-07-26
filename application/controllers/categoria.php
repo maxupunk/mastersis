@@ -23,7 +23,7 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
 
-        $this->form_validation->set_error_delimiters('<span class="label label-important">', '</span>');
+        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -68,7 +68,7 @@ class Categoria extends CI_Controller {
         $dados = array(
             'categoria' => $this->crud_model->pega_tudo("CATEGORIA", $quant, $inicial)->result(),
             'tela' => 'categ_listar',
-            'total'=> $this->crud_model->pega_tudo("CATEGORIA")->num_rows(),
+            'total' => $this->crud_model->pega_tudo("CATEGORIA")->num_rows(),
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);
@@ -84,6 +84,8 @@ class Categoria extends CI_Controller {
     public function editar() {
 
         $this->form_validation->set_rules('CATE_NOME', 'NOME CATEGORIA', 'required|max_length[45]');
+
+        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):

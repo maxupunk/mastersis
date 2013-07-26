@@ -12,13 +12,12 @@
                             <li><? echo anchor('produto', $this->lang->line("menu_cad_produto")); ?></li>
                             <li><? echo anchor('servico', $this->lang->line("menu_cad_servico")); ?></li>
                             <li class="divider"></li>
-                            <li><? echo anchor('cliente', $this->lang->line("menu_cad_cliente")); ?></a></li>
-                            <li><? echo anchor('fornecedor', $this->lang->line("menu_cad_fornecedor")); ?></li>
+                            <li><? echo anchor('pessoa', $this->lang->line("menu_cad_pessoa")); ?></a></li>
                             <li><? echo anchor('usuario', $this->lang->line("menu_cad_usario")); ?></li>
                             <li class="divider"></li>
                             <li><? echo anchor('endereco', $this->lang->line("menu_cad_endereco")); ?></li>
                             <li><? echo anchor('categoria', $this->lang->line("menu_cad_categoria")); ?></li>
-                            <li><? echo anchor('unidade_medida', $this->lang->line("menu_cad_unid_medida")); ?></li>
+                            <li><? echo anchor('medida', $this->lang->line("menu_cad_unid_medida")); ?></li>
                             <li class="divider"></li>
                             <li><? echo anchor('avaria', $this->lang->line("menu_cad_avaria")); ?></li>
                         </ul>
@@ -29,11 +28,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">Fazer Venda</a></li>
                             <li><a href="#">Busca Venda</a></li>
-                            <li><a href="#">Cansela Venda</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Fazer orçamento</a></li>
-                            <li><a href="#">Concluir orçamento</a></li>
-                            <li><a href="#">Cansela orçamento</a></li>
                         </ul>
                     </li>
 
@@ -42,7 +36,6 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">Abrir um OS</a></li>
                             <li><a href="#">Alterar/consulta OS</a></li>
-                            <li><a href="#">Orçamento de serviços</a></li>
                         </ul>
                     </li>
 
@@ -52,7 +45,6 @@
                             <li><a href="#">Fazer Compra</a></li>
                             <li><a href="#">Lista Compras</a></li>
                             <li><a href="#">Receber Compra</a></li>
-                            <li><a href="#">Conselar compra</a></li>
                         </ul>
                     </li>
 

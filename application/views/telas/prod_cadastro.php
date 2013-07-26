@@ -14,7 +14,7 @@
         <?php echo form_error('PRO_CARAC_TEC'); ?>
         <textarea name="PRO_CARAC_TEC" rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>                    
 
-        <hr><button type="submit" class="btn">CADASTRAR</button>
+        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
 
     </fieldset>
 

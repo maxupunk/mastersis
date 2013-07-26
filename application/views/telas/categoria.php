@@ -17,7 +17,6 @@
         <div class="well">
             <input type="text" name="buscar" url="<?php echo base_url('categoria'); ?>/busca?buscar=" id="busca" class="search-query span5" placeholder="Busca categoria">
         </div>
-        <hr>
         <div id="resultado"></div><!--resultado da busca -->
 
     </div>
