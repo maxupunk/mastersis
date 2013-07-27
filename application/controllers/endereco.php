@@ -20,7 +20,7 @@ class Endereco extends CI_Controller {
 
     public function bairro() {
         // validar o formulario
-        $this->form_validation->set_rules('BAIRRO_NOME', 'NOME', 'required|max_length[45]|strtoupper|is_unique[BAIRROS.BAIRRO_NOME]');
+        $this->form_validation->set_rules('BAIRRO_NOME', 'NOME', 'required|max_length[45]|is_unique[BAIRROS.BAIRRO_NOME]');
         $this->form_validation->set_rules('CIDA_ID', 'CIDADE', 'required');
 
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
@@ -46,7 +46,7 @@ class Endereco extends CI_Controller {
 
     public function rua() {
         // validar o formulario
-        $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|strtoupper|is_unique[RUA.RUA_NOME]');
+        $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|is_unique[RUA.RUA_NOME]');
         $this->form_validation->set_rules('RUA_CEP', 'CEP', 'required');
         $this->form_validation->set_rules('BAIRRO_ID', 'BAIRRO', 'required');
 
@@ -115,42 +115,26 @@ class Endereco extends CI_Controller {
         echo '[ {"nome":"Selecione o bairro"}, ' . implode(",", $arr_bairros) . ']';
     }
 
-    public function excluir() {
+    function pegaruas($id) {
 
-        $excluir = $this->uri->segment(3);
-        $id_excluir = $this->uri->segment(4);
-        switch ($excluir) {
-            case 'estado':
+        $ruas = $this->crud_model->pega("RUA", array('RUA_ID' => $id))->result();
 
-                // ESTADO
-                if ($id_excluir > 0):
-                    if ($this->crud_model->excluir("ESTADOS", array('ESTA_ID' => $id_excluir)) === TRUE) {
-                        $mensagem = $this->lang->line("msg_excluir_sucesso");
-                    } else {
-                        $mensagem = $this->lang->line("msg_excluir_erro");
-                    }
-                endif;
-
-                $dados = array(
-                    'tela' => "endereco_estado_ex",
-                    'mensagem' => @$mensagem,
-                );
-                $this->load->view('contente', $dados);
-                break;
-
-            case 'cidade':
-                echo "cidade";
-                break;
-
-            case 'bairro':
-                echo "bairro";
-                break;
-
-            case 'rua':
-                echo "Rua";
-                echo $id;
-                break;
+        if ($ruas === FALSE){
+            echo '[{ "nome": "ERRO NO DB" }]';
+            exit();
         }
+        
+        if (empty($ruas)){
+            echo '[{ "nome": "Nenhuma rua encontrado" }]';
+            exit();
+        }
+
+        $arr_ruas = array();
+        foreach ($ruas as $ruas) {
+            $arr_ruas[] = '{"id":' . $ruas->RUA_ID . ',"nome":"' . $ruas->RUA_NOME . '"}';
+        }
+
+        echo '[ {"nome":"Selecione a rua"}, ' . implode(",", $arr_ruas) . ']';
     }
 
     public function busca() {

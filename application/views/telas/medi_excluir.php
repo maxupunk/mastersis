@@ -22,7 +22,7 @@ endif;
 
     <fieldset>
 
-        <legend>EXCLUIR O PRODUTO ABAIXO?</legend>
+        <legend>EXCLUIR A UNIDADE ABAIXO?</legend>
 
 
         <label>CODIGO: <?php echo $query->MEDI_ID ?></label>
@@ -35,7 +35,7 @@ endif;
         
         <input type="hidden" name="id_medida" value="<?php echo $query->MEDI_ID ?>" />
 
-        <br><button type="submit" class="btn">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn">SIM, EXCLUIR</button>
 
     </fieldset>
 

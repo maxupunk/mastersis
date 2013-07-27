@@ -22,6 +22,7 @@ class Servico extends CI_Controller {
     public function cadastrar() {
 
         $this->form_validation->set_rules('SERV_NOME', 'DESCRIÇÃO DO SERVICO', 'required|max_length[45]|strtoupper|is_unique[SERVICOS.SERV_NOME]');
+        $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
         $this->form_validation->set_rules('SERV_VALOR', 'VALOR', 'required|max_length[11]');
         $this->form_validation->set_rules('SERV_DESC', 'DESCERIÇÃO', 'required');
 

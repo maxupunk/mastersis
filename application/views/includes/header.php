@@ -50,6 +50,18 @@
                 width: 80px;
             }
             
+            .fone{
+                width: 100px;
+            }
+            
+            .data{
+                width: 80px;
+            }
+            
+            .cpf{
+                width: 120px;
+            }
+            
             #mensagem {
                 position: absolute;
                 text-align: center;

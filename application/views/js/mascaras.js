@@ -5,5 +5,6 @@ $(document).ready(function(){
   $('.cep').mask('99999-999');
   $('.fone').mask('(99)9999-9999');
   $('.cpf').mask('999.999.999-99', {reverse: true});
+  $('.cnpj').mask('99.999.999.9999-99', {reverse: true});
   $('.valor').mask('000.000,00', {reverse: true});
 });

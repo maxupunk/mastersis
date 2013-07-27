@@ -30,45 +30,49 @@ $(document).on('change', 'form[name="grava"]', function() {
 
 
 $(document).on('change', 'select[id="estado"]', function() {
-
     estado = $(this).val();
-
     if (estado === '')
         return false;
 
     $.getJSON('endereco/pegacidades/' + estado, function(data) {
-
         var option = new Array();
-
         $.each(data, function(i, obj) {
             option[i] = document.createElement('option');
             $(option[i]).attr({value: obj.id});
             $(option[i]).append(obj.nome);
         });
         $('select[id="cidade"]').html(option);
-
     });
-
 });
 
 $(document).on('change', 'select[id="cidade"]', function() {
-
     bairro = $(this).val();
-
     if (bairro === '')
         return false;
 
     $.getJSON('endereco/pegabairros/' + bairro, function(data) {
-
         var option = new Array();
-
         $.each(data, function(i, obj) {
             option[i] = document.createElement('option');
             $(option[i]).attr({value: obj.id});
             $(option[i]).append(obj.nome);
         });
         $('select[id="bairro"]').html(option);
-
     });
+});
 
+$(document).on('change', 'select[id="bairro"]', function() {
+    rua = $(this).val();
+    if (rua === '')
+        return false;
+
+    $.getJSON('endereco/pegaruas/' + rua, function(data) {
+        var option = new Array();
+        $.each(data, function(i, obj) {
+            option[i] = document.createElement('option');
+            $(option[i]).attr({value: obj.id});
+            $(option[i]).append(obj.nome);
+        });
+        $('select[id="rua"]').html(option);
+    });
 });
