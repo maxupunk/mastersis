@@ -22,8 +22,10 @@ class Categoria extends CI_Controller {
     public function cadastrar() {
 
         $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
+        $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -85,7 +87,7 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_rules('CATE_NOME', 'NOME CATEGORIA', 'required|max_length[45]');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
@@ -110,7 +112,7 @@ class Categoria extends CI_Controller {
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
-        $img['upload_path'] = APPPATH . 'views/img_categoria/';
+        $img['upload_path'] = 'assets/img_categoria/';
         $img['allowed_types'] = 'jpg';
         $img['max_size'] = '2048';
         $img['file_name'] = $this->input->post('id_categoria');

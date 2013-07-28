@@ -3,8 +3,7 @@
     <div class="page-header">
 
         <div class="navbar"><!-- INICIO DO MENU -->
-            <div class="navbar-inner">
-                <ul class="nav"><!-- MENU DROPDOWN -->
+                <ul class="nav navbar-nav"><!-- MENU DROPDOWN -->
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line("menu_cadastro"); ?></a>
@@ -73,7 +72,6 @@
 
                 </ul>
 
-            </div><!-- /navbar-inner -->
         </div><!-- FIM DO MENU -->
     </div>
 

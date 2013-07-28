@@ -16,17 +16,11 @@ $query->PRO_IMG != null ? $img = $query->PRO_IMG : $img = "sem_img.gif";
 ?>
 
 
-
-<ul class="thumbnails">
-    <li class="span6">
-        <hr>
         <div class="thumbnail">
             <center><h3><?php echo $query->PRO_DESCRICAO ?></h3></center>
-            <img src="<? echo APPPATH . 'views/img_produto/' . $img ?>">
+            <img src="<? echo 'assets/img_produto/' . $img ?>">
             <div class="caption">
                 VALOR:
                 <p><pre><?php echo $query->PRO_CARAC_TEC ?></pre></p>
             </div>
         </div>
-    </li>
-</ul>

@@ -10,7 +10,7 @@
 
                 $linha->SERV_ESTATUS == 'd' ? $estatus = '<strike>' . $linha->SERV_NOME . '</strike>' : $estatus = $linha->SERV_NOME;
 
-                $this->table->add_row($linha->SERV_ID, $estatus, anchor("servico/editar/$linha->SERV_ID", '<i class="icon-edit"></i>') . ' ' . anchor("servico/excluir/$linha->SERV_ID", '<i class="icon-trash"></i>'));
+                $this->table->add_row($linha->SERV_ID, $estatus, anchor("servico/editar/$linha->SERV_ID", '<span class="glyphicon glyphicon-edit"></i>') . ' ' . anchor("servico/excluir/$linha->SERV_ID", '<span class="glyphicon glyphicon-trash"></span>'));
             }
 
             $tmpl = array('table_open' => '<table class="table table-hover">');

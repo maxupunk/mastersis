@@ -12,10 +12,16 @@ $(document).on("submit", 'form[name="grava"]', function() {
     return false;
 });
 
-$(document).on("submit", '#upload_img', function() {
-    $('#upload_img').ajaxForm({
-        success: function(data) {
-            $("#cadastro").html(data);
+$(document).on("submit", 'form[name="form-data"]', function() {
+    var formData = new FormData($(this)[0]);
+    $.ajax({
+        url: $(this).attr('action'),
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $("#cadastro").html(response);
         }
     });
     return false;
@@ -23,13 +29,12 @@ $(document).on("submit", '#upload_img', function() {
 
 $(document).on('change', 'form[name="grava"]', function() {
     $('button[type="submit"]').removeAttr("disabled");
-    $("#mensagem").text("Atenção: Foi feita alterações nessa pagina, salve as alteracoes antes de sai.");
+    $("#mensagem").text("Atenção: Foi feita alterações nessa pagina, salve as alterações antes de sai.");
     $("#mensagem").show();
     $(".alert").hide();
 });
 
-
-$(document).on('change', 'select[id="estado"]', function() {
+$(document).on('change', 'select[name="ESTA_ID"]', function() {
     estado = $(this).val();
     if (estado === '')
         return false;
@@ -41,11 +46,11 @@ $(document).on('change', 'select[id="estado"]', function() {
             $(option[i]).attr({value: obj.id});
             $(option[i]).append(obj.nome);
         });
-        $('select[id="cidade"]').html(option);
+        $('select[name="CIDA_ID"]').html(option);
     });
 });
 
-$(document).on('change', 'select[id="cidade"]', function() {
+$(document).on('change', 'select[name="CIDA_ID"]', function() {
     bairro = $(this).val();
     if (bairro === '')
         return false;
@@ -57,11 +62,11 @@ $(document).on('change', 'select[id="cidade"]', function() {
             $(option[i]).attr({value: obj.id});
             $(option[i]).append(obj.nome);
         });
-        $('select[id="bairro"]').html(option);
+        $('select[name="BAIRRO_ID"]').html(option);
     });
 });
 
-$(document).on('change', 'select[id="bairro"]', function() {
+$(document).on('change', 'select[name="BAIRRO_ID"]', function() {
     rua = $(this).val();
     if (rua === '')
         return false;
@@ -73,6 +78,23 @@ $(document).on('change', 'select[id="bairro"]', function() {
             $(option[i]).attr({value: obj.id});
             $(option[i]).append(obj.nome);
         });
-        $('select[id="rua"]').html(option);
+        $('select[name="RUA_ID"]').html(option);
     });
+});
+
+$(document).on('change', 'select[name="PES_TIPO"]', function() {
+    if ($(this).val() == "f") {
+        $('.cpf-cnpj').mask('999.999.999-99', {reverse: true});
+        $('.cpf-cnpj-label').html('CPF *:');
+        $('input[name="PES_NASC_DATA"]').prop('disabled', false);
+        $('input[name="PES_NOME_PAI"]').prop('disabled', false);
+        $('input[name="PES_NOME_MAE"]').prop('disabled', false);
+
+    } else {
+        $('.cpf-cnpj').mask('99.999.999.9999-99', {reverse: true});
+        $('.cpf-cnpj-label').html('CNPJ *:');
+        $('input[name="PES_NASC_DATA"]').prop('disabled', true);
+        $('input[name="PES_NOME_PAI"]').prop('disabled', true);
+        $('input[name="PES_NOME_MAE"]').prop('disabled', true);
+    }
 });

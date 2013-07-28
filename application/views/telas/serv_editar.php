@@ -26,11 +26,11 @@ endif;
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_NOME'); ?>
-        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" class="span6" />
+        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" class="col-6" />
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_DESC'); ?>
-        <textarea name="SERV_DESC" rows="10" class="span6"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
+        <textarea name="SERV_DESC" rows="10" class="col-6"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_VALOR'); ?>

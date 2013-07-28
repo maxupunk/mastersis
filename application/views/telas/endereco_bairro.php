@@ -10,16 +10,15 @@
         $options = array('' => 'Escolha o Estado');
         foreach ($estados as $estado)
             $options[$estado->ESTA_ID] = $estado->ESTA_NOME;
-        echo form_dropdown('ESTA_ID', $options, '' ,'id="estado"');
+        echo form_dropdown('ESTA_ID', $options, '', 'autofocus');
         ?>
 
 
-        <?php echo form_dropdown('CIDA_ID', array('' => 'Escolha a cidade'), '', 'id="cidade"'); ?>
+        <?php echo form_dropdown('CIDA_ID', array('' => 'Escolha a cidade')); ?>
 
-        </div>
         <label>Nome:</label>
         <?php echo form_error('BAIRRO_NOME'); ?>
-        <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" class="span4" />
+        <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" />
 
         <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
 

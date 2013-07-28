@@ -1,4 +1,5 @@
-<form action="<?php echo base_url('pessoa'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
+<form action="<?php echo base_url('pessoa'); ?>/cadastrar" method="post" class="form-inline" name="grava" accept-charset="utf-8">
     <fieldset>
 
         <legend>CADASTRO DE PESSOAS</legend>
@@ -10,68 +11,90 @@
         }
         ?>
 
-        <?php echo form_dropdown('PES_TIPO', array('f' => 'FISICA', 'j' => 'JURIDICA'), '', 'id="pessoa_tipo" class="span3"'); ?>
+        <?php echo validation_errors(); ?>
 
-        <label>Nome:</label>
-        <?php echo form_error('PES_NOME'); ?>
-        <input type="text" name="PES_NOME" value="<?php echo set_value('PES_NOME'); ?>" class="span6" />
+        <div class="well" >
+            <legend>Pessoal:</legend>
 
-        <label>C.P.F/CNPJ *:</label>
-        <?php echo form_error('PES_CPF_CNPJ'); ?>
-        <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ'); ?>" class="cpf" />
+            <div class="row">
+                <div class="col-4">
+                    <label>Tipo *:</label>
+                    <?php echo form_dropdown('PES_TIPO', array('f' => 'FISICA', 'j' => 'JURIDICA'), $this->input->post('PES_TIPO'), 'id="pessoa_tipo" autofocus'); ?>
+                </div>
+                <div class="col-5">
+                    <label class="cpf-cnpj-label">C.P.F *:</label>
+                    <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ'); ?>" class="cpf-cnpj" required />
+                </div>
+                <div class="col-3">
+                    <label>Dt.Nasc.:</label>
+                    <input type="text" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>" class="data" />
+                </div></div>
 
-        <label>Nome do pai:</label>
-        <?php echo form_error('PES_NOME_PAI'); ?>
-        <input type="text" name="PES_NOME_PAI" value="<?php echo set_value('PES_NOME_PAI'); ?>" class="span6" />
+            <label>Nome:</label>
+            <input type="text" name="PES_NOME" value="<?php echo set_value('PES_NOME'); ?>" required />
 
-        <label>Nome da mãe:</label>
-        <?php echo form_error('PES_NOME_MAE'); ?>
-        <input type="text" name="PES_NOME_MAE" value="<?php echo set_value('PES_NOME_MAE'); ?>" class="span6" />
+            <label>Nome do pai:</label>
+            <input type="text" name="PES_NOME_PAI" value="<?php echo set_value('PES_NOME_PAI'); ?>" />
 
-        <label>Data de nascimento *:</label>
-        <?php echo form_error('PES_NASC_DATA'); ?>
-        <input type="text" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>" class="data" />
+            <label>Nome da mãe:</label>
+            <input type="text" name="PES_NOME_MAE" value="<?php echo set_value('PES_NOME_MAE'); ?>" />
+        </div>
 
-        <label>Telefone:</label>
-        <?php echo form_error('PES_FONE'); ?>
-        <input type="text" name="PES_FONE" value="<?php echo set_value('PES_FONE'); ?>" class="fone" />
+        <div class="well" >
+            <legend>Contatos:</legend>
+            <div class="row">
+                <div class="col-4">
+                    <label>Telefone:</label>
+                    <input type="text" name="PES_FONE" value="<?php echo set_value('PES_FONE'); ?>" class="fone" />
+                </div>
+                <div class="col-4">
+                    <label>Celular 1 *:</label>
+                    <input type="text" name="PES_CEL1" value="<?php echo set_value('PES_CEL1'); ?>" class="fone" required />
+                </div>
+                <div class="col-4">
+                    <label>Celular 2:</label>
+                    <input type="text" name="PES_CEL2" value="<?php echo set_value('PES_CEL2'); ?>" class="fone" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label>E-MAIL:</label>
+                    <input type="text" name="PES_EMAIL" value="<?php echo set_value('PES_EMAIL'); ?>"/>
+                </div>
+            </div>
+        </div>
 
-        <label>Celular 1 *:</label>
-        <?php echo form_error('PES_CEL1'); ?>
-        <input type="text" name="PES_CEL1" value="<?php echo set_value('PES_CEL1'); ?>" class="fone" />
+        <div class="well">
+            <legend>Endereço:</legend>
+            <?php
+            $options = array('' => 'Selecione o Estado');
+            foreach ($estados as $estado)
+                $options[$estado->ESTA_ID] = $estado->ESTA_NOME;
+            echo form_dropdown('ESTA_ID', $options);
+            ?>
 
-        <label>Celular 2:</label>
-        <?php echo form_error('PES_VEL2'); ?>
-        <input type="text" name="PES_CEL2" value="<?php echo set_value('PES_CEL2'); ?>" class="fone" />
+            <?php echo form_dropdown('CIDA_ID', array('' => 'Selecione a cidade')); ?>
 
-        <?php echo form_error('RUA_ID'); ?>
-        <?php
-        $options = array('' => 'Selecione o Estado');
-        foreach ($estados as $estado)
-            $options[$estado->ESTA_ID] = $estado->ESTA_NOME;
-        echo form_dropdown('ESTA_ID', $options, '', 'id="estado" class="span6"');
-        ?>
+            <?php echo form_dropdown('BAIRRO_ID', array('' => 'Selecione o bairro')); ?>
 
-        <?php echo form_dropdown('CIDA_ID', array('' => 'Selecione a cidade'), '', 'id="cidade" class="span6"'); ?>
+            <?php echo form_dropdown('RUA_ID', array('' => 'Selecione a rua'), 'required'); ?>
 
-        <?php echo form_dropdown('BAIRRO_ID', array('' => 'Selecione o bairro'), '', 'id="bairro" class="span6"'); ?>
+            <label>Numero:
+                <?php echo form_error('END_NUMERO'); ?>
+                <input type="text" name="END_NUMERO" value="<?php echo set_value('END_NUMERO'); ?>" />
+            </label>
 
-        <?php echo form_dropdown('RUA_ID', array('' => 'Selecione a rua'), '', 'id="rua" class="span6"'); ?>
-
-        <label>Numero:</label>
-        <?php echo form_error('END_NUMERO'); ?>
-        <input type="text" name="END_NUMERO" value="<?php echo set_value('END_NUMERO'); ?>" class="span1" />
-
-        <label>Referencia:</label>
-        <?php echo form_error('END_REFERENCIA'); ?>
-        <input type="text" name="END_REFERENCIA" value="<?php echo set_value('END_REFERENCIA'); ?>" class="span6" />
+            <label>Referencia:
+                <?php echo form_error('END_REFERENCIA'); ?>
+                <input type="text" name="END_REFERENCIA" value="<?php echo set_value('END_REFERENCIA'); ?>" />
+            </label>
+        </div>
 
         <input type="hidden" name="PES_DATE" />
 
 
 
-        <hr><button type="submit" class="btn">CADASTRAR</button>
+        <button type="submit" class="btn">CADASTRAR</button>
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/mascaras.js'); ?>"></script>

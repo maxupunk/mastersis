@@ -6,7 +6,7 @@ if (isset($mensagem)):
     exit();
 
 elseif ($id_servico == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div?>';
+    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
     exit();
 endif;
 
@@ -28,10 +28,10 @@ endif;
         <label>CODIGO: <?php echo $query->SERV_ID ?></label>
 
         <label>Servço:</label>
-        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" readonly class="span6" />
+        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" readonly />
 
         <label>Descrição:</label>
-        <textarea name="SERV_DESC" readonly rows="10" class="span6"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
+        <textarea name="SERV_DESC" readonly rows="10"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
 
         <input type="hidden" name="id_servico" value="<?php echo $query->SERV_ID ?>" />
 

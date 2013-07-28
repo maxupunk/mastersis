@@ -26,11 +26,11 @@ endif;
 
         <label>Medida:</label>
         <?php echo form_error('MEDI_NOME'); ?>
-        <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" class="span4" />
+        <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" />
 
         <label>Sigla:</label>
         <?php echo form_error('MEDI_SIGLA'); ?>
-        <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" class="span1" />
+        <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" />
 
         
         <input type="hidden" value="<?php echo $id_medida; ?>" name="id_medida" />

@@ -20,7 +20,7 @@ endif;
 
 
 <div class="row">
-    <form action="<?php echo base_url('categoria'); ?>/imagem/<?php echo $id_categoria ?>" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
+    <form action="<?php echo base_url('categoria'); ?>/imagem/<?php echo $id_categoria ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
         <fieldset>
             <legend><?php echo $query->CATE_NOME; ?></legend>
 
@@ -34,8 +34,9 @@ endif;
                 echo '<div class="alert alert-info">' . $mensagem . '</div>';
             ?>
 
-
-            <input type="file" class="btn" name="userfile" />
+            <label class="file_input_button">Click para seleciona arquivo!
+                <input type="file" name="userfile" />
+            </label>
             <input type="hidden" value="<?php echo $id_categoria; ?>" name="id_categoria" />
             <button type="submit" id="img_botao" class="btn">Adiciona/Alterar</button>
         </fieldset>
@@ -44,5 +45,5 @@ endif;
 </div>
 
 <div class="row">
-    <?php if ($query->CATE_IMG != NULL) echo '<img src="' . APPPATH . 'views/img_categoria/' . $query->CATE_IMG . '" >' ?>
+    <?php if ($query->CATE_IMG != NULL) echo '<img src="assets/img_categoria/' . $query->CATE_IMG . '" >' ?>
 </div>

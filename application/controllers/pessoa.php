@@ -22,51 +22,53 @@ class Pessoa extends CI_Controller {
         // validar o formulario
 
         $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required|strtoupper');
+
         $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|strtoupper|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
-        $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required|strtoupper');
-        $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
-        $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
+
+        if ($this->input->post('PES_TIPO') === 'f') {
+            $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required|strtoupper');
+            $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
+            $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
+        }
+
         $this->form_validation->set_rules('PES_CEL1', 'CELULAR 1', 'required');
         $this->form_validation->set_rules('RUA_ID', 'RUA', 'required');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        // se for valido ele chama o inserir dentro do produto_model        
+        // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE) {
-            
+
             $endereco = elements(array('END_NUMERO', 'END_REFERENCIA', 'RUA_ID'), $this->input->post());
-            if ($this->crud_model->inserir('ENDERECOS', $endereco) === TRUE) {               
+            if ($this->crud_model->inserir('ENDERECOS', $endereco) === TRUE) {
 
                 $post_pessoa = $this->input->post();
-                      
-                // pega id do endereço 
+
+                // pega id do endereço
                 $id_ende = array('END_ID' => $this->db->insert_id());
-                
+
                 //pega a data atual
                 $data_atual = array('PES_DATA' => date("Y-m-d h:i:s"));
-                
-                // converte a data pra inserir no db 
-                $data_nasc = array('PES_NASC_DATA' => implode("-",array_reverse(explode("/",$post_pessoa['PES_NASC_DATA']))));
-                
+
+                // converte a data pra inserir no db
+                $data_nasc = array('PES_NASC_DATA' => implode("-", array_reverse(explode("/", $post_pessoa['PES_NASC_DATA']))));
+
                 //Desfazer a conversão de data
                 //$data = implode("/",array_reverse(explode("-",$data)));
-                
-                
                 // faz a atualização do array com os dados assima
                 $post_pessoa = array_replace($post_pessoa, $id_ende);
                 $post_pessoa = array_replace($post_pessoa, $data_nasc);
                 $post_pessoa = array_replace($post_pessoa, $data_atual);
-                
-                
-                $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA'), $post_pessoa);
+
+
+                $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA', 'PES_EMAIL'), $post_pessoa);
                 if ($this->crud_model->inserir('PESSOAS', $pessoa) === TRUE) {
                     $mensagem = $this->lang->line("msg_cadastro_sucesso");
                 } else {
                     $mensagem = $this->lang->line("msg_cadastro_erro");
                 }
             }
-            
         }
 
 

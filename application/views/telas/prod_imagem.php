@@ -16,12 +16,11 @@ if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
-
 ?>
 
 
 <div class="row">
-    <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" id="upload_img" accept-charset="utf-8" enctype="multipart/form-data">
+    <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
         <fieldset>
             <legend><?php echo $query->PRO_DESCRICAO ?></legend>
 
@@ -31,17 +30,19 @@ endif;
             if (isset($thumb))
                 print_r($thumb);
             if (isset($mensagem))
-                echo $mensagem;
+                echo '<div class="alert alert-info">' . $mensagem . '</div>';
             ?>
-
-            <input type="file" class="btn" name="userfile" />
-            <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
+            <label class="file_input_button">Click para seleciona arquivo!
+                <input type="file" name="userfile" />
+            </label>
+            <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
             <button type="submit" id="img_botao" class="btn">Adiciona/Alterar</button>
+            </div>
         </fieldset>
     </form>
     <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
 </div>
 
 <div class="row">
-<?php if ($query->PRO_IMG != NULL) echo '<img src="' . APPPATH . 'views/img_produto/' . $query->PRO_IMG . '" >' ?>
+    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-12">' ?>
 </div>

@@ -1,0 +1,156 @@
+/*
+    Document   : custom
+    Created on : 27/07/2013, 19:28:12
+    Author     : maxuel
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body
+{
+    position: relative;
+    margin:0;
+    padding:0;
+}
+
+a:link {text-decoration: none;}
+a:visited {text-decoration: none;}
+a:hover {text-decoration: none;}
+a:active {text-decoration: none;}
+
+#footer {
+    height: 60px;
+    background-color: #f5f5f5;
+}
+
+#head {
+    height: 100px;
+    width: 100%;
+    background-color: #f5f5f5;
+}
+
+.container .credit {
+    margin: 20px 0;
+}
+
+.container p {
+    margin: 20px 0;
+}
+
+#mensagem {
+    position: absolute;
+    text-align: center;
+    display: none;
+    height: auto;
+    width: 600px;
+    top:195px;
+    left:calc(50% - 600px/2);
+    z-index:9999;
+    padding:10px 12px;
+    font-size:14px;
+    vertical-align:middle;
+    background-color:#f5f5f5;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+
+}
+
+#screen {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background: #000;
+    display: none;
+    opacity: 0.7;
+    width: 100%;
+    height: 100%;
+    z-index:9998;
+}
+
+input[type="text"] {
+    display:block;
+    width:100%;
+    height:32px;
+    padding:8px 12px;
+    font-size:16px;
+    color:#555;
+    vertical-align:middle;
+    background-color:#fff;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+select {
+    display:block;
+    width:100%;
+    height:32px;
+    padding:8px 12px;
+    font-size:14px;
+    line-height:1.428571429;
+    color:#555;
+    vertical-align:middle;
+    background-color:#fff;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+textarea{
+    display:block;
+    width:100%;
+    padding:8px 12px;
+    font-size:14px;
+    line-height:1.428571429;
+    vertical-align:middle;
+    background-color:#fff;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+}
+
+input[type="file"] {
+    opacity: 0;
+    filter: alpha(opacity=0);
+    -ms-filter: "alpha(opacity=0)";
+    -khtml-opacity: 0;
+    -moz-opacity: 0;;
+}
+
+.file_input_button
+{
+    width:60%;
+    vertical-align:middle;
+    padding:6px 12px;
+    height:38px;
+    text-align: center;
+    background-color:#f5f5f5;
+    border:1px solid #ccc;
+    border-radius:4px;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+    float: left;
+    cursor: pointer;
+}
+
+.cep{
+    width: 120px;
+}
+
+.valor{
+    width: 120px;
+}
+
+.fone{
+    width: 130px;
+}
+
+.data{
+    width: 110px;
+}
+
+.cpf{
+    width: 150px;
+}

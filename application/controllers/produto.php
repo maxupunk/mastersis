@@ -22,14 +22,16 @@ class Produto extends CI_Controller {
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
-        $this->form_validation->set_rules('PRO_CARAC_TEC', 'CARACTERISTICA TECNICA');
+        $this->form_validation->set_rules('CATE_ID', 'CATEGORIA','required');
+        $this->form_validation->set_rules('MEDI_ID', 'MEDIDA','required');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         // se for valido ele chama o inserir dentro do produto_model        
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC'), $this->input->post());
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID'), $this->input->post());
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
@@ -37,9 +39,10 @@ class Produto extends CI_Controller {
             }
 
         endif;
-
         $dados = array(
             'tela' => 'prod_cadastro',
+            'categorias' => $this->crud_model->pega_tudo("CATEGORIA")->result(),
+            'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),            
             'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
@@ -105,7 +108,7 @@ class Produto extends CI_Controller {
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
-        $img['upload_path'] = APPPATH . 'views/img_produto/';
+        $img['upload_path'] = 'assets/img_produto/';
         $img['allowed_types'] = 'jpg';
         $img['max_size'] = '2048';
         $img['file_name'] = $this->input->post('id_produto');

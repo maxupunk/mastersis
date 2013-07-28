@@ -8,11 +8,11 @@
 
         <label>Categoria:</label>
         <?php echo form_error('CATE_NOME'); ?>
-        <input type="text" name="CATE_NOME" value="<?php echo set_value('CATE_NOME'); ?>" maxlength="45" class="span6" />
+        <input type="text" name="CATE_NOME" value="<?php echo set_value('CATE_NOME'); ?>" maxlength="45" autofocus />
 
         <label>Descrição:</label>
         <?php echo form_error('CATE_DESCRIC'); ?>
-        <textarea name="CATE_DESCRIC" rows="10" class="span6"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
+        <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
 
         <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
 

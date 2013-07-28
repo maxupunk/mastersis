@@ -28,10 +28,10 @@ endif;
         <label>CODIGO: <?php echo $query->MEDI_ID ?></label>
 
         <label>Medida:</label>
-        <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" readonly class="span4" />
+        <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" readonly />
 
         <label>Sigla:</label>
-        <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" readonly class="span1" />
+        <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" readonly />
         
         <input type="hidden" name="id_medida" value="<?php echo $query->MEDI_ID ?>" />
 

@@ -24,7 +24,7 @@ class Medida extends CI_Controller {
         $this->form_validation->set_rules('MEDI_NOME', 'UNIDADE DE MEDIDA', 'required|max_length[45]|strtoupper|is_unique[MEDIDAS.MEDI_NOME]');
         $this->form_validation->set_rules('MEDI_SIGLA', 'SIGLA', 'required|max_length[4]|strtoupper|is_unique[MEDIDAS.MEDI_SIGLA]');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -55,7 +55,7 @@ class Medida extends CI_Controller {
         $this->form_validation->set_rules('MEDI_NOME', 'MEDIDA', 'required|max_length[45]');
         $this->form_validation->set_rules('MEDI_SIGLA', 'SIGLA', 'required|max_length[4]');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):

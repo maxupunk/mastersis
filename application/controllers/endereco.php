@@ -23,7 +23,7 @@ class Endereco extends CI_Controller {
         $this->form_validation->set_rules('BAIRRO_NOME', 'NOME', 'required|max_length[45]|is_unique[BAIRROS.BAIRRO_NOME]');
         $this->form_validation->set_rules('CIDA_ID', 'CIDADE', 'required');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -44,13 +44,14 @@ class Endereco extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
+    
     public function rua() {
         // validar o formulario
         $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|is_unique[RUA.RUA_NOME]');
         $this->form_validation->set_rules('RUA_CEP', 'CEP', 'required');
         $this->form_validation->set_rules('BAIRRO_ID', 'BAIRRO', 'required');
 
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE):
 
@@ -71,6 +72,7 @@ class Endereco extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
+    
     function pegacidades($id) {
 
         $cidades = $this->crud_model->pega("CIDADES", array('ESTA_ID' => $id))->result();
@@ -93,6 +95,7 @@ class Endereco extends CI_Controller {
         echo '[ {"nome":"Selecione a cidade"}, ' . implode(",", $arr_cidade) . ']';
     }
 
+    
     function pegabairros($id) {
 
         $bairros = $this->crud_model->pega("BAIRROS", array('CIDA_ID' => $id))->result();
@@ -115,6 +118,7 @@ class Endereco extends CI_Controller {
         echo '[ {"nome":"Selecione o bairro"}, ' . implode(",", $arr_bairros) . ']';
     }
 
+    
     function pegaruas($id) {
 
         $ruas = $this->crud_model->pega("RUA", array('RUA_ID' => $id))->result();

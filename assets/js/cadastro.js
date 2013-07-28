@@ -28,9 +28,8 @@ $(document).on("click", "#screen", function() {
 //
 // Regras de carregamentos
 //
-
 $(document).ajaxStart(function() {
-    $("#mensagem").html("<img src='carregando.gif'>");
+    $("#mensagem").html("<img src='assets/img/carregando.gif'>");
     $('#screen').show();
     $("#mensagem").show();
 });

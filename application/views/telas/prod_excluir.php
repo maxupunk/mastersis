@@ -28,10 +28,10 @@ endif;
         <label>CODIGO: <?php echo $query->PRO_ID ?></label>
 
         <label>Descrição:</label>
-        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" readonly class="span6" />
+        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" readonly />
 
         <label>Caracteristica Tecnicas:</label>
-        <textarea name="PRO_CARAC_TEC" readonly rows="10" class="span6"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
+        <textarea name="PRO_CARAC_TEC" readonly rows="10"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
         <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
 

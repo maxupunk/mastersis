@@ -26,16 +26,20 @@ endif;
 
         <label>Descrição do produto:</label>
         <?php echo form_error('CATE_NOME'); ?>
-        <input type="text" name="CATE_NOME" value="<?php echo set_value('CATE_NOME', $query->CATE_NOME); ?>" class="span6" />
+        <input type="text" name="CATE_NOME" value="<?php echo set_value('CATE_NOME', $query->CATE_NOME); ?>" />
 
         <label>Caracteristica Tecnicas:</label>
         <?php echo form_error('CATE_DESCRIC'); ?>
-        <textarea name="CATE_DESCRIC" rows="10" class="span6"><?php echo set_value('CATE_DESCRIC', $query->CATE_DESCRIC); ?></textarea>
+        <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC', $query->CATE_DESCRIC); ?></textarea>
 
 
         <label class="radio">
             <input type="radio" name="CATE_ESTATUS" value="a" <?php if ($query->CATE_ESTATUS == "a") echo 'checked="checked"'; ?> />Ativo
         </label>
+        <select name="CATE_ESTATUS">
+            <option value = "a">Ativo</option>
+            <option value = "d">Desativo</option>
+        </select>
 
         <label class="radio">
             <input type="radio" name="CATE_ESTATUS" value="d" <?php if ($query->CATE_ESTATUS == "d") echo 'checked="checked"'; ?> />Desativo

@@ -7,11 +7,11 @@
         
         <label>Nome:</label>
         <?php echo form_error('SERV_NOME'); ?>
-        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME'); ?>" maxlength="45" class="span6" />
+        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME'); ?>" maxlength="45" autofocus />
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_DESC'); ?>
-        <textarea name="SERV_DESC" rows="10" class="span6"><?php echo set_value('SERV_DESC'); ?></textarea>                    
+        <textarea name="SERV_DESC" rows="10"><?php echo set_value('SERV_DESC'); ?></textarea>                    
 
         <label>Valor:</label>
         <?php echo form_error('SERV_VALOR'); ?>
@@ -22,4 +22,4 @@
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/mascaras.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
