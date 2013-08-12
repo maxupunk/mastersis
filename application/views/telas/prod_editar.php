@@ -1,20 +1,12 @@
 <?php
-$id_produto = $this->uri->segment(3);
-
-if ($id_produto == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
-    exit();
-endif;
-
-$query = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row();
 
 if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe ou foi excluido!</div>';
     exit();
 endif;
 ?>
-
-<form method="POST" action="<?php echo base_url('produto'); ?>/editar/<?php echo $id_produto; ?>" name="grava" accept-charset="utf-8">
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
+<form method="POST" action="<?php echo base_url('produto'); ?>/editar/<?php echo $query->PRO_ID; ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
@@ -30,17 +22,14 @@ endif;
         <?php echo form_error('PRO_CARAC_TEC'); ?>
         <textarea name="PRO_CARAC_TEC" rows="10"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
 
-        <label class="radio">
-            <input type="radio" name="PRO_ESTATUS" value="a" <?php if ($query->PRO_ESTATUS == "a") echo 'checked="checked"'; ?> />Ativo
-        </label>
+        <label>Peso (Kg):</label>
+        <?php echo form_error('PRO_PESO'); ?>
+        <input type="text" name="PRO_PESO" value="<?php echo set_value('PRO_PESO', $query->PRO_PESO); ?>" class="peso" />
 
-        <label class="radio">
-            <input type="radio" name="PRO_ESTATUS" value="d" <?php if ($query->PRO_ESTATUS == "d") echo 'checked="checked"'; ?> />Desativo
-        </label>
+        
+        <?php echo form_dropdown('PRO_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('PRO_ESTATUS', $query->PRO_ESTATUS)); ?>
 
-        </div>
-
-        <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto" />
+        <input type="hidden" value="<?php echo $query->PRO_ID; ?>" name="id_produto" />
 
         <hr><button type="submit" class="btn" disabled>ATUALIZAR</button>
 

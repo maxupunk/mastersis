@@ -1,20 +1,11 @@
 <?php
-$id_medida = $this->uri->segment(3);
-
-if ($id_medida == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
-    exit();
-endif;
-
-$query = $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row();
-
 if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
 ?>
 
-<form method="post" action="<?php echo base_url('medida'); ?>/editar/<?php echo $id_medida; ?>" name="grava" accept-charset="utf-8">
+<form method="post" action="<?php echo base_url('medida'); ?>/editar/<?php echo $query->MEDI_ID; ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
@@ -33,7 +24,7 @@ endif;
         <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" />
 
         
-        <input type="hidden" value="<?php echo $id_medida; ?>" name="id_medida" />
+        <input type="hidden" value="<?php echo $query->MEDI_ID; ?>" name="id_medida" />
 
         <hr><button type="submit" class="btn" disabled>SALVA ALTERAÇOES</button>
 

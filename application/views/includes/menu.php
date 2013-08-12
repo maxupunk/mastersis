@@ -25,7 +25,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $this->lang->line("menu_vendas"); ?></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Fazer Venda</a></li>
+                            <li><? echo anchor('venda', $this->lang->line("menu_venda_fazer")); ?></li>
                             <li><a href="#">Busca Venda</a></li>
                         </ul>
                     </li>

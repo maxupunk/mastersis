@@ -1,20 +1,11 @@
 <?php
-$id_categoria = $this->uri->segment(3);
-
-if ($id_categoria == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
-    exit();
-endif;
-
-$query = $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row();
-
 if ($query == null) :
     echo '<div class="alert alert-error">Esse item não existe!</div>';
     exit();
 endif;
 ?>
 
-<form method="post" action="<?php echo base_url('categoria'); ?>/editar/<?php echo $id_categoria; ?>" name="grava" accept-charset="utf-8">
+<form method="post" action="<?php echo base_url('categoria'); ?>/editar/<?php echo $query->CATE_ID; ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
@@ -32,22 +23,11 @@ endif;
         <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC', $query->CATE_DESCRIC); ?></textarea>
 
-
-        <label class="radio">
-            <input type="radio" name="CATE_ESTATUS" value="a" <?php if ($query->CATE_ESTATUS == "a") echo 'checked="checked"'; ?> />Ativo
-        </label>
-        <select name="CATE_ESTATUS">
-            <option value = "a">Ativo</option>
-            <option value = "d">Desativo</option>
-        </select>
-
-        <label class="radio">
-            <input type="radio" name="CATE_ESTATUS" value="d" <?php if ($query->CATE_ESTATUS == "d") echo 'checked="checked"'; ?> />Desativo
-        </label>
+        <?php echo form_dropdown('CATE_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('CATE_ESTATUS', $query->CATE_ESTATUS)); ?>
 
         </div>
 
-        <input type="hidden" value="<?php echo $id_categoria; ?>" name="id_categoria" />
+        <input type="hidden" value="<?php echo $query->CATE_ID; ?>" name="id_categoria" />
 
         <hr><button type="submit" class="btn" disabled>SALVA ALTERAÇOES</button>
 

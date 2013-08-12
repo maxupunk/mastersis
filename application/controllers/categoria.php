@@ -77,13 +77,16 @@ class Categoria extends CI_Controller {
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "categ_busca",
+            'query' => $query = $this->crud_model->buscar("CATEGORIA", array('CATE_ID' => $busca, 'CATE_NOME' => $busca))->result(),
+
         );
         $this->load->view('contente', $dados);
     }
 
-    public function editar() {
+    public function editar($id_categoria) {
 
         $this->form_validation->set_rules('CATE_NOME', 'NOME CATEGORIA', 'required|max_length[45]');
 
@@ -104,6 +107,7 @@ class Categoria extends CI_Controller {
         $dados = array(
             'tela' => "categ_editar",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row(),
         );
         $this->load->view('contente', $dados);
     }

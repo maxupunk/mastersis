@@ -2,7 +2,6 @@
     <div class="col-6">
         <div class="btn-group" id="sub_menu">
             <button class="btn" url="<?php echo base_url('pessoa'); ?>/cadastrar">Cadastro</button>
-            <button class="btn" url="<?php echo base_url('pessoa'); ?>/listar">Lista todos</button>
         </div>
 
         <div id="cadastro"><!-- tabela de cadastro --></div>

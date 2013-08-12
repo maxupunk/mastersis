@@ -86,8 +86,10 @@ class Servico extends CI_Controller {
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "serv_busca",
+            'query' => $this->crud_model->buscar("SERVICOS", array('SERV_ID' => $busca, 'SERV_NOME' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
     }
@@ -117,7 +119,7 @@ class Servico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function excluir() {
+    public function excluir($id_servico) {
         if ($this->input->post('id_servico') > 0):
             if ($this->crud_model->excluir("SERVICOS", array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -129,6 +131,7 @@ class Servico extends CI_Controller {
         $dados = array(
             'tela' => "serv_excluir",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("SERVICOS", array('SERV_ID' => $id_servico))->row(),
         );
         $this->load->view('contente', $dados);
     }

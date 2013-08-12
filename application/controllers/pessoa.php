@@ -7,7 +7,7 @@ class Pessoa extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('crud_model');
+        $this->load->model(array('crud_model', 'join_model'));
         $this->load->library(array('form_validation', 'table'));
     }
 
@@ -112,103 +112,82 @@ class Pessoa extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function editar() {
+    public function editar($id_pessoa) {
 
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
+        $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required|strtoupper');
 
+        if ($this->input->post('PES_TIPO') === 'f') {
+            $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required|strtoupper');
+            $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
+            $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
+        }
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS'), $this->input->post());
-            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
+            $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'PES_DATA', 'PES_EMAIL', 'PES_TIPO'), $this->input->post());
+                if ($this->crud_model->update("PESSOAS", $pessoa, array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_editar_sucesso");
+
+                $endereco = elements(array('END_NUMERO', 'END_REFERENCIA'), $this->input->post());
+                if ($this->crud_model->update("ENDERECOS", $endereco, array('END_ID' => $this->input->post('id_pessoa'))) === TRUE) {
+                    $mensagem .= $this->lang->line("msg_editar_sucesso");
+                } else {
+                    $mensagem .= $this->lang->line("msg_editar_erro");
+                }
             } else {
                 $mensagem = $this->lang->line("msg_editar_erro");
             }
         endif;
 
         $dados = array(
-            'tela' => "prod_editar",
+            'tela' => "pessoa_editar",
             'mensagem' => @$mensagem,
+            'query' => $this->join_model->endereco_completo($id_pessoa)->row(),
+            'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function imagem() {
-        // validar o formulario
-        $this->load->library(array('image_lib', 'upload'));
-
-        $img['upload_path'] = APPPATH . 'views/img_produto/';
-        $img['allowed_types'] = 'jpg';
-        $img['max_size'] = '2048';
-        $img['file_name'] = $this->input->post('id_produto');
-        $img['overwrite'] = TRUE;
-        $img['max_width'] = '1024';
-        $img['max_heigh'] = '768';
-
-        $this->upload->initialize($img);
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->upload->do_upload() == TRUE):
-
-            $data = $this->upload->data();
-
-            $thumb['image_library'] = "gd";
-            $thumb['source_image'] = $data['file_path'] . $data['file_name'];
-            $thumb['create_thumb'] = TRUE;
-            $thumb['maintain_ratio'] = TRUE;
-            $thumb['master_dim'] = "auto";
-            $thumb['quality'] = "100%";
-            $thumb['width'] = "120";
-            $thumb['height'] = "120";
-            $this->image_lib->initialize($thumb);
-            $this->image_lib->resize();
-
-            if ($this->crud_model->update("PRODUTOS", array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_imagem_sucesso");
-            } else {
-                $mensagem = $this->lang->line("msg_imagem_erro");
-            }
-
-        endif;
-
-        $dados = array(
-            'tela' => "prod_imagem",
-            'upload' => $this->upload->display_errors(),
-            'thumb' => $this->image_lib->display_errors(),
-            'mensagem' => @$mensagem,
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function excluir() {
-        if ($this->input->post('id_produto') > 0):
-            if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
+    public function excluir($id_pessoa) {
+        if ($this->input->post('id_pessoa') > 0):
+            if ($this->crud_model->excluir("PESSOAS", array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_excluir_sucesso");
+                $mensagem = $this->lang->line("msg_excluir_erro");
             }
         endif;
 
         $dados = array(
-            'tela' => "prod_excluir",
+            'tela' => "pessoa_excluir",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("PESSOAS", array('PES_ID' => $id_pessoa))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "prod_busca",
+            'tela' => "pessoa_busca",
+            'query' => $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca, 'PES_EMAIL' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function exibir() {
-        $dados = array(
-            'tela' => "prod_exibir",
-        );
-        $this->load->view('contente', $dados);
+    public function pegapessoa() {
+        $busca = $_GET['buscar'];
+        $pessoas = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
+
+        if ($pessoas === FALSE) {
+            echo '[{ "PES_NOME": "ERRO NO DB" }]';
+            exit();
+        }
+
+        if (empty($pessoas)) {
+            echo '[{ "PES_NOME": "Não existe pessoa cadastrada com esse nome" }]';
+            exit();
+        }
+        echo json_encode($pessoas);
     }
 
 }

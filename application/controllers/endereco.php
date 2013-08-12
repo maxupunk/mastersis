@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -7,7 +6,7 @@ class Endereco extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('crud_model');
+        $this->load->model(array('crud_model','join_model'));
         $this->load->library(array('form_validation', 'table'));
     }
 
@@ -44,7 +43,6 @@ class Endereco extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    
     public function rua() {
         // validar o formulario
         $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|is_unique[RUA.RUA_NOME]');
@@ -72,80 +70,67 @@ class Endereco extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    
     function pegacidades($id) {
 
         $cidades = $this->crud_model->pega("CIDADES", array('ESTA_ID' => $id))->result();
 
-        if ($cidades === FALSE){
-            echo '{ "nome": "ERRO NO DB" }';
-            exit();
-        }
-        
-        if (empty($cidades)){
-            echo '{ "nome": "Nenhuma cidade encontrada" }';
+        if ($cidades === FALSE) {
+            echo '{ "CIDA_ID": "ERRO NO DB" }';
             exit();
         }
 
-        $arr_cidade = array();
-        foreach ($cidades as $cidade) {
-            $arr_cidade[] = '{"id":' . $cidade->CIDA_ID . ',"nome":"' . $cidade->CIDA_NOME . '"}';
+        if (empty($cidades)) {
+            echo '{ "CIDA_ID": "Nenhuma cidade encontrada" }';
+            exit();
         }
-
-        echo '[ {"nome":"Selecione a cidade"}, ' . implode(",", $arr_cidade) . ']';
+        array_unshift($cidades, array('CIDA_NOME' => 'Selecione a cidade'));
+        echo json_encode($cidades);
     }
 
-    
     function pegabairros($id) {
 
         $bairros = $this->crud_model->pega("BAIRROS", array('CIDA_ID' => $id))->result();
 
-        if ($bairros === FALSE){
-            echo '[{ "nome": "ERRO NO DB" }]';
-            exit();
-        }
-        
-        if (empty($bairros)){
-            echo '[{ "nome": "Nenhum bairro encontrado" }]';
+        if ($bairros === FALSE) {
+            echo '[{ "BAIRRO_NOME": "ERRO NO DB" }]';
             exit();
         }
 
-        $arr_bairros = array();
-        foreach ($bairros as $bairro) {
-            $arr_bairros[] = '{"id":' . $bairro->BAIRRO_ID . ',"nome":"' . $bairro->BAIRRO_NOME . '"}';
+        if (empty($bairros)) {
+            echo '[{ "BAIRRO_NOME": "Nenhum bairro encontrado" }]';
+            exit();
         }
-
-        echo '[ {"nome":"Selecione o bairro"}, ' . implode(",", $arr_bairros) . ']';
+        array_unshift($bairros, array('BAIRRO_NOME' => 'Selecione o bairro'));
+        echo json_encode($bairros);
     }
 
-    
     function pegaruas($id) {
 
         $ruas = $this->crud_model->pega("RUA", array('RUA_ID' => $id))->result();
 
-        if ($ruas === FALSE){
-            echo '[{ "nome": "ERRO NO DB" }]';
-            exit();
-        }
-        
-        if (empty($ruas)){
-            echo '[{ "nome": "Nenhuma rua encontrado" }]';
+        if ($ruas === FALSE) {
+            echo '[{ "RUA_NOME": "ERRO NO DB" }]';
             exit();
         }
 
-        $arr_ruas = array();
-        foreach ($ruas as $ruas) {
-            $arr_ruas[] = '{"id":' . $ruas->RUA_ID . ',"nome":"' . $ruas->RUA_NOME . '"}';
+        if (empty($ruas)) {
+            echo '[{ "RUA_NOME": "Nenhuma rua encontrado" }]';
+            exit();
         }
-
-        echo '[ {"nome":"Selecione a rua"}, ' . implode(",", $arr_ruas) . ']';
+        array_unshift($ruas, array('RUA_NOME' => 'Selecione a rua'));
+        echo json_encode($ruas);
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "endereco_busca",
+            'busca_rua' => $this->crud_model->buscar("RUA", array('RUA_NOME' => $busca, 'RUA_CEP' => $busca))->result(),
+            'busca_bairro' => $this->crud_model->buscar("BAIRROS", array('BAIRRO_NOME' => $busca))->result(),
+            'busca_cidade' => $this->crud_model->buscar("CIDADES", array('CIDA_NOME' => $busca))->result(),
+            'busca_estado' => $this->crud_model->buscar("ESTADOS", array('ESTA_NOME' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
     }
 
-}
+    }

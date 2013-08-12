@@ -22,16 +22,16 @@ class Produto extends CI_Controller {
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
-        $this->form_validation->set_rules('CATE_ID', 'CATEGORIA','required');
-        $this->form_validation->set_rules('MEDI_ID', 'MEDIDA','required');
+        $this->form_validation->set_rules('CATE_ID', 'CATEGORIA', 'required');
+        $this->form_validation->set_rules('MEDI_ID', 'MEDIDA', 'required');
 
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        // se for valido ele chama o inserir dentro do produto_model        
+        // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID'), $this->input->post());
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO'), $this->input->post());
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
@@ -42,7 +42,7 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => 'prod_cadastro',
             'categorias' => $this->crud_model->pega_tudo("CATEGORIA")->result(),
-            'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),            
+            'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
             'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
@@ -80,7 +80,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function editar() {
+    public function editar($id_produto) {
 
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
 
@@ -89,7 +89,7 @@ class Produto extends CI_Controller {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS'), $this->input->post());
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS', 'PRO_PESO'), $this->input->post());
             if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
@@ -100,6 +100,7 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => "prod_editar",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
     }
@@ -151,7 +152,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function excluir() {
+    public function excluir($id_produto) {
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -163,13 +164,16 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => "prod_excluir",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "prod_busca",
+            'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
     }
@@ -179,6 +183,22 @@ class Produto extends CI_Controller {
             'tela' => "prod_exibir",
         );
         $this->load->view('contente', $dados);
+    }
+
+    public function pegaproduto() {
+        $busca = $_GET['buscar'];
+        $pessoas = $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result();
+
+        if ($pessoas === FALSE) {
+            echo '[{ "PRO_NOME": "ERRO NO DB" }]';
+            exit();
+        }
+
+        if (empty($pessoas)) {
+            echo '[{ "PRO_NOME": "Não existe cadastro com esses dados" }]';
+            exit();
+        }
+        echo json_encode($pessoas);
     }
 
 }

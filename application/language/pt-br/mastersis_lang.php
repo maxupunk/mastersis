@@ -11,6 +11,10 @@ $lang["msg_imagem_erro"] = "Erro ao grava no banco de dados!";
 $lang["msg_excluir_sucesso"] = "exclusão realizada com sucesso!";
 $lang["msg_excluir_erro"] = "Erro ao grava no banco de dados!";
 
+$lang["msg_pedido_sucesso"] = "Pedido aberto com sucesso!";
+$lang["msg_pedido_erro"] = "Erro ao criar pedido!";
+
+$lang["msg_pedido_aberto"] = "Já existe uma compra EM ABERTA para esse cliente!";
 //
 // Tradução do menu
 //
@@ -29,7 +33,7 @@ $lang["menu_cad_avaria"] = "Avaria";
 
 // MENU DE VENDAS
 $lang["menu_vendas"] = "Vendas";
-
+$lang["menu_venda_fazer"] = "Fazer uma Venda";
 
 // MENU ORDEM DE SERVIÇO
 $lang["menu_ordem_servico"] = "Ordem Serviço";

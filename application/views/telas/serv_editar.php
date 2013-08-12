@@ -26,24 +26,17 @@ endif;
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_NOME'); ?>
-        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" class="col-6" />
+        <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>"/>
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_DESC'); ?>
-        <textarea name="SERV_DESC" rows="10" class="col-6"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
+        <textarea name="SERV_DESC" rows="10"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
 
         <label>Descrição:</label>
         <?php echo form_error('SERV_VALOR'); ?>
-        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR', number_format($query->SERV_VALOR, 2, ',', '.')); ?>" class="valor" />
+        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR', number_format($query->SERV_VALOR, 2, ',', '.')); ?>" />
 
-
-        <label class="radio">
-            <input type="radio" name="SERV_ESTATUS" value="a" <?php if ($query->SERV_ESTATUS == "a") echo 'checked="checked"'; ?> />Ativo
-        </label>
-
-        <label class="radio">
-            <input type="radio" name="SERV_ESTATUS" value="d" <?php if ($query->SERV_ESTATUS == "d") echo 'checked="checked"'; ?> />Desativo
-        </label>
+        <?php echo form_dropdown('SERV_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('SERV_ESTATUS', $query->SERV_ESTATUS)); ?>
 
         </div>
 
@@ -53,4 +46,4 @@ endif;
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('application/views/js/mascaras.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>

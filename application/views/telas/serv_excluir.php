@@ -1,16 +1,10 @@
 <?php
 $id_servico = $this->uri->segment(3);
 
-if (isset($mensagem)):
+if (isset($mensagem)) {
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
     exit();
-
-elseif ($id_servico == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div>';
-    exit();
-endif;
-
-$query = $this->crud_model->pega("SERVICOS", array('SERV_ID' => $id_servico))->row();
+}
 
 if ($query == NULL):
     echo '<div class="alert alert-error">Esse item não existe ou foi excluido!</div>';
@@ -18,14 +12,11 @@ if ($query == NULL):
 endif;
 ?>
 
-<form action="<?php echo base_url('servico'); ?>/excluir/<?php echo $id_servico; ?>" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('servico'); ?>/excluir/<?php echo $query->SERV_ID ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
         <legend>EXCLUIR O SERVIÇO ABAIXO?</legend>
-
-
-        <label>CODIGO: <?php echo $query->SERV_ID ?></label>
 
         <label>Servço:</label>
         <input type="text" name="SERV_NOME" value="<?php echo set_value('SERV_NOME', $query->SERV_NOME); ?>" readonly />

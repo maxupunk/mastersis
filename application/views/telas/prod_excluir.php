@@ -1,16 +1,8 @@
 <?php
-$id_produto = $this->uri->segment(3);
-
-if (isset($mensagem)):
+if (isset($mensagem)) {
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
     exit();
-
-elseif ($id_produto == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div?>';
-    exit();
-endif;
-
-$query = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row();
+}
 
 if ($query == NULL):
     echo '<div class="alert alert-error">Esse item não existe ou foi excluido!</div>';
@@ -18,7 +10,7 @@ if ($query == NULL):
 endif;
 ?>
 
-<form action="produto/excluir/<?php echo $id_produto; ?>" method="post" name="grava" accept-charset="utf-8">
+<form action="produto/excluir/<?php echo $query->PRO_ID ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 

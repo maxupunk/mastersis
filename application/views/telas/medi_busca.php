@@ -1,10 +1,4 @@
 <?php
-
-if (isset($_GET['buscar'])) {
-    $busca = $_GET['buscar'];
-
-    $query = $this->crud_model->buscar("MEDIDAS", array('MEDI_NOME' => $busca))->result();
-
     $this->table->set_heading('MEDIDA', 'SIGLA', "OP's");
 
     foreach ($query as $linha) {
@@ -15,5 +9,4 @@ if (isset($_GET['buscar'])) {
     $this->table->set_template($tmpl);
 
     echo $this->table->generate();
-}
 ?>

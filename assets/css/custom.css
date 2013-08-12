@@ -117,7 +117,7 @@ input[type="file"] {
     filter: alpha(opacity=0);
     -ms-filter: "alpha(opacity=0)";
     -khtml-opacity: 0;
-    -moz-opacity: 0;;
+    -moz-opacity: 0;
 }
 
 .file_input_button
@@ -134,7 +134,7 @@ input[type="file"] {
     float: left;
     cursor: pointer;
 }
-
+/*
 .cep{
     width: 120px;
 }
@@ -154,3 +154,4 @@ input[type="file"] {
 .cpf{
     width: 150px;
 }
+*/

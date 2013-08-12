@@ -1,3 +1,4 @@
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
 <form action="<?php echo base_url('produto'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
@@ -14,6 +15,11 @@
         <?php echo form_error('PRO_CARAC_TEC'); ?>
         <textarea name="PRO_CARAC_TEC" rows="10"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>                    
 
+        <label>Peso (Kg):</label>
+        <?php echo form_error('PRO_PESO'); ?>
+        <input type="text" name="PRO_PESO" value="<?php echo set_value('PRO_PESO'); ?>" class="peso" />
+
+        <label>Categoria:</label>
         <?php
         echo form_error('CATE_ID');
         if ($categorias != NULL){
@@ -23,6 +29,7 @@
         echo form_dropdown('CATE_ID', $options, $this->input->post('CATE_ID'));
         ?>
 
+        <label>Unidade de medida:</label>
         <?php
         echo form_error('MEDI_ID');
         if ($medidas != NULL){
@@ -31,7 +38,6 @@
         }else{ $options[''] = 'Cadastre uma unidade de medida antes de continuar'; }
         echo form_dropdown('MEDI_ID', $options, $this->input->post('MEDI_ID'));
         ?>
-        </select>
 
         <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
 

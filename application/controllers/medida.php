@@ -44,13 +44,15 @@ class Medida extends CI_Controller {
     }
 
     public function busca() {
+        $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "medi_busca",
+            'query' => $this->crud_model->buscar("MEDIDAS", array('MEDI_NOME' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function editar() {
+    public function editar($id_medida) {
 
         $this->form_validation->set_rules('MEDI_NOME', 'MEDIDA', 'required|max_length[45]');
         $this->form_validation->set_rules('MEDI_SIGLA', 'SIGLA', 'required|max_length[4]');
@@ -72,11 +74,12 @@ class Medida extends CI_Controller {
         $dados = array(
             'tela' => "medi_editar",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function excluir() {
+    public function excluir($id_medida) {
         if ($this->input->post('id_medida') > 0):
             if ($this->crud_model->excluir("MEDIDAS", array('MEDI_ID' => $this->input->post('id_medida'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -88,6 +91,7 @@ class Medida extends CI_Controller {
         $dados = array(
             'tela' => "medi_excluir",
             'mensagem' => @$mensagem,
+            'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);
     }
