@@ -104,28 +104,28 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
     }
 });
 
-$("#nome_pes").autocomplete({
-    source: function(request, response) {
+$('input[name="PES_NOME"]').typeahead({
+    source: function(query, process) {
         $.ajax({
             url: "pessoa/pegapessoa",
-            dataType: "json",
-            data: { buscar: request.term },
+            type: 'POST',
+            data: {buscar: query},
+            dataType: 'json',
             success: function(data) {
-                response($.map( data, function(item) {
-                    return {
-                        label: item.PES_NOME + " - " + item.PES_CPF_CNPJ,
-                        value: item.PES_NOME,
-                        pes_id: item.PES_ID
-                    };
-                }));
+                pessoa = [];
+                map = {};
+                $.each(data, function(i, state) {
+                    map[state.PES_NOME] = state;
+                    pessoa.push(state.PES_NOME);
+                });
+                process(pessoa);
             }
         });
     },
-    minLength: 1,
-    select: function(event, ui) {
-        //$('input[name="ID_PES"]').val(ui.item.pes_id);
-        $("#venda").load("venda/abrir/"+ui.item.pes_id);
+    updater: function(item) {
+        $("#venda").load("venda/abrir/" + map[item].PES_ID);
     },
+    minLength: 4,
 });
 
 //Desbloquea atela preta e o aviso

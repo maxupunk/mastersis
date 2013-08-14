@@ -175,19 +175,11 @@ class Pessoa extends CI_Controller {
     }
 
     public function pegapessoa() {
-        $busca = $_GET['buscar'];
-        $pessoas = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
-
-        if ($pessoas === FALSE) {
-            echo '[{ "PES_NOME": "ERRO NO DB" }]';
-            exit();
-        }
-
-        if (empty($pessoas)) {
-            echo '[{ "PES_NOME": "Não existe pessoa cadastrada com esse nome" }]';
-            exit();
-        }
-        echo json_encode($pessoas);
+        $busca = $_POST['buscar'];
+        $dados = array(
+            'query' => $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result(),
+        );
+        $this->load->view('json', $dados);
     }
 
 }

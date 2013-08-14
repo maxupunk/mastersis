@@ -4,7 +4,6 @@ if ($query == null) :
     exit();
 endif;
 ?>
-<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
 <form method="post" action="<?php echo base_url('pessoa'); ?>/editar/<?php echo $query->PES_ID ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
@@ -15,14 +14,8 @@ endif;
         <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
         <?php echo validation_errors(); ?>
 
-        <div id="tabs">
-            <ul>
-                <li><a href="#tabs-1">Pessoal</a></li>
-                <li><a href="#tabs-2">Contatos</a></li>
-                <li><a href="#tabs-3">Endereco</a></li>
-            </ul>
 
-            <div id="tabs-1">
+            <div class="well">
                 <div class="row">
                     <div class="col-3">
                         <label>Tipo *:</label>
@@ -51,7 +44,7 @@ endif;
             </div>
 
 
-            <div id="tabs-2" >
+            <div class="well">
                 <legend>Contatos:</legend>
                 <div class="row">
                     <div class="col-4">
@@ -75,7 +68,7 @@ endif;
                 </div>
             </div>
 
-            <div id="tabs-3">
+            <div class="well">
                 <label>Numero:</label>
                 <?php echo form_error('END_NUMERO'); ?>
                 <input type="text" name="END_NUMERO" value="<?php echo set_value('END_NUMERO', $query->END_NUMERO); ?>" />
@@ -99,8 +92,6 @@ endif;
                 <?php echo form_dropdown('RUA_ID', array($query->RUA_ID => $query->RUA_NOME), $query->RUA_ID); ?>
             </div>
 
-        </div>
-
 
         <?php echo form_dropdown('PES_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('PES_ESTATUS', $query->PES_ESTATUS)); ?>
 
@@ -112,3 +103,4 @@ endif;
 
     </fieldset>
 </form>
+<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>

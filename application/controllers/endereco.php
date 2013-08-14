@@ -76,15 +76,18 @@ class Endereco extends CI_Controller {
 
         if ($cidades === FALSE) {
             echo '{ "CIDA_ID": "ERRO NO DB" }';
-            exit();
+            die();
         }
 
         if (empty($cidades)) {
             echo '{ "CIDA_ID": "Nenhuma cidade encontrada" }';
-            exit();
+            die();
         }
         array_unshift($cidades, array('CIDA_NOME' => 'Selecione a cidade'));
-        echo json_encode($cidades);
+        $dados = array(
+            'query' => $cidades,
+        );
+        $this->load->view('json', $dados);
     }
 
     function pegabairros($id) {
@@ -93,15 +96,18 @@ class Endereco extends CI_Controller {
 
         if ($bairros === FALSE) {
             echo '[{ "BAIRRO_NOME": "ERRO NO DB" }]';
-            exit();
+            die();
         }
 
         if (empty($bairros)) {
             echo '[{ "BAIRRO_NOME": "Nenhum bairro encontrado" }]';
-            exit();
+            die();
         }
         array_unshift($bairros, array('BAIRRO_NOME' => 'Selecione o bairro'));
-        echo json_encode($bairros);
+        $dados = array(
+            'query' => $bairros,
+        );
+        $this->load->view('json', $dados);
     }
 
     function pegaruas($id) {
@@ -110,15 +116,18 @@ class Endereco extends CI_Controller {
 
         if ($ruas === FALSE) {
             echo '[{ "RUA_NOME": "ERRO NO DB" }]';
-            exit();
+            die();
         }
 
         if (empty($ruas)) {
             echo '[{ "RUA_NOME": "Nenhuma rua encontrado" }]';
-            exit();
+            die();
         }
         array_unshift($ruas, array('RUA_NOME' => 'Selecione a rua'));
-        echo json_encode($ruas);
+        $dados = array(
+            'query' => $ruas,
+        );
+        $this->load->view('json', $dados);
     }
 
     public function busca() {

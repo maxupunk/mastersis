@@ -1,27 +1,32 @@
-/* 
+/*
  * MasterSis script de vendas
  */
-$("#produto_venda").autocomplete({
-    source: function(request, response) {
+
+$('#produto_venda').typeahead({
+    source: function(query, process) {
         $.ajax({
             url: "produto/pegaproduto",
-            dataType: "json",
-            data: { buscar: request.term },
+            type: 'POST',
+            data: {buscar: query},
+            dataType: 'json',
             success: function(data) {
-                response($.map( data, function(item) {
-                    return {
-                        label: item.PRO_DESCRICAO,
-                        value: item.PRO_DESCRICAO,
-                        pro_id: item.PRO_ID
-                    };
-                }));
+                produto = [];
+                map = {};
+                $.each(data, function(i, state) {
+                    map[state.PRO_DESCRICAO] = state;
+                    produto.push(state.PRO_DESCRICAO);
+                });
+                process(produto);
             }
         });
     },
-    minLength: 1,
-    select: function(event, ui) {
-        //$('input[name="ID_PES"]').val(ui.item.pes_id);
-        alert(ui.item.pro_id);
-        //$("#venda").load("venda/abrir/"+ui.item.pes_id);
+    updater: function(item) {
+        $("#lista").load("venda/addproduto/" + $('input[name="PEDIDO_ID"]').val() + "/" + map[item].PRO_ID);
+        $(this).val('');
     },
+    minLength: 1,
+});
+
+$(document).on('change', '#quantidade', function() {
+    $("#lista").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).val());
 });

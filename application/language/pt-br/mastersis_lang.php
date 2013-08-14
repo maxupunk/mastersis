@@ -15,6 +15,13 @@ $lang["msg_pedido_sucesso"] = "Pedido aberto com sucesso!";
 $lang["msg_pedido_erro"] = "Erro ao criar pedido!";
 
 $lang["msg_pedido_aberto"] = "Já existe uma compra EM ABERTA para esse cliente!";
+
+$lang["msg_atualuzado_sucesso"] = "Item atualuzado com sucesso!";
+$lang["msg_atualuzado_erro"] = "eroo ao atualuzar item!";
+
+$lang["msg_pedido_erro"] = "eroo ao atualuzar item!";
+
+
 //
 // Tradução do menu
 //

@@ -186,19 +186,11 @@ class Produto extends CI_Controller {
     }
 
     public function pegaproduto() {
-        $busca = $_GET['buscar'];
-        $pessoas = $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result();
-
-        if ($pessoas === FALSE) {
-            echo '[{ "PRO_NOME": "ERRO NO DB" }]';
-            exit();
-        }
-
-        if (empty($pessoas)) {
-            echo '[{ "PRO_NOME": "Não existe cadastro com esses dados" }]';
-            exit();
-        }
-        echo json_encode($pessoas);
+        $busca = $_POST['buscar'];
+        $dados = array(
+            'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
+        );
+        $this->load->view('json', $dados);
     }
 
 }

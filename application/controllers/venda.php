@@ -21,85 +21,77 @@ class Venda extends CI_Controller {
     public function abrir($id_cliente) {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->crud_model->pega("PESSOAS", array('PES_ID' => $id_cliente))->row() != NULL) {
-            $estatus = $this->crud_model->pega("PEDIDO", array('PES_ID' => $id_cliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
-            if ($estatus == NULL) {
-                $pedido = array(
+            $pedido = $this->crud_model->pega("PEDIDO", array('PES_ID' => $id_cliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
+            if ($pedido == NULL) {
+                $dados = array(
                     'PES_ID' => $id_cliente,
                     //'USU_ID' => '',
                     'PEDIDO_DATA' => date("Y-m-d h:i:s"),
                     'PEDIDO_ESTATUS' => '1',
                     'PEDIDO_TIPO' => 'v');
-                if ($this->crud_model->inserir('PEDIDO', $pedido) != TRUE) {
+                if ($this->crud_model->inserir('PEDIDO', $dados) != TRUE) {
                     $mensagem = $this->lang->line("msg_pedido_erro");
                 } else {
                     $id_venda = $this->db->insert_id();
                 }
             } else {
-                $mensagem = $this->lang->line("msg_pedido_aberto");
-                $id_venda = $estatus->PEDIDO_ID;
+                $id_venda = $pedido->PEDIDO_ID;
             }
         }
         $dados = array(
             'tela' => 'venda_abrir',
             'id_venda' => $id_venda,
             'cliente' => $this->join_model->endereco_completo($id_cliente)->row(),
+            'pedido' => $pedido,
             'mensagem' => @$mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
-    public function listar() {
-
-        $this->load->library('pagination');
-        $config['base_url'] = base_url('vendas/listar');
-        $config['total_rows'] = $this->crud_model->pega_tudo("PRODUTOS")->num_rows();
-        $config['per_page'] = 10;
-        $quant = $config['per_page'];
-
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="disabled"><a>';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_link'] = '&gt;';
-        $config['next_tag_open'] = '<li>';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lt;';
-        $config['prev_tag_open'] = '<li>';
-        $config['prev_tag_close'] = '</li>';
-
-        $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
-
-        $this->pagination->initialize($config);
-
-        $dados = array(
-            'produtos' => $this->crud_model->pega_tudo("PRODUTOS", $quant, $inicial)->result(),
-            'tela' => 'prod_listar',
-            'total' => $this->crud_model->pega_tudo("PRODUTOS")->num_rows(),
-            'paginacao' => $this->pagination->create_links(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function editar() {
-
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
-
-        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
-
+    public function addproduto($id_pedido, $id_produto) {
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
-
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS'), $this->input->post());
-            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_editar_sucesso");
+        $produto = $this->join_model->produto($id_produto)->row();
+        if ($produto != NULL || $produto->ESTOQ_ATUAL > 0) {
+            $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
+            if ($pedido != NULL) {
+                $lista_pedido = $this->crud_model->pega("LISTA_PEDIDO", array('ESTOQ_ID' => $produto->ESTOQ_ID))->row();
+                if ($lista_pedido == NULL) {
+                    echo "<br>pode da insert na lista_pedido";
+                } else {
+                    echo "<br>faz o update de adição no produto";
+                }
             } else {
-                $mensagem = $this->lang->line("msg_editar_erro");
+                $mensagem = $this->lang->line("msg_pedido_erro");
             }
-        endif;
+        } else {
+            $mensagem = "1";
+        }
+        $dados = array(
+            'tela' => 'venda_lista',
+            'mensagem' => @$mensagem,
+            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function atualizar($id_pedido, $lista_ped_id, $quantidade) {
+        $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
+        if ($pedido != NULL) {
+            $atualizar = array('LIST_PED_QNT' => $quantidade);
+            $cindicao = array('LIST_PED_ID' => $lista_ped_id);
+            if ($this->crud_model->update("LISTA_PEDIDO", $atualizar, $cindicao) === TRUE) {
+                $mensagem = $this->lang->line("msg_atualuzado_sucesso");
+            } else {
+                $mensagem = $this->lang->line("msg_atualuzado_erro");
+            }
+        } else {
+            $mensagem = $this->lang->line("msg_pedido_erro");
+        }
 
         $dados = array(
-            'tela' => "prod_editar",
+            'tela' => 'venda_lista',
             'mensagem' => @$mensagem,
+            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
         );
         $this->load->view('contente', $dados);
     }
@@ -132,12 +124,7 @@ class Venda extends CI_Controller {
 
     public function exibir() {
         echo "<pre>";
-        var_dump($this->join_model->produto("1")->row());
-        $teste = $this->join_model->produto("1")->row();
-        echo $teste->PRO_NOME;
-        echo $teste->ESTOQ_ATUAL;
-        echo $teste->ESTOQ_CUSTO;
-        echo $teste->ESTOQ_VENDA;
+        print_r($this->join_model->lista_pedido("3")->result());
         echo "</pre>";
     }
 
