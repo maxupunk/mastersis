@@ -3,7 +3,7 @@
 
         <legend>CADASTRO DE SERVIÇO</legend>
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
         
         <label>Nome:</label>
         <?php echo form_error('SERV_NOME'); ?>
@@ -18,7 +18,7 @@
         <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR'); ?>" class="valor" />
 
         
-        <hr><button type="submit" class="btn">CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default">CADASTRAR</button>
 
     </fieldset>
 </form>

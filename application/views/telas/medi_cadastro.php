@@ -4,7 +4,7 @@
 
         <legend>CADASTRO DE MEDIDA</legend>
         
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Medida:</label>
         <?php echo form_error('MEDI_NOME'); ?>
@@ -14,7 +14,7 @@
         <?php echo form_error('MEDI_SIGLA'); ?>
         <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA'); ?>" maxlength="4" />
 
-        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
 
     </fieldset>
 

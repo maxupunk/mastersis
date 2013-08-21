@@ -1,6 +1,6 @@
 <?php
 
-if (isset($mensagem)) {
+if (isset($mensagem) and $mensagem != NULL) {
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
     exit();
 }
@@ -28,7 +28,7 @@ endif;
 
         <input type="hidden" name="id_medida" value="<?php echo $query->MEDI_ID ?>" />
 
-        <hr><button type="submit" class="btn">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn btn-default">SIM, EXCLUIR</button>
 
     </fieldset>
 

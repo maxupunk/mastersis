@@ -4,11 +4,12 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Produto extends CI_Controller {
-
+    
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {
@@ -19,15 +20,15 @@ class Produto extends CI_Controller {
     }
 
     public function cadastrar() {
+        $mensagem = NULL;
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
         $this->form_validation->set_rules('CATE_ID', 'CATEGORIA', 'required');
         $this->form_validation->set_rules('MEDI_ID', 'MEDIDA', 'required');
 
-
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -43,7 +44,7 @@ class Produto extends CI_Controller {
             'tela' => 'prod_cadastro',
             'categorias' => $this->crud_model->pega_tudo("CATEGORIA")->result(),
             'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -86,6 +87,7 @@ class Produto extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -99,7 +101,7 @@ class Produto extends CI_Controller {
 
         $dados = array(
             'tela' => "prod_editar",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
@@ -147,12 +149,13 @@ class Produto extends CI_Controller {
             'tela' => "prod_imagem",
             'upload' => $this->upload->display_errors(),
             'thumb' => $this->image_lib->display_errors(),
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_produto) {
+        $mensagem = NULL;
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -163,7 +166,7 @@ class Produto extends CI_Controller {
 
         $dados = array(
             'tela' => "prod_excluir",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
@@ -186,10 +189,18 @@ class Produto extends CI_Controller {
     }
 
     public function pegaproduto() {
-        $busca = $_POST['buscar'];
+        $busca = $_GET['buscar'];
+        $rows = $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result();
+
+        $json_array = array();
+        foreach ($rows as $row)
+            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO));
+
         $dados = array(
-            'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
+            'query' => $json_array,
         );
+
+
         $this->load->view('json', $dados);
     }
 

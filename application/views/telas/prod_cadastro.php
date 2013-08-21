@@ -5,7 +5,9 @@
 
         <legend>CADASTRO DE PRODUTO</legend>
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL)
+            echo '<div class="alert alert-info">' . $mensagem . '</div>';
+        ?>
 
         <label>Descrição:</label>
         <?php echo form_error('PRO_DESCRICAO'); ?>
@@ -15,31 +17,41 @@
         <?php echo form_error('PRO_CARAC_TEC'); ?>
         <textarea name="PRO_CARAC_TEC" rows="10"><?php echo set_value('PRO_CARAC_TEC'); ?></textarea>                    
 
-        <label>Peso (Kg):</label>
-        <?php echo form_error('PRO_PESO'); ?>
-        <input type="text" name="PRO_PESO" value="<?php echo set_value('PRO_PESO'); ?>" class="peso" />
+        <div class="row">
+            <div class="col-sm-3">
+                <label>Peso(Kg):</label>
+                <?php echo form_error('PRO_PESO'); ?>
+                <input type="text" name="PRO_PESO" value="<?php echo set_value('PRO_PESO'); ?>" class="peso" />
+            </div>
+            <div class="col-sm-5">
+                <label>Categoria:</label>
+                <?php
+                echo form_error('CATE_ID');
+                if ($categorias != NULL) {
+                    foreach ($categorias as $categoria)
+                        $options[$categoria->CATE_ID] = $categoria->CATE_NOME;
+                } else {
+                    $options[''] = 'Cadastre uma categoria antes de continuar';
+                }
+                echo form_dropdown('CATE_ID', $options, $this->input->post('CATE_ID'));
+                ?>
+            </div>
+            <div class="col-sm-4">
+                <label>Unidade de medida:</label>
+                <?php
+                echo form_error('MEDI_ID');
+                if ($medidas != NULL) {
+                    foreach ($medidas as $medida)
+                        $options[$medida->MEDI_ID] = $medida->MEDI_NOME;
+                } else {
+                    $options[''] = 'Cadastre uma unidade de medida antes de continuar';
+                }
+                echo form_dropdown('MEDI_ID', $options, $this->input->post('MEDI_ID'));
+                ?>
+            </div>
+        </div>
 
-        <label>Categoria:</label>
-        <?php
-        echo form_error('CATE_ID');
-        if ($categorias != NULL){
-        foreach ($categorias as $categoria)
-            $options[$categoria->CATE_ID] = $categoria->CATE_NOME;
-        }else{ $options[''] = 'Cadastre uma categoria antes de continuar'; }
-        echo form_dropdown('CATE_ID', $options, $this->input->post('CATE_ID'));
-        ?>
-
-        <label>Unidade de medida:</label>
-        <?php
-        echo form_error('MEDI_ID');
-        if ($medidas != NULL){
-        foreach ($medidas as $medida)
-            $options[$medida->MEDI_ID] = $medida->MEDI_NOME;
-        }else{ $options[''] = 'Cadastre uma unidade de medida antes de continuar'; }
-        echo form_dropdown('MEDI_ID', $options, $this->input->post('MEDI_ID'));
-        ?>
-
-        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
 
     </fieldset>
 

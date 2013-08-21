@@ -12,7 +12,7 @@ endif;
 
         <legend>EDIÇÃO DE PRODUTO</legend>
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Descrição do produto:</label>
         <?php echo form_error('PRO_DESCRICAO'); ?>
@@ -31,7 +31,7 @@ endif;
 
         <input type="hidden" value="<?php echo $query->PRO_ID; ?>" name="id_produto" />
 
-        <hr><button type="submit" class="btn" disabled>ATUALIZAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>ATUALIZAR</button>
 
     </fieldset>
 </form>

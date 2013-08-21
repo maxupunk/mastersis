@@ -8,7 +8,9 @@ class Servico extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class , $this->router->method);
+        $mensagem = NULL;
     }
 
     public function index() {
@@ -28,6 +30,7 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         if ($this->form_validation->run() == TRUE):
 
             $formulario = $this->input->post();
@@ -48,7 +51,7 @@ class Servico extends CI_Controller {
 
         $dados = array(
             'tela' => "serv_cadastro",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -100,6 +103,7 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -114,12 +118,13 @@ class Servico extends CI_Controller {
 
         $dados = array(
             'tela' => "serv_editar",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_servico) {
+        $mensagem = NULL;
         if ($this->input->post('id_servico') > 0):
             if ($this->crud_model->excluir("SERVICOS", array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -130,7 +135,7 @@ class Servico extends CI_Controller {
 
         $dados = array(
             'tela' => "serv_excluir",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("SERVICOS", array('SERV_ID' => $id_servico))->row(),
         );
         $this->load->view('contente', $dados);

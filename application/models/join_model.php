@@ -24,6 +24,16 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
+    public function endereco($busca) {
+        $this->db->select('*');
+        $this->db->from('RUA', 'BAIRROS', 'CIDADES', 'ESTADOS');
+        $this->db->join('BAIRROS', 'RUA.BAIRRO_ID = BAIRROS.BAIRRO_ID');
+        $this->db->join('CIDADES', 'BAIRROS.CIDA_ID = CIDADES.CIDA_ID');
+        $this->db->join('ESTADOS', 'CIDADES.ESTA_ID = ESTADOS.ESTA_ID');
+        $this->db->or_like('RUA.RUA_NOME',$busca,'both');
+        return $this->db->get();
+    }
+
     public function produto($id_produto) {
         $this->db->select('*');
         $this->db->from('PRODUTOS', 'ESTOQUE');

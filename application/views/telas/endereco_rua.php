@@ -5,7 +5,7 @@
 
         <legend>CADASTRO DE RUA</legend>
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <?php
         $options = array('' => 'Escolha o Estado');
@@ -27,7 +27,7 @@
         <?php echo form_error('RUA_CEP'); ?>
         <input type="text" name="RUA_CEP" value="<?php echo set_value('RUA_CEP'); ?>" maxlength="45" class="cep" />
 
-        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
 
     </fieldset>
 

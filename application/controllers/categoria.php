@@ -8,11 +8,11 @@ class Categoria extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
     public function index() {
-
         $dados = array(
             'tela' => "categoria",
         );
@@ -21,12 +21,13 @@ class Categoria extends CI_Controller {
 
     public function cadastrar() {
 
-        $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
+        $this->form_validation->sest_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
 
-
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-
+        
+        $mensagem = NULL;
+        //verifica se passou na validação
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('CATE_NOME', 'CATE_DESCRIC'), $this->input->post());
@@ -39,7 +40,7 @@ class Categoria extends CI_Controller {
 
         $dados = array(
             'tela' => "categ_cadastro",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -92,6 +93,7 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -106,7 +108,7 @@ class Categoria extends CI_Controller {
 
         $dados = array(
             'tela' => "categ_editar",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row(),
         );
         $this->load->view('contente', $dados);
@@ -126,6 +128,7 @@ class Categoria extends CI_Controller {
 
         $this->upload->initialize($img);
 
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->upload->do_upload() == TRUE):
 
@@ -154,7 +157,7 @@ class Categoria extends CI_Controller {
             'tela' => "categ_imagem",
             'upload' => @$this->upload->display_errors(),
             'thumb' => @$this->image_lib->display_errors(),
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }

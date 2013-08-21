@@ -1,6 +1,78 @@
-/* 
+/*
  * MasterSis script comportamento dos forms
  */
+
+// minha função de debuga objeto
+
+var alteracao = false;
+
+//
+// Aviso de alterações de dados
+//
+$(window).on('beforeunload', function() {
+    if (alteracao == true) {
+        return "As mudanças deste formulário não foram salvas.\n\
+        Saindo desta página, todas as mudanças serão perdidas.";
+    }
+});
+
+//
+// Regras de carregamentos
+//
+$(document).ajaxStart(function() {
+    $("#mensagem").html("<img src='assets/img/carregando.gif'>");
+    $('#screen').show();
+    $("#mensagem").show();
+});
+
+$(document).ajaxError(function(event, request, settings) {
+    $("#mensagem").html(request.responseText);
+    $("#mensagem").append("<h4>" + settings.url + "</h4>");
+});
+
+$(document).ajaxSuccess(function() {
+    $("#mensagem").hide();
+    $('#screen').hide();
+});
+
+//
+// FUNÇÃO DA POPUP DE MENSAGEM
+//
+var offset = $("#mensagem").offset();
+$(window).scroll(function() {
+    if ($(window).scrollTop() > offset.top) {
+        $("#mensagem").stop().animate({
+            marginTop: $(window).scrollTop(),
+        }, 0);
+    }
+});
+
+//
+// MasterSis script do CRUD
+//
+$(document).on("click", "#resultado a, #pagination a", function() {
+    $("#cadastro").load($(this).attr('href'));
+    return false;
+});
+
+$(document).on("click", "#sub_menu button", function() {
+    $("#cadastro").load($(this).attr('url'));
+    return false;
+});
+
+$(document).on("keyup", "#busca", function() {
+    if ($(this).val().length > 0) {
+        $("#resultado").load($(this).attr('url') + encodeURI($(this).val()));
+    }
+});
+
+//
+// Tooltip do menu
+//
+$('.dropdown-toggle').tooltip()
+//
+//
+
 $(document).on("submit", 'form[name="grava"]', function() {
     $.ajax({
         type: "POST",
@@ -30,11 +102,12 @@ $(document).on("submit", 'form[name="form-data"]', function() {
     return false;
 });
 
-$(document).on('change', 'form[name="grava"]', function() {
-    $('button[type="submit"]').removeAttr("disabled");
-    $("#mensagem").text("Atenção: Foi feita alterações nessa pagina, salve as alterações antes de sai.");
-    $("#mensagem").show();
-    $(".alert").hide();
+$(document).on('keypress', 'form[name="grava"]', function() {
+    $(this).change(function() {
+        $('button[type="submit"]').removeAttr("disabled");
+        $(".alert").hide();
+        alteracao = true;
+    });
 });
 
 $(document).on('change', 'select[name="ESTA_ID"]', function() {
@@ -102,30 +175,48 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
         $('input[name="PES_NOME_PAI"]').val('');
         $('input[name="PES_NOME_MAE"]').val('');
     }
+    $(".cpf-cnpj").focus();
 });
 
-$('input[name="PES_NOME"]').typeahead({
-    source: function(query, process) {
-        $.ajax({
-            url: "pessoa/pegapessoa",
-            type: 'POST',
-            data: {buscar: query},
-            dataType: 'json',
-            success: function(data) {
-                pessoa = [];
-                map = {};
-                $.each(data, function(i, state) {
-                    map[state.PES_NOME] = state;
-                    pessoa.push(state.PES_NOME);
-                });
-                process(pessoa);
-            }
-        });
+// autocomplete venda
+var cliente = $('#nome_pes').typeahead({
+    name: 'cliente',
+    minLength: 1,
+    limit: 10,
+    remote: {
+        url: 'pessoa/pegapessoa?buscar=%QUERY'
     },
-    updater: function(item) {
-        $("#venda").load("venda/abrir/" + map[item].PES_ID);
+});
+cliente.on('typeahead:selected', function(evt, data) {
+    $("#venda").load("venda/abrir/" + data.id);
+});
+$("#nome_pes").focus();
+//
+//
+
+
+// autocomplete
+var usuario = $('#usuario').typeahead({
+    name: 'usuario',
+    minLength: 1,
+    limit: 10,
+    remote: {
+        url: 'usuario/pegausuario?buscar=%QUERY'
     },
-    minLength: 4,
+});
+usuario.on('typeahead:selected', function(evt, data) {
+    $("#permissoes").load("permissoes/gerenciar/" + data.id);
+});
+$("#usuario").focus();
+//
+//
+
+//
+// Submenu abrir no corpo
+//
+$(document).on("click", ".nocorpo", function() {
+    $("#corpo").load($(this).attr('href'));
+    return false;
 });
 
 //Desbloquea atela preta e o aviso
@@ -134,20 +225,10 @@ $(document).on("click", "#screen", function() {
     $("#screen").hide();
 });
 
-//
-// Regras de carregamentos
-//
-$(document).ajaxStart(function() {
-    $("#mensagem").html("<img src='assets/img/carregando.gif'>");
-    $('#screen').show();
-    $("#mensagem").show();
-});
-
-$(document).ajaxError(function(settings) {
-    $("#mensagem").html("Erro ao carregar a pagina: " + settings.url);
-});
-
-$(document).ajaxSuccess(function() {
-    $("#mensagem").hide();
-    $('#screen').hide();
-});
+function printObject(o) {
+    var out = '';
+    for (var p in o) {
+        out += p + ': ' + o[p] + '\n';
+    }
+    console.log(out);
+}

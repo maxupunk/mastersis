@@ -21,7 +21,7 @@ endif;
         <legend>EDIÇÃO DE SERVIÇO</legend>
 
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
 
         <label>Descrição:</label>
@@ -42,7 +42,7 @@ endif;
 
         <input type="hidden" value="<?php echo $id_servico; ?>" name="id_servico" />
 
-        <hr><button type="submit" class="btn" disabled>SALVA ALTERAÇÕES</button>
+        <hr><button type="submit" class="btn btn-default" disabled>SALVA ALTERAÇÕES</button>
 
     </fieldset>
 </form>

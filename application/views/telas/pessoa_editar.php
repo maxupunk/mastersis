@@ -11,21 +11,23 @@ endif;
         <legend>EDIÇÃO DE PESSOA</legend>
 
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
-        <?php echo validation_errors(); ?>
+        <?php
+        if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>';
+        echo validation_errors();
+        ?>
 
 
             <div class="well">
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-sm-3">
                         <label>Tipo *:</label>
                         <?php echo form_dropdown('PES_TIPO', array('f' => 'FISICA', 'j' => 'JURIDICA'), $query->PES_TIPO, 'id="pessoa_tipo" autofocus'); ?>
                     </div>
-                    <div class="col-5">
+                    <div class="col-sm-5">
                         <label class="cpf-cnpj-label">C.P.F *:</label>
                         <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ', $query->PES_CPF_CNPJ); ?>" class="cpf-cnpj" required />
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label>Dt.Nasc.:</label>
                         <input type="text" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA', $query->PES_NASC_DATA); ?>" class="data" <?php if ($query->PES_TIPO == "j") echo 'disabled="disabled"'; ?>/>
                     </div>
@@ -47,21 +49,21 @@ endif;
             <div class="well">
                 <legend>Contatos:</legend>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label>Telefone:</label>
                         <input type="text" name="PES_FONE" value="<?php echo set_value('PES_FONE', $query->PES_FONE); ?>" class="fone" />
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label>Celular 1 *:</label>
                         <input type="text" name="PES_CEL1" value="<?php echo set_value('PES_CEL1', $query->PES_CEL1); ?>" class="fone" required />
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-4">
                         <label>Celular 2:</label>
                         <input type="text" name="PES_CEL2" value="<?php echo set_value('PES_CEL2', $query->PES_CEL2); ?>" class="fone" />
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-sm-12">
                         <label>E-MAIL:</label>
                         <input type="text" name="PES_EMAIL" value="<?php echo set_value('PES_EMAIL', $query->PES_EMAIL); ?>"/>
                     </div>
@@ -99,7 +101,7 @@ endif;
         <input type="hidden" value="<?php echo $query->PES_ID ?>" name="id_pessoa" />
         <input type="hidden" value="<?php echo $query->END_ID; ?>" name="id_endereco" />
 
-        <hr><button type="submit" class="btn" >SALVA ALTERAÇOES</button>
+        <hr><button type="submit" class="btn btn-default" >SALVA ALTERAÇOES</button>
 
     </fieldset>
 </form>

@@ -29,14 +29,14 @@ endif;
                 print_r($upload);
             if (isset($thumb))
                 print_r($thumb);
-            if (isset($mensagem))
+            if (isset($mensagem) and $mensagem != NULL)
                 echo '<div class="alert alert-info">' . $mensagem . '</div>';
             ?>
             <label class="file_input_button">Click para seleciona arquivo!
                 <input type="file" name="userfile" />
             </label>
             <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
-            <button type="submit" id="img_botao" class="btn">Adiciona/Alterar</button>
+            <button type="submit" id="img_botao" class="btn btn-default">Adiciona/Alterar</button>
             </div>
         </fieldset>
     </form>
@@ -44,5 +44,5 @@ endif;
 </div>
 
 <div class="row">
-    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-12">' ?>
+    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-sm-12">' ?>
 </div>

@@ -1,7 +1,7 @@
 <?php
 $id_servico = $this->uri->segment(3);
 
-if (isset($mensagem)) {
+if (isset($mensagem) and $mensagem != NULL) {
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
     exit();
 }
@@ -26,7 +26,7 @@ endif;
 
         <input type="hidden" name="id_servico" value="<?php echo $query->SERV_ID ?>" />
 
-        <br><button type="submit" class="btn">SIM, EXCLUIR</button>
+        <br><button type="submit" class="btn btn-default">SIM, EXCLUIR</button>
 
     </fieldset>
 

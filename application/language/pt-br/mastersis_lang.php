@@ -11,16 +11,22 @@ $lang["msg_imagem_erro"] = "Erro ao grava no banco de dados!";
 $lang["msg_excluir_sucesso"] = "exclusão realizada com sucesso!";
 $lang["msg_excluir_erro"] = "Erro ao grava no banco de dados!";
 
+
 $lang["msg_pedido_sucesso"] = "Pedido aberto com sucesso!";
 $lang["msg_pedido_erro"] = "Erro ao criar pedido!";
-
 $lang["msg_pedido_aberto"] = "Já existe uma compra EM ABERTA para esse cliente!";
-
 $lang["msg_atualuzado_sucesso"] = "Item atualuzado com sucesso!";
-$lang["msg_atualuzado_erro"] = "eroo ao atualuzar item!";
+$lang["msg_atualuzado_erro"] = "erro ao atualuzar item!";
+$lang["msg_pedido_erro"] = "erro ao atualuzar item!";
+$lang["msg_addproduto_existente"] = "O item já existe, se deseja altera quantidades, click em umas das setas em QUANTIDADE.";
+$lang["msg_pedido_erro"] = "erro ao atualuzar item!";
+$lang["msg_estoque_insuficiente"] = "Não existe estoque suficiente!";
 
-$lang["msg_pedido_erro"] = "eroo ao atualuzar item!";
+$lang["msg_permissao_add_sucesso"] = "Permissão adicionada com sucesso!";
+$lang["msg_permissao_add_erro"] = "Erro ao adiciona permisão!";
 
+$lang["msg_permissao_rm_sucesso"] = "Permissão removida com sucesso!";
+$lang["msg_permissao_rm_erro"] = "Erro ao remover a permisão!";
 
 //
 // Tradução do menu
@@ -32,6 +38,7 @@ $lang["menu_cad_produto"] = "Produto";
 $lang["menu_cad_servico"] = "Serviço";
 $lang["menu_cad_pessoa"] = "Pessoa";
 $lang["menu_cad_usario"] = "Usuario";
+$lang["menu_cad_permissoes"] = "Permisões";
 $lang["menu_cad_endereco"] = "Endereço";
 $lang["menu_cad_categoria"] = "Categoria";
 $lang["menu_cad_unid_medida"] = "Unidade de Medida";
@@ -58,4 +65,11 @@ $lang["menu_financeiro"] = "Financeiro";
 $lang["menu_relatorio"] = "Relatorio";
 
 // MENU CONFIGURAÇÕES
-$lang["menu_configuracoes"] = "Configuraçoes";
+$lang["menu_ferramentas"] = "Ferramentas";
+
+$lang["menu_ferra_principal"] = "Pagina Principal";
+$lang["menu_ferra_config"] = "Configuraçoes";
+$lang["menu_ferra_logsistema"] = "Logs do sistema";
+$lang["menu_ferra_backup"] = "Backup do banco de dados";
+$lang["menu_ferra_otimizar"] = "Otimizar banco de dados";
+$lang["menu_ferra_logout"] = "Sair";

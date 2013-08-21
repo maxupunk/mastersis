@@ -12,7 +12,7 @@ endif;
         <legend>EDIÇÃO DE MEDIDA</legend>
 
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
 
         <label>Medida:</label>
@@ -26,7 +26,7 @@ endif;
         
         <input type="hidden" value="<?php echo $query->MEDI_ID; ?>" name="id_medida" />
 
-        <hr><button type="submit" class="btn" disabled>SALVA ALTERAÇOES</button>
+        <hr><button type="submit" class="btn btn-default" disabled>SALVA ALTERAÇOES</button>
 
     </fieldset>
 </form>

@@ -12,7 +12,7 @@ endif;
         <legend>EDIÇÃO DE CATEGORIA</legend>
 
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
 
         <label>Descrição do produto:</label>
@@ -29,7 +29,7 @@ endif;
 
         <input type="hidden" value="<?php echo $query->CATE_ID; ?>" name="id_categoria" />
 
-        <hr><button type="submit" class="btn" disabled>SALVA ALTERAÇOES</button>
+        <hr><button type="submit" class="btn btn-default" disabled>SALVA ALTERAÇOES</button>
 
     </fieldset>
 </form>

@@ -7,7 +7,8 @@ class Endereco extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model','join_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
     public function index() {
@@ -17,13 +18,14 @@ class Endereco extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function bairro() {
+    public function bairro() {        
         // validar o formulario
         $this->form_validation->set_rules('BAIRRO_NOME', 'NOME', 'required|max_length[45]|is_unique[BAIRROS.BAIRRO_NOME]');
         $this->form_validation->set_rules('CIDA_ID', 'CIDADE', 'required');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('BAIRRO_NOME', 'CIDA_ID'), $this->input->post());
@@ -38,7 +40,7 @@ class Endereco extends CI_Controller {
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
             'tela' => 'endereco_bairro',
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -51,6 +53,7 @@ class Endereco extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('RUA_NOME', 'RUA_CEP', 'BAIRRO_ID'), $this->input->post());
@@ -65,7 +68,7 @@ class Endereco extends CI_Controller {
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
             'tela' => 'endereco_rua',
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }

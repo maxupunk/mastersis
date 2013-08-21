@@ -8,7 +8,8 @@ class Medida extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
     public function index() {
@@ -26,6 +27,7 @@ class Medida extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('MEDI_NOME', 'MEDI_SIGLA'), $this->input->post());
@@ -38,7 +40,7 @@ class Medida extends CI_Controller {
 
         $dados = array(
             'tela' => "medi_cadastro",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -59,6 +61,7 @@ class Medida extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -73,13 +76,14 @@ class Medida extends CI_Controller {
 
         $dados = array(
             'tela' => "medi_editar",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_medida) {
+        $mensagem = NULL;
         if ($this->input->post('id_medida') > 0):
             if ($this->crud_model->excluir("MEDIDAS", array('MEDI_ID' => $this->input->post('id_medida'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -90,7 +94,7 @@ class Medida extends CI_Controller {
 
         $dados = array(
             'tela' => "medi_excluir",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);

@@ -4,7 +4,7 @@
 
         <legend>CADASTRO DE BAIRRO</legend>
 
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <?php
         $options = array('' => 'Escolha o Estado');
@@ -20,7 +20,7 @@
         <?php echo form_error('BAIRRO_NOME'); ?>
         <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" />
 
-        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
 
     </fieldset>
 

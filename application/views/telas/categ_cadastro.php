@@ -4,7 +4,7 @@
 
         <legend>CADASTRO DE CATEGORIA</legend>
         
-        <?php if (isset($mensagem)) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+        <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Categoria:</label>
         <?php echo form_error('CATE_NOME'); ?>
@@ -14,7 +14,7 @@
         <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
 
-        <hr><button type="submit" class="btn" disabled>CADASTRAR</button>
+        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
 
     </fieldset>
 

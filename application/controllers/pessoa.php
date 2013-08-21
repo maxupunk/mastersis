@@ -8,7 +8,9 @@ class Pessoa extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->auth->check_logged($this->router->class , $this->router->method);
+        $mensagem = NULL;
     }
 
     public function index() {
@@ -26,6 +28,7 @@ class Pessoa extends CI_Controller {
         $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|strtoupper|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
 
+        $mensagem = NULL;
         if ($this->input->post('PES_TIPO') === 'f') {
             $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required|strtoupper');
             $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
@@ -54,8 +57,6 @@ class Pessoa extends CI_Controller {
                 // converte a data pra inserir no db
                 $data_nasc = array('PES_NASC_DATA' => implode("-", array_reverse(explode("/", $post_pessoa['PES_NASC_DATA']))));
 
-                //Desfazer a conversão de data
-                //$data = implode("/",array_reverse(explode("-",$data)));
                 // faz a atualização do array com os dados assima
                 $post_pessoa = array_replace($post_pessoa, $id_ende);
                 $post_pessoa = array_replace($post_pessoa, $data_nasc);
@@ -75,7 +76,7 @@ class Pessoa extends CI_Controller {
         $dados = array(
             'tela' => 'pessoa_cadastro',
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -121,11 +122,13 @@ class Pessoa extends CI_Controller {
             $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
             $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
         }
+        
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'PES_DATA', 'PES_EMAIL', 'PES_TIPO'), $this->input->post());
-                if ($this->crud_model->update("PESSOAS", $pessoa, array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
+            if ($this->crud_model->update("PESSOAS", $pessoa, array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_editar_sucesso");
 
                 $endereco = elements(array('END_NUMERO', 'END_REFERENCIA'), $this->input->post());
@@ -141,7 +144,7 @@ class Pessoa extends CI_Controller {
 
         $dados = array(
             'tela' => "pessoa_editar",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->join_model->endereco_completo($id_pessoa)->row(),
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
         );
@@ -149,6 +152,7 @@ class Pessoa extends CI_Controller {
     }
 
     public function excluir($id_pessoa) {
+        $mensagem = NULL;
         if ($this->input->post('id_pessoa') > 0):
             if ($this->crud_model->excluir("PESSOAS", array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
                 $mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -159,7 +163,7 @@ class Pessoa extends CI_Controller {
 
         $dados = array(
             'tela' => "pessoa_excluir",
-            'mensagem' => @$mensagem,
+            'mensagem' => $mensagem,
             'query' => $this->crud_model->pega("PESSOAS", array('PES_ID' => $id_pessoa))->row(),
         );
         $this->load->view('contente', $dados);
@@ -175,10 +179,18 @@ class Pessoa extends CI_Controller {
     }
 
     public function pegapessoa() {
-        $busca = $_POST['buscar'];
+        $busca = $_GET['buscar'];
+        
+        $rows = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
+
+        $json_array = array();
+        foreach ($rows as $row)
+            array_push($json_array, array('id' => $row->PES_ID, 'value' => $row->PES_NOME));
+
         $dados = array(
-            'query' => $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result(),
+            'query' => $json_array,
         );
+        
         $this->load->view('json', $dados);
     }
 

@@ -26,18 +26,23 @@ class Crud_model extends CI_Model {
         endif;
     }
 
-    public function pega_tudo($tabela, $quant = 0, $inicial = 0) {
+    public function pega_tudo($tabela, $quant = 0, $inicial = 0, $ordeby = NULL) {
+        if ($ordeby != NULL)
+            $this->db->order_by($ordeby, "asc");
         if ($quant > 0)
             $this->db->limit($quant, $inicial);
+
         return $this->db->get($tabela);
     }
 
-    public function pega($tabela, $id = NULL) {
-        if ($id != NULL):
+    public function pega($tabela, $id = NULL, $ordeby = 0) {
+        if ($id != NULL) {
+            
+            if ($ordeby != 0)
+                $this->db->order_by($ordeby, "asc");
+            
             return $this->db->get_where($tabela, $id);
-        else:
-            return FALSE;
-        endif;
+        }
     }
 
     public function buscar($tabela, $busca, $limit = 15) {
