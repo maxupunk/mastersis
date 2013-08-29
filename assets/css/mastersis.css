@@ -25,68 +25,93 @@ a:active {text-decoration: none;}
     margin: 20px 0;
 }
 
-.mensagem {
-    position: absolute;
+/* LAYOUT DO RECIBO */
+.recibo{
+    font-family: sans-serif;
+    font-size: 12px;
+    border: 1px solid #f5f5f5;
+}
+.cabeca-recibo{
     text-align: center;
-    display: none;
-    height: auto;
-    width: 700px;
-    top:150px;
-    left:calc(50% - 700px/2);
-    z-index:9999;
-    padding:10px 12px;
-    vertical-align:middle;
-    background-color:#f5f5f5;
-    border:1px solid #ccc;
-    border-radius:4px;
-    -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+    border-bottom: 1px solid #f5f5f5;
 }
 
-.screen {
-    position: absolute;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    background: #000;
-    display: none;
-    opacity: 0.6;
+.lista-recibo{
     width: 100%;
-    height: 100%;
-    z-index:9998;
+    text-align: left;
+    font-size: 12px;
 }
 
-/*
-* CONFIGURACÃO DO MENU
-*/
+.lista-recibo td{
+    border-top: 1px solid #f5f5f5;
+    padding: 2px;
+}
+
+.miniletras{
+    padding: 10px;
+    font-size: 10px;
+    border-bottom: 1px dotted #f5f5f5;
+    border-top: 1px dotted #f5f5f5;
+}
+
+.rodape-recibo{
+    width: 100%;
+    font-size: 12px;
+}
+
+.rodape-recibo td{
+    border-left: 2px solid #f5f5f5;
+}
+/* FIM DO LAYOUT */
+
+
+#modal-ajax-content {
+    text-align: center;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
+/* CONFIGURACÃO DO MENU */
+.centraliza-menu {
+    width: 775px;
+    margin: 0 auto;
+}
+
+.titulo-menu {
+    font-size: 15px;
+    text-align: center;
+    color: #ccc;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 4px;
+    margin-top: -6px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 2px 2px rgba(0,0,0,0.075);
+}
+
 .dropdown:hover {
     background-color:#f5f5f5;
 }
 
 .dropdown-toggle span{
-  font-size: 40px;
-  line-height: 65%;
-  padding-left: 20px;
-  padding-right: 20px;
+    font-size: 40px;
+    line-height: 65%;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-/*
-* CONFIGURAÇÃO DOS ICONES GERAL
-*/
+/* CONFIGURACÃO DOS ICONES GERAL */
 .glyphicon {
-  margin: 5px auto 10px;
-  font-size: 18px;
-  color: #555;
+    margin: 5px auto 10px;
+    font-size: 18px;
+    color: #555;
 }
 
 .glyphicon:hover {
-  color: #000;
+    color: #000;
 }
 
 
-/*
-* FORMULARIO
-*/
+/* FORMULARIO */
 input[type="text"] {
     display:block;
     width:100%;
@@ -182,9 +207,8 @@ input[type="date"], input[type="email"] {
     max-width: 173px;
 }
 
-/*
-* Permissoes
-*/
+
+/* Permissoes */
 .permissao-class {
     float: left;
     max-width: 400px;
@@ -211,47 +235,64 @@ input[type="date"], input[type="email"] {
     margin: 0px 0px;
 }
 
-/*
-* typeahead configuração
-*/
+
+/* typeahead configuração */
+.twitter-typeahead{
+    width: 100%;
+}
+
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+    margin-bottom: 0;
+}
 
 .tt-dropdown-menu {
+    min-width: 160px;
     width: 100%;
-    margin-top: 12px;
-    padding: 8px 0;
+    margin-top: 2px;
+    padding: 5px 0;
     background-color: #fff;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.2);
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
     -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
 }
 
 .tt-suggestion {
+    display: block;
     padding: 3px 20px;
-    font-size: 18px;
-    line-height: 24px;
 }
 
 .tt-suggestion.tt-is-under-cursor {
     color: #fff;
-    background-color: #0097cf;
+    background-color: #0081c2;
+    background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+    background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0)
+}
+
+.tt-suggestion.tt-is-under-cursor a {
+    color: #fff;
 }
 
 .tt-suggestion p {
     margin: 0;
 }
 
-.twitter-typeahead > input {
-    min-width: 670px;
-}
-
-/*
-* ESTILO DO FORMULARIO DE LOGIN
-*/
+/* ESTILO DO FORMULARIO DE LOGIN */
 .form-signin {
     max-width: 400px;
     padding: 15px;

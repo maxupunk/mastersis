@@ -7,9 +7,9 @@ class Venda extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('crud_model', 'join_model'));
-        $this->load->library(array('form_validation', 'table', 'session'));
-        $mensagem = NULL;
+        $this->load->model(array('crud_model', 'join_model', 'geral_model'));
+        $this->load->library(array('form_validation', 'table'));
+        $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {
@@ -30,6 +30,7 @@ class Venda extends CI_Controller {
                     'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
                     'PEDIDO_DATA' => date("Y-m-d h:i:s"),
                     'PEDIDO_ESTATUS' => '1',
+                    'PEDIDO_LOCAL' => 'l',
                     'PEDIDO_TIPO' => 'v');
                 if ($this->crud_model->inserir('PEDIDO', $dados) != TRUE) {
                     $mensagem = $this->lang->line("msg_pedido_erro");
@@ -38,6 +39,7 @@ class Venda extends CI_Controller {
                 }
             } else {
                 $id_venda = $pedido->PEDIDO_ID;
+                $mensagem = "Já existe um pedido em aberto para essse clientes!";
             }
         }
         $dados = array(
@@ -53,10 +55,10 @@ class Venda extends CI_Controller {
     public function addproduto($id_pedido, $id_produto) {
         $mensagem = NULL;
         //verifica se o produto existe e tem um estoque maior que zero
-        $produto = $this->join_model->produto($id_produto)->row();
+        $produto = $this->join_model->produto_estoque($id_produto)->row();
         if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
             //verifica se existe realmente um pedido com o id passado
-            $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
+            $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
             if ($pedido != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
                 $lista_pedido = $this->crud_model->pega("LISTA_PEDIDO", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row();
@@ -87,13 +89,13 @@ class Venda extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function atualizar($id_pedido, $lista_ped_id, $quantidade) {
+    public function atualizar($id_pedido, $lista_ped_id, $id_estoque, $quantidade) {
         $mensagem = NULL;
         // verifica se existe o pedido
         $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
         if ($pedido != NULL) {
             //verifica se existe a quatidade de produto pedido
-            $produto = $this->join_model->lista_pedido($id_pedido)->row();
+            $produto = $this->crud_model->pega("ESTOQUE", array('ESTOQ_ID' => $id_estoque))->row();
             if ($produto->ESTOQ_ATUAL < $quantidade) {
                 $mensagem = $this->lang->line("msg_estoque_insuficiente");
                 $quantidade = $produto->ESTOQ_ATUAL;
@@ -138,6 +140,50 @@ class Venda extends CI_Controller {
             'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
+    }
+
+    public function cansela($id_pedido) {
+        $this->geral_model->delete_pedido($id_pedido);
+        redirect(base_url() . 'venda');
+    }
+
+    public function avista($id_pedido) {
+        $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
+
+        $dados = array(
+            'tela' => "venda_avista",
+            'total' => $this->geral_model->total_pedido($id_pedido)->row(),
+            'pessoa' => $this->join_model->endereco_completo($pedido->PES_ID)->row(),
+            'id_pedido' => $id_pedido,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function fecha_pedido($id_pedido) {
+        $mensagem = NULL;
+        ini_set('memory_limit', '32M');
+
+        $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
+
+        if ($this->geral_model->fecha_pedido($id_pedido) > 0) {
+            $mensagem = 'Venda concluida com sucesso. Os itens foram baixado no estoque!';
+        } else {
+            $mensagem = 'Esse pedido já foi baixado anteriormente!';
+        }
+
+        $dados = array(
+            'tela' => "venda_fecha",
+            'mensagem' => $mensagem,
+            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+            'empresa' => $this->crud_model->pega_tudo("EMPRESA")->row(),
+            'pessoa' => $this->join_model->endereco_completo($pedido->PES_ID)->row(),
+        );
+        
+        $html = $this->load->view('contente', $dados);
+    }
+
+    public function teste() {
+        print_r($this->join_model->produto_busca("p")->result());
     }
 
 }

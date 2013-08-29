@@ -9,6 +9,7 @@ class Configuracoes extends CI_Controller {
         parent::__construct();
         $this->load->model('crud_model');
         $this->load->library(array('form_validation', 'table'));
+        $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {

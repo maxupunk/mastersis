@@ -7,23 +7,33 @@
     </div>
 </div>
 
-<div class="screen"></div>
-<div class="mensagem"></div>
+<div class="modal fade" id="modal">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-content"></div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal" id="modal-ajax">
+  <div class="modal-dialog">
+    <div class="modal-content" id="modal-ajax-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <!-- jquery -->
-<script src="<?php echo base_url('assets/js/jquery-1.10.2.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/jquery-1.10.2.min.js'); ?>"></script>
 
 <!-- bootstrap -->
-<script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/typeahead.min.js'); ?>"></script>
-
-
-<!-- plug-ins -->
-<script src="<?php echo base_url('assets/js/jquery.mask.min.js'); ?>"></script>
-
+<script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap/typeahead.min.js'); ?>"></script>
 
 <!-- custom -->
 <script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
+
+<!-- plug-ins -->
+<script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/plugins/printThis.js'); ?>"></script>
+
 
 </body>
 </html>

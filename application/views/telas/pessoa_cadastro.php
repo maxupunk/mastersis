@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <label>Nome:</label>
+            <label>Nome / Razão social:</label>
             <input type="text" name="PES_NOME" value="<?php echo set_value('PES_NOME'); ?>" required />
 
             <label>Nome do pai:</label>
@@ -91,4 +91,3 @@
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>

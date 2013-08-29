@@ -20,7 +20,7 @@ $lang["msg_atualuzado_erro"] = "erro ao atualuzar item!";
 $lang["msg_pedido_erro"] = "erro ao atualuzar item!";
 $lang["msg_addproduto_existente"] = "O item já existe, se deseja altera quantidades, click em umas das setas em QUANTIDADE.";
 $lang["msg_pedido_erro"] = "erro ao atualuzar item!";
-$lang["msg_estoque_insuficiente"] = "Não existe estoque suficiente!";
+$lang["msg_estoque_insuficiente"] = "Não existe estoque suficiente! O estoque maximo foi digitado para você!";
 
 $lang["msg_permissao_add_sucesso"] = "Permissão adicionada com sucesso!";
 $lang["msg_permissao_add_erro"] = "Erro ao adiciona permisão!";

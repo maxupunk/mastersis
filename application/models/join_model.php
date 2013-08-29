@@ -5,12 +5,12 @@ if (!defined('BASEPATH'))
 
 class Join_model extends CI_Model {
 
-    public function join($tabela1, $tabela2, $join) {
-        $this->db->select('*');
-        $this->db->from($tabela1, $tabela2);
-        $this->db->join($tabela2, $join);
-        return $this->db->get();
-    }
+//    public function join($tabela1, $tabela2, $join) {
+//        $this->db->select('*');
+//        $this->db->from($tabela1, $tabela2);
+//        $this->db->join($tabela2, $join);
+//        return $this->db->get();
+//    }
 
     public function endereco_completo($id_pessoa) {
         $this->db->select('*');
@@ -30,15 +30,26 @@ class Join_model extends CI_Model {
         $this->db->join('BAIRROS', 'RUA.BAIRRO_ID = BAIRROS.BAIRRO_ID');
         $this->db->join('CIDADES', 'BAIRROS.CIDA_ID = CIDADES.CIDA_ID');
         $this->db->join('ESTADOS', 'CIDADES.ESTA_ID = ESTADOS.ESTA_ID');
-        $this->db->or_like('RUA.RUA_NOME',$busca,'both');
+        $this->db->or_like('RUA.RUA_NOME', $busca, 'both');
         return $this->db->get();
     }
 
-    public function produto($id_produto) {
+    public function produto_estoque($id_produto) {
         $this->db->select('*');
         $this->db->from('PRODUTOS', 'ESTOQUE');
         $this->db->join('ESTOQUE', 'PRODUTOS.PRO_ID = ESTOQUE.PRO_ID');
-        $this->db->where('PRODUTOS.PRO_ID = ' . $id_produto);
+        $this->db->where('PRODUTOS.PRO_ID = ', $id_produto);
+        return $this->db->get();
+    }
+
+    public function produto_busca($busca) {
+        $this->db->select('*');
+        $this->db->from('PRODUTOS', 'ESTOQUE');
+        $this->db->join('ESTOQUE', 'PRODUTOS.PRO_ID = ESTOQUE.PRO_ID');
+        $this->db->where('PRODUTOS.PRO_ESTATUS','a');
+        $this->db->where('ESTOQUE.ESTOQ_ATUAL >=',1);
+        $this->db->or_like('PRODUTOS.PRO_DESCRICAO', $busca);
+        $this->db->or_like('PRODUTOS.PRO_CARAC_TEC', $busca);
         return $this->db->get();
     }
 
@@ -48,7 +59,17 @@ class Join_model extends CI_Model {
         $this->db->join('ESTOQUE', 'PRODUTOS.PRO_ID = ESTOQUE.PRO_ID');
         $this->db->join('LISTA_PEDIDO', 'ESTOQUE.ESTOQ_ID = LISTA_PEDIDO.ESTOQ_ID');
         $this->db->join('MEDIDAS', 'PRODUTOS.MEDI_ID = MEDIDAS.MEDI_ID');
-        $this->db->where('LISTA_PEDIDO.PEDIDO_ID = ' . $id_pedido);
+        $this->db->where('LISTA_PEDIDO.PEDIDO_ID = ', $id_pedido);
+        return $this->db->get();
+    }
+
+    public function busca_pedido($busca, $situacao = NULL) {
+        $this->db->select('*');
+        $this->db->from('PESSOAS', 'PEDIDO');
+        $this->db->join('PEDIDO', 'PESSOAS.PES_ID = PEDIDO.PES_ID');
+        $this->db->where('PEDIDO.PEDIDO_ESTATUS = '.$situacao);
+        $this->db->or_like('PESSOAS.PES_NOME', $busca);
+
         return $this->db->get();
     }
 

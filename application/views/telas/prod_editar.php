@@ -5,7 +5,6 @@ if ($query == null) :
     exit();
 endif;
 ?>
-<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
 <form method="POST" action="<?php echo base_url('produto'); ?>/editar/<?php echo $query->PRO_ID; ?>" name="grava" accept-charset="utf-8">
 
     <fieldset>
@@ -31,7 +30,7 @@ endif;
 
         <input type="hidden" value="<?php echo $query->PRO_ID; ?>" name="id_produto" />
 
-        <hr><button type="submit" class="btn btn-default" disabled>ATUALIZAR</button>
+        <hr><button type="submit" class="btn btn-default">ATUALIZAR</button>
 
     </fieldset>
 </form>

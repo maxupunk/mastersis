@@ -8,6 +8,7 @@ class Ferramentas extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
+        //$this->auth->check_logged($this->router->class, $this->router->method);
         $this->load->dbutil();
     }
 
@@ -82,8 +83,29 @@ class Ferramentas extends CI_Controller {
         }
     }
 
-    public function teste() {
-        
+    public function Cod_barra() {
+        $this->load->library(array('barcode'));
+        $valor = "12345678998098409840948049804984";
+        $this->barcode->criabarra($valor);
+    }
+
+    public function ini() {
+        $this->load->library(array('ini'));
+
+        //$ini = $this->ini->set('config.ini');
+        // Add new setting to section third_section
+        $this->ini->data['principal']['app_name'] = "MasterSis3";
+
+        // Udate settings
+        //$ini->data['first_section']['animal'] = 'COW';
+        // Save settings to file
+        $this->ini->write('config.ini');
+
+        echo "<pre>";
+        print_r($this->ini->data);
+        print_r($this->ini->data['principal']);
+        print_r($this->ini->data['principal']['app_name']);
+        echo "</pre>";
     }
 
 }

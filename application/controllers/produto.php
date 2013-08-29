@@ -8,7 +8,7 @@ class Produto extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->load->library(array('form_validation', 'table'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
@@ -20,7 +20,6 @@ class Produto extends CI_Controller {
     }
 
     public function cadastrar() {
-        $mensagem = NULL;
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
@@ -29,6 +28,7 @@ class Produto extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
         
+        $mensagem = NULL;
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -108,6 +108,7 @@ class Produto extends CI_Controller {
     }
 
     public function imagem() {
+        $mensagem = NULL;
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
@@ -189,12 +190,16 @@ class Produto extends CI_Controller {
     }
 
     public function pegaproduto() {
-        $busca = $_GET['buscar'];
-        $rows = $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result();
-
+        $this->load->model('join_model');
+        
+        $busca = $_GET['buscar'];        
+        $rows = $this->join_model->produto_busca($busca)->result();
+        
+        setlocale(LC_MONETARY, "pt_BR");
+        
         $json_array = array();
         foreach ($rows as $row)
-            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO));
+            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO.' | '. $row->ESTOQ_ATUAL.' | '.money_format('%n', $row->ESTOQ_PRECO)));
 
         $dados = array(
             'query' => $json_array,

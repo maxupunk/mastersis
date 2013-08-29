@@ -8,7 +8,7 @@ class Categoria extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
-        $this->load->library(array('form_validation', 'table', 'auth'));
+        $this->load->library(array('form_validation', 'table'));
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
 

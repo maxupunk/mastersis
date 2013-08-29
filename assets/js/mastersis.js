@@ -6,7 +6,7 @@
 
 var alteracao = false;
 
-//
+////////////////////////////////////////////////////////////////////////////////
 // Aviso de alterações de dados
 //
 $(window).on('beforeunload', function() {
@@ -16,35 +16,35 @@ $(window).on('beforeunload', function() {
     }
 });
 
-//
+$(document).on('click', '.alert', function() {
+    $(this).hide();
+});
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Regras de carregamentos
 //
 $(document).ajaxStart(function() {
-    $("#mensagem").html("<img src='assets/img/carregando.gif'>");
-    $('#screen').show();
-    $("#mensagem").show();
+    $("#modal-ajax-content").html("<img src='assets/img/carregando.gif'>");
+    $('#modal-ajax').modal('show');
 });
 
 $(document).ajaxError(function(event, request, settings) {
-    $("#mensagem").html(request.responseText);
-    $("#mensagem").append("<h4>" + settings.url + "</h4>");
+    $("#modal-ajax-content").html(request.responseText);
+    $("#modal-ajax-content").append(settings.url);
 });
 
 $(document).ajaxSuccess(function() {
-    $("#mensagem").hide();
-    $('#screen').hide();
+    $('#modal-ajax').modal('hide');
 });
 
+
 //
-// FUNÇÃO DA POPUP DE MENSAGEM
+// Submenu abrir no corpo
 //
-var offset = $("#mensagem").offset();
-$(window).scroll(function() {
-    if ($(window).scrollTop() > offset.top) {
-        $("#mensagem").stop().animate({
-            marginTop: $(window).scrollTop(),
-        }, 0);
-    }
+$(document).on("click", ".nocorpo", function() {
+    $("#corpo").load($(this).attr('href'));
+    return false;
 });
 
 //
@@ -66,13 +66,9 @@ $(document).on("keyup", "#busca", function() {
     }
 });
 
+////////////////////////////////////////////////////////////////////////////////
+// Comportamento dos formulario do CRUD
 //
-// Tooltip do menu
-//
-$('.dropdown-toggle').tooltip()
-//
-//
-
 $(document).on("submit", 'form[name="grava"]', function() {
     $.ajax({
         type: "POST",
@@ -82,6 +78,7 @@ $(document).on("submit", 'form[name="grava"]', function() {
         // enviado com sucesso
         success: function(response) {
             $("#cadastro").html(response);
+            alteracao = false;
         }
     });
     return false;
@@ -178,7 +175,9 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
     $(".cpf-cnpj").focus();
 });
 
-// autocomplete venda
+////////////////////////////////////////////////////////////////////////////////
+// AUTOCOMPLETE VENDA
+////////////////////////////////////////////////////////////////////////////////
 var cliente = $('#nome_pes').typeahead({
     name: 'cliente',
     minLength: 1,
@@ -194,8 +193,51 @@ $("#nome_pes").focus();
 //
 //
 
+////////////////////////////////////////////////////////////////////////////////
+// AUTOCOMPLETE USUARIO
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('click', '#pessoa', function() {
+    var usuario = $('#pessoa').typeahead({
+        name: 'pessoa',
+        minLength: 1,
+        limit: 10,
+        remote: {
+            url: 'pessoa/pegapessoa?buscar=%QUERY'
+        },
+    });
+    usuario.on('typeahead:selected', function(evt, data) {
+        $("#PES_ID").val(data.id);
+    });
+    usuario.on('typeahead:autocompleted', function(evt, data) {
+        $("#PES_ID").val(data.id);
+    });
+    $("#pessoa").focus();
+});
 
-// autocomplete
+////////////////////////////////////////////////////////////////////////////////
+// AUTOCOMPLETE PRODUTOS
+////////////////////////////////////////////////////////////////////////////////
+$(document).on('click', '#produto_venda', function() {
+    var produto = $('#produto_venda').typeahead({
+        name: 'produtos',
+        minLength: 1,
+        limit: 10,
+        remote: {
+            url: 'produto/pegaproduto?buscar=%QUERY'
+        },
+    });
+    produto.on('typeahead:selected', function(evt, data) {
+        $("#lista").load("venda/addproduto/" + $('input[name="PEDIDO_ID"]').val() + "/" + data.id);
+        $(this).val('');
+    });
+    $(this).val('');
+    $("#produto_venda").focus();
+});
+
+////////////////////////////////////////////////////////////////////////////////
+// Menu permicoes
+////////////////////////////////////////////////////////////////////////////////
+// autocomplete usuario
 var usuario = $('#usuario').typeahead({
     name: 'usuario',
     minLength: 1,
@@ -208,23 +250,74 @@ usuario.on('typeahead:selected', function(evt, data) {
     $("#permissoes").load("permissoes/gerenciar/" + data.id);
 });
 $("#usuario").focus();
-//
-//
 
-//
-// Submenu abrir no corpo
-//
-$(document).on("click", ".nocorpo", function() {
-    $("#corpo").load($(this).attr('href'));
-    return false;
+// Selecione uma permisão
+$(document).on('change', '#permissao', function() {
+    if ($(this).is(':checked') == true) {
+        $("#retorno").load('permissoes/inserir/' + $("#id_usuario").val() + '/' + $(this).val());
+        return false;
+    } else {
+        $("#retorno").load('permissoes/retirar/' + $("#id_usuario").val() + '/' + $(this).val());
+        return false;
+    }
+
 });
-
-//Desbloquea atela preta e o aviso
-$(document).on("click", "#screen", function() {
-    $("#mensagem").hide();
-    $("#screen").hide();
+// marca e/ou desmarca todoas as permisoes
+$(document).on('click', '#selec-all-permi', function() {
+    if ($("#selec-all-permi").is(':checked')) {
+        $(".selecao").each(function() {
+            $(this).prop("checked", true);
+            $("#retorno").load('permissoes/inserir/' + $("#id_usuario").val() + '/' + $(this).val());
+        });
+    } else {
+        $(".selecao").each(function() {
+            $(this).prop("checked", false);
+            $("#retorno").load('permissoes/retirar/' + $("#id_usuario").val() + '/' + $(this).val());
+        });
+    }
 });
+////////////////////////////////////////////////////////////////////////////////
 
+
+////////////////////////////////////////////////////////////////////////////////
+// VENDAS
+////////////////////////////////////////////////////////////////////////////////
+// ALTERA QUATIDADE DE PRODUTOS
+$(document).on('change', '#quantidade', function() {
+    $("#lista").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
+});
+// EXCLUIR PRODUTOS
+$(document).on('click', '#excluir-produto', function() {
+    $("#lista").load("venda/excluir/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
+});
+//  INICIA A FINALIZAÇÃO DA VENDA
+$(document).on('click', '#pagamento', function() {
+    $("#modal-content").load($(this).attr('url') + "/" + $('input[name="PEDIDO_ID"]').val());
+    $('#modal').modal('show');
+});
+// CONCLUI A VENDA
+$(document).on('click', '#finaliza-venda', function() {
+    $("#modal-content").load("venda/fecha_pedido/" + $('input[name="PEDIDO_ID"]').val());
+});
+// IMPRESÃO DE RECIBO
+$(document).on('click', '#imprimir', function() {
+    $(".impresao").printThis({
+        debug: false,
+        importCSS: true,
+        printContainer: true,
+        loadCSS: "assets/css/mastersis.css",
+        pageTitle: "IMPRESSAO DE RECIBO",
+        removeInline: false
+    });
+});
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//
+// Ferramenta de debuga objetos
+//
 function printObject(o) {
     var out = '';
     for (var p in o) {

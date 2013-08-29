@@ -104,7 +104,7 @@ class Ini {
      * @param 	String		$file 		- INI file path
      * @param 	Boolean		$sections 	- Process sections
      */
-    function INI() {
+    function set() {
         if (func_num_args()) {
             $args = func_get_args();
             call_user_func_array(array($this, 'read'), $args);

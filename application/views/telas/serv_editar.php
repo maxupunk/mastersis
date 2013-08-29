@@ -46,4 +46,3 @@ endif;
 
     </fieldset>
 </form>
-<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>

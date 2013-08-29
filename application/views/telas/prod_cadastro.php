@@ -1,4 +1,3 @@
-<script src="<?php echo base_url('assets/js/mascaras.js'); ?>"></script>
 <form action="<?php echo base_url('produto'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>

@@ -11,7 +11,7 @@
 
     <div class="col-sm-6">
         <div class="well">
-            <input type="text" name="buscar" url="<?php echo base_url('usuario'); ?>/busca?buscar=" id="busca" class="form-control" placeholder="Busca serviço">
+            <input type="text" name="buscar" url="<?php echo base_url('usuario'); ?>/busca?buscar=" id="busca" class="form-control" placeholder="Busca usuario">
         </div>
         <div id="resultado"><!--resultado da busca --></div>
 
