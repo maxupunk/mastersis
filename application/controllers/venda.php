@@ -166,9 +166,9 @@ class Venda extends CI_Controller {
         $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
 
         if ($this->geral_model->fecha_pedido($id_pedido) > 0) {
-            $mensagem = 'Venda concluida com sucesso. Os itens foram baixado no estoque!';
+            $mensagem = 'Venda concluida com sucesso!';
         } else {
-            $mensagem = 'Esse pedido já foi baixado anteriormente!';
+            $mensagem = 'Esse pedido já foi fchado anteriormente!';
         }
 
         $dados = array(

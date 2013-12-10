@@ -21,7 +21,7 @@ class Categoria extends CI_Controller {
 
     public function cadastrar() {
 
-        $this->form_validation->sest_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
+        $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');

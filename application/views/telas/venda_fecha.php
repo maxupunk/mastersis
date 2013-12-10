@@ -8,7 +8,7 @@
     <p class="cabeca-recibo">
         <?php echo $empresa->EMPRE_NOME ?><br>
         CNPJ: <?php echo $empresa->EMPRE_CNPJ ?> - Fone/Fax: <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
-        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / www.masternetinformatica.com.br<br>
+        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php //echo $empresa->EMPRE_SITE ?><br>
     </p>
     <?php
     setlocale(LC_MONETARY, "pt_BR");

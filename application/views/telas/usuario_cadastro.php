@@ -9,9 +9,9 @@
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
         ?>
 
-        <?php echo validation_errors(); ?>
-        <br>
+        
         <label>NOME DA PESSOA</label>
+        <?php echo form_error('PES_ID'); ?>
         <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" />
 
         <label>APELIDO (como é conhecido)</label>
