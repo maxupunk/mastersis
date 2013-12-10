@@ -23,14 +23,12 @@ class Usuario extends CI_Controller {
     public function cadastrar() {
         // validar o formulario
         $this->form_validation->set_rules('PES_ID', 'NOME DA PESSOA', 'required|is_unique[USUARIO.PES_ID]');
-        $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrada como usuario!');
         $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required');
-        $this->form_validation->set_rules('USUARIO_LOGIN', 'LOGIN', 'required|is_unique[USUARIO.PES_LOGIN]');
-        $this->form_validation->set_message('is_unique', 'Já existe um usuario com esse %s cadastrado!');
+        $this->form_validation->set_rules('USUARIO_LOGIN', 'LOGIN', 'required|is_unique[USUARIO.USUARIO_LOGIN]');
         $this->form_validation->set_rules('USUARIO_SENHA', 'SENHA', 'required');
         $this->form_validation->set_rules('USUARIO_SENHA_RE', 'REPITA A SENHA', 'required|matches[USUARIO_SENHA]');
         $this->form_validation->set_rules('CARG_ID', 'CARGO', 'required');
-
+        $this->form_validation->set_message('is_unique', 'Já existe um usuario com esse %s cadastrado!');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 

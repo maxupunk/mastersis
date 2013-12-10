@@ -24,11 +24,11 @@
 
         <label>SENHA</label>
         <?php echo form_error('USUARIO_SENHA'); ?>
-        <input type="text" name="USUARIO_SENHA" value="<?php echo set_value('USUARIO_SENHA'); ?>" maxlength="45" />
+        <input type="password" name="USUARIO_SENHA" value="<?php echo set_value('USUARIO_SENHA'); ?>" maxlength="45" />
 
         <label>REPITA A SENHA</label>
         <?php echo form_error('USUARIO_SENHA_RE'); ?>
-        <input type="text" name="USUARIO_SENHA_RE" value="<?php echo set_value('USUARIO_SENHA_RE'); ?>" maxlength="45" />
+        <input type="password" name="USUARIO_SENHA_RE" value="<?php echo set_value('USUARIO_SENHA_RE'); ?>" maxlength="45" />
 
 
 
