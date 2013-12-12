@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Produto extends CI_Controller {
     
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -28,15 +29,15 @@ class Produto extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
         
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO'), $this->input->post());
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
 
         endif;
@@ -44,7 +45,7 @@ class Produto extends CI_Controller {
             'tela' => 'prod_cadastro',
             'categorias' => $this->crud_model->pega_tudo("CATEGORIA")->result(),
             'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -87,28 +88,28 @@ class Produto extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS', 'PRO_PESO'), $this->input->post());
             if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_editar_sucesso");
+                $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_editar_erro");
+                $this->mensagem = $this->lang->line("msg_editar_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "prod_editar",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function imagem() {
-        $mensagem = NULL;
+        
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
@@ -139,9 +140,9 @@ class Produto extends CI_Controller {
             $this->image_lib->resize();
 
             if ($this->crud_model->update("PRODUTOS", array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_imagem_sucesso");
+                $this->mensagem = $this->lang->line("msg_imagem_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_imagem_erro");
+                $this->mensagem = $this->lang->line("msg_imagem_erro");
             }
 
         endif;
@@ -150,24 +151,24 @@ class Produto extends CI_Controller {
             'tela' => "prod_imagem",
             'upload' => $this->upload->display_errors(),
             'thumb' => $this->image_lib->display_errors(),
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_produto) {
-        $mensagem = NULL;
+        
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
             }
         endif;
 
         $dados = array(
             'tela' => "prod_excluir",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);

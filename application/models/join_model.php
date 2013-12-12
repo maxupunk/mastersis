@@ -52,6 +52,25 @@ class Join_model extends CI_Model {
         $this->db->or_like('PRODUTOS.PRO_CARAC_TEC', $busca);
         return $this->db->get();
     }
+    
+    public function pedido_busca2($busca) {
+        $this->db->select('*');
+        $this->db->from('PESSOAS', 'PEDIDO');
+        $this->db->join('PEDIDO', 'PESSOAS.PES_ID = PEDIDO.PES_ID');
+        $this->db->or_like('PESSOAS.PES_CPF_CNPJ', $busca);
+        $this->db->or_like('PESSOAS.PES_NOME', $busca);
+        return $this->db->get();
+    }
+    
+    public function pedido_busca($busca) {
+        $this->db->select('*');
+        $this->db->from('PEDIDO', 'PESSOAS', 'USUARIO');
+        $this->db->join('PESSOAS', 'PEDIDO.PES_ID = PESSOAS.PES_ID');
+        $this->db->join('USUARIO', 'PEDIDO.USUARIO_ID = USUARIO.USUARIO_ID');
+        $this->db->or_like('PESSOAS.PES_CPF_CNPJ', $busca);
+        $this->db->or_like('PESSOAS.PES_NOME', $busca);
+        return $this->db->get();
+    }
 
     public function lista_pedido($id_pedido) {
         $this->db->select('*');

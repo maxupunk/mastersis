@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Medida extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -27,20 +28,20 @@ class Medida extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('MEDI_NOME', 'MEDI_SIGLA'), $this->input->post());
             if ($this->crud_model->inserir("MEDIDAS", $dados) == TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "medi_cadastro",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -61,40 +62,40 @@ class Medida extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('MEDI_NOME', 'MEDI_SIGLA'), $this->input->post());
             if ($this->crud_model->update("MEDIDAS", $dados, array('MEDI_ID' => $this->input->post('id_medida'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_editar_sucesso");
+                $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_editar_erro");
+                $this->mensagem = $this->lang->line("msg_editar_erro");
             }
 
         endif;
 
         $dados = array(
             'tela' => "medi_editar",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_medida) {
-        $mensagem = NULL;
+        
         if ($this->input->post('id_medida') > 0):
             if ($this->crud_model->excluir("MEDIDAS", array('MEDI_ID' => $this->input->post('id_medida'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_excluir_erro");
+                $this->mensagem = $this->lang->line("msg_excluir_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "medi_excluir",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
         $this->load->view('contente', $dados);

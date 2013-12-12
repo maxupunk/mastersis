@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Permissoes extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -36,38 +37,38 @@ class Permissoes extends CI_Controller {
     }
 
     public function inserir($id_usuario, $id_metodo) {
-        $mensagem = NULL;
+        
         if ($this->crud_model->pega("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo))->row() == NULL) {
             $dados = array(
                 'USUARIO_ID' => $id_usuario,
                 'METOD_ID' => $id_metodo);
             if ($this->crud_model->inserir('PERMISSOES', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_permissao_add_sucesso");
+                $this->mensagem = $this->lang->line("msg_permissao_add_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_permissao_add_erro");
+                $this->mensagem = $this->lang->line("msg_permissao_add_erro");
             }
 
             $dados = array(
                 'tela' => "permissoes_mensagem",
-                'mensagem' => $mensagem,
+                'mensagem' => $this->mensagem,
             );
             $this->load->view('contente', $dados);
         }
     }
 
     public function retirar($id_usuario, $id_metodo) {
-        $mensagem = NULL;
+        
         if ($this->crud_model->pega("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo))->row() != NULL) {
 
             if ($this->crud_model->excluir("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo)) === TRUE) {
-                $mensagem = $this->lang->line("msg_permissao_rm_sucesso");
+                $this->mensagem = $this->lang->line("msg_permissao_rm_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_permissao_rm_erro");
+                $this->mensagem = $this->lang->line("msg_permissao_rm_erro");
             }
 
             $dados = array(
                 'tela' => "permissoes_mensagem",
-                'mensagem' => $mensagem,
+                'mensagem' => $this->mensagem,
             );
             $this->load->view('contente', $dados);
         }

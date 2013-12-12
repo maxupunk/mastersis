@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Usuario extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -32,7 +33,7 @@ class Usuario extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -42,16 +43,16 @@ class Usuario extends CI_Controller {
 
             $dados = elements(array('PES_ID', 'USUARIO_APELIDO', 'USUARIO_LOGIN', 'USUARIO_SENHA', 'CARG_ID'), $novo_form);
             if ($this->crud_model->inserir('USUARIO', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
 
         endif;
         $dados = array(
             'tela' => 'usuario_cadastro',
             'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -75,7 +76,7 @@ class Usuario extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -85,9 +86,9 @@ class Usuario extends CI_Controller {
 
             $dados = elements(array('USUARIO_APELIDO', 'USUARIO_SENHA', 'CARG_ID'), $novo_form);
             if ($this->crud_model->inserir('USUARIO', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
 
         endif;
@@ -96,7 +97,7 @@ class Usuario extends CI_Controller {
             'id_usuario' => $id_usuario,
             'usuario' => $this->crud_model->pega("USUARIO", array('USUARIO_ID' => $id_usuario))->row(),
             'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }

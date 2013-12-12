@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Categoria extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -18,7 +19,7 @@ class Categoria extends CI_Controller {
         );
         $this->load->view('home', $dados);
     }
-
+    
     public function cadastrar() {
 
         $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
@@ -26,21 +27,21 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
         
-        $mensagem = NULL;
+        
         //verifica se passou na validação
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('CATE_NOME', 'CATE_DESCRIC'), $this->input->post());
             if ($this->crud_model->inserir("CATEGORIA", $dados) == TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "categ_cadastro",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -93,22 +94,22 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('CATE_NOME', 'CATE_DESCRIC', 'CATE_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("CATEGORIA", $dados, array('CATE_ID' => $this->input->post('id_categoria'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_editar_sucesso");
+                $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_ediatr_erro");
+                $this->mensagem = $this->lang->line("msg_ediatr_erro");
             }
 
         endif;
 
         $dados = array(
             'tela' => "categ_editar",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row(),
         );
         $this->load->view('contente', $dados);
@@ -128,7 +129,7 @@ class Categoria extends CI_Controller {
 
         $this->upload->initialize($img);
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->upload->do_upload() == TRUE):
 
@@ -146,9 +147,9 @@ class Categoria extends CI_Controller {
             $this->image_lib->resize();
 
             if ($this->crud_model->update("CATEGORIA", array('CATE_IMG' => $data['file_name']), array('CATE_ID' => $this->input->post('id_categoria'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_imagem_sucesso");
+                $this->mensagem = $this->lang->line("msg_imagem_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_imagem_erro");
+                $this->mensagem = $this->lang->line("msg_imagem_erro");
             }
 
         endif;
@@ -157,7 +158,7 @@ class Categoria extends CI_Controller {
             'tela' => "categ_imagem",
             'upload' => @$this->upload->display_errors(),
             'thumb' => @$this->image_lib->display_errors(),
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }

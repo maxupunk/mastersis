@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
 
 class Endereco extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model','join_model'));
@@ -25,14 +26,14 @@ class Endereco extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('BAIRRO_NOME', 'CIDA_ID'), $this->input->post());
             if ($this->crud_model->inserir('BAIRROS', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
 
         endif;
@@ -40,7 +41,7 @@ class Endereco extends CI_Controller {
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
             'tela' => 'endereco_bairro',
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -53,14 +54,14 @@ class Endereco extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('RUA_NOME', 'RUA_CEP', 'BAIRRO_ID'), $this->input->post());
             if ($this->crud_model->inserir('RUA', $dados) === TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
 
         endif;
@@ -68,7 +69,7 @@ class Endereco extends CI_Controller {
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
             'tela' => 'endereco_rua',
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }

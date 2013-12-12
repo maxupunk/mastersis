@@ -5,6 +5,7 @@ if (!defined('BASEPATH'))
 
 class Servico extends CI_Controller {
 
+    var $mensagem;
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -29,7 +30,7 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         if ($this->form_validation->run() == TRUE):
 
             $formulario = $this->input->post();
@@ -42,15 +43,15 @@ class Servico extends CI_Controller {
 
             $dados = elements(array('SERV_NOME', 'SERV_DESC', 'SERV_VALOR'), $novo_form);
             if ($this->crud_model->inserir("SERVICOS", $dados) == TRUE) {
-                $mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "serv_cadastro",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -102,39 +103,39 @@ class Servico extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        $mensagem = NULL;
+        
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('SERV_NOME', 'SERV_DESC', 'SERV_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("SERVICOS", $dados, array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_editar_sucesso");
+                $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_editar_erro");
+                $this->mensagem = $this->lang->line("msg_editar_erro");
             }
 
         endif;
 
         $dados = array(
             'tela' => "serv_editar",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
     public function excluir($id_servico) {
-        $mensagem = NULL;
+        
         if ($this->input->post('id_servico') > 0):
             if ($this->crud_model->excluir("SERVICOS", array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
-                $mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
             } else {
-                $mensagem = $this->lang->line("msg_excluir_erro");
+                $this->mensagem = $this->lang->line("msg_excluir_erro");
             }
         endif;
 
         $dados = array(
             'tela' => "serv_excluir",
-            'mensagem' => $mensagem,
+            'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("SERVICOS", array('SERV_ID' => $id_servico))->row(),
         );
         $this->load->view('contente', $dados);
