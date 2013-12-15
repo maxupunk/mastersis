@@ -16,7 +16,7 @@ class Ordemservico extends CI_Controller {
     public function index() {
 
         $dados = array(
-            'tela' => "servico",
+            'tela' => "ordem_servico",
         );
         $this->load->view('home', $dados);
     }

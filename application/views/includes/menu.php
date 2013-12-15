@@ -35,8 +35,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span></a>
                     <ul class="dropdown-menu">
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_ordem_servico"); ?></li>
-                        <li><a href="#">Abrir um OS</a></li>
-                        <li><a href="#">Alterar/consulta OS</a></li>
+                        <li><? echo anchor('ordemservico', $this->lang->line("menu_ordem_dash")); ?></li>
+                        <li><? echo anchor('ordemservico', $this->lang->line("menu_ordem_abrir")); ?></li>
                     </ul>
                 </li>
 
@@ -67,8 +67,10 @@
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_relatorio"); ?></li>
                         <li><a href="#">Vendas</a></li>
                         <li><a href="#">Compras</a></li>
+                        <li><a href="#">Ordem de serviços</a></li>
+                        <li><a href="#">Itens sem saida</a></li>
                         <li><a href="#">Itens com estoque baixo</a></li>
-                        <li><a href="#">Baixa pagamentos</a></li>
+                        <li><a href="#">Pagamentos baixados</a></li>
                         <li><a href="#">Clientes em atraso</a></li>
                     </ul>
                 </li>

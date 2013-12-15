@@ -52,7 +52,7 @@
 
         <hr>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="submit" class="btn btn-primary" disabled>Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
         </div>
         

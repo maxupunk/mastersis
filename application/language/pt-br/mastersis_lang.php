@@ -51,7 +51,8 @@ $lang["menu_venda_fazer"] = "Fazer uma Venda";
 
 // MENU ORDEM DE SERVIÇO
 $lang["menu_ordem_servico"] = "Ordem Serviço";
-
+$lang["menu_ordem_dash"] = "Movimento";
+$lang["menu_ordem_abrir"] = "Abrir um OS";
 
 // MENU DE COMPRAS
 $lang["menu_compras"] = "Compras";

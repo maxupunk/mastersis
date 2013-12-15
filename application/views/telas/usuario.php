@@ -1,19 +1,35 @@
 <div class="row">
     <div class="col-sm-6">
-        <div class="btn-group" id="sub_menu">
-            <button class="btn btn-default" url="<?php echo base_url('usuario'); ?>/cadastrar">Cadastro</button>
-            <button class="btn btn-default" url="<?php echo base_url('usuario'); ?>/listar">Lista todos</button>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="btn-group" id="sub_menu">
+                            <button class="btn btn-default" url="<?php echo base_url('usuario'); ?>/cadastrar">Cadastro</button>
+                            <button class="btn btn-default" url="<?php echo base_url('usuario'); ?>/listar">Lista todos</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+
+                        <div id="cadastro"><!-- tabela de cadastro --></div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div id="cadastro"><!-- tabela de cadastro --></div>
-
     </div>
 
     <div class="col-sm-6">
-        <div class="well">
-            <input type="text" name="buscar" url="<?php echo base_url('usuario'); ?>/busca?buscar=" id="busca" class="form-control" placeholder="Busca usuario">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <input type="text" name="buscar" url="<?php echo base_url('usuario'); ?>/busca?buscar=" id="busca" class="form-control" placeholder="Busca usuario">
+                    </div>
+                    <div class="panel-body">
+                        <div id="resultado"><!--resultado da busca --></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="resultado"><!--resultado da busca --></div>
-
     </div>
 </div>

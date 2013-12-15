@@ -20,6 +20,7 @@ endif;
 
 
 <div class="row">
+    <div class="col-lg-12">
     <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
         <fieldset>
             <legend><?php echo $query->PRO_DESCRICAO ?></legend>
@@ -37,11 +38,12 @@ endif;
             </label>
             <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
             <button type="submit" id="img_botao" class="btn btn-primary">Adiciona/Alterar</button>
-            </div>
         </fieldset>
     </form>
     <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
+    </div>
 </div>
+
 
 <div class="row">
     <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-sm-12">' ?>

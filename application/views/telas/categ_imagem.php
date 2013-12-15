@@ -20,6 +20,7 @@ endif;
 
 
 <div class="row">
+    <div class="col-lg-12">
     <form action="<?php echo base_url('categoria'); ?>/imagem/<?php echo $id_categoria ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
         <fieldset>
             <legend><?php echo $query->CATE_NOME; ?></legend>
@@ -42,6 +43,7 @@ endif;
         </fieldset>
     </form>
     <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
+    </div>
 </div>
 
 <div class="row">
