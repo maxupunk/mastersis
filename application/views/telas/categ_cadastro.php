@@ -13,8 +13,11 @@
         <label>Descrição:</label>
         <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
-
-        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 

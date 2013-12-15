@@ -20,7 +20,11 @@
         <?php echo form_error('BAIRRO_NOME'); ?>
         <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" />
 
-        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 

@@ -36,7 +36,7 @@ endif;
                 <input type="file" name="userfile" />
             </label>
             <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
-            <button type="submit" id="img_botao" class="btn btn-default">Adiciona/Alterar</button>
+            <button type="submit" id="img_botao" class="btn btn-primary">Adiciona/Alterar</button>
             </div>
         </fieldset>
     </form>

@@ -29,7 +29,11 @@ endif;
 
         <input type="hidden" value="<?php echo $query->CATE_ID; ?>" name="id_categoria" />
 
-        <hr><button type="submit" class="btn btn-default" disabled>SALVA ALTERAÇOES</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 </form>

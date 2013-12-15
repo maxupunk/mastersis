@@ -18,7 +18,11 @@
         <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR'); ?>" class="valor" />
 
         
-        <hr><button type="submit" class="btn btn-default">CADASTRAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 </form>

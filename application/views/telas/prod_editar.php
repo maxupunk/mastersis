@@ -30,7 +30,11 @@ endif;
 
         <input type="hidden" value="<?php echo $query->PRO_ID; ?>" name="id_produto" />
 
-        <hr><button type="submit" class="btn btn-default">ATUALIZAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 </form>

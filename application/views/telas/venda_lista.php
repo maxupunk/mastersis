@@ -28,6 +28,6 @@ echo $this->table->generate();
 ?>
 
 <div class="well">
-    <button class="btn btn-default" id="pagamento" url="<?php echo base_url('venda/avista'); ?>">Finaliza Avista</button>
-    <button class="btn btn-default" id="pagamento" url="">Finaliza Parcelado</button>
+    <button class="btn btn-primary" id="pagamento" url="<?php echo base_url('venda/avista'); ?>">Finaliza Avista</button>
+    <button class="btn btn-primary" id="pagamento" url="">Finaliza Parcelado</button>
 </div>

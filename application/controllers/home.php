@@ -9,7 +9,6 @@ class Home extends CI_Controller {
         parent::__construct();
         $this->load->model('crud_model');
         $this->load->helper('url');
-        $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {

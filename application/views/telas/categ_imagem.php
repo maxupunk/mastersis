@@ -38,7 +38,7 @@ endif;
                 <input type="file" name="userfile" />
             </label>
             <input type="hidden" value="<?php echo $id_categoria; ?>" name="id_categoria" />
-            <button type="submit" id="img_botao" class="btn btn-default">Adiciona/Alterar</button>
+            <button type="submit" id="img_botao" class="btn btn-primary">Adiciona/Alterar</button>
         </fieldset>
     </form>
     <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>

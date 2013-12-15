@@ -42,7 +42,11 @@ endif;
 
         <input type="hidden" value="<?php echo $id_servico; ?>" name="id_servico" />
 
-        <hr><button type="submit" class="btn btn-default" disabled>SALVA ALTERAÇÕES</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 </form>

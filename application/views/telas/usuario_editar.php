@@ -40,7 +40,11 @@ endif;
         <input type="hidden" name="PES_ID" id="PES_ID" value=""/>
 
 
-        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 

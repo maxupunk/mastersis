@@ -67,7 +67,7 @@
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_relatorio"); ?></li>
                         <li><a href="#">Vendas</a></li>
                         <li><a href="#">Compras</a></li>
-                        <li><a href="#">Itens com estoue baixo</a></li>
+                        <li><a href="#">Itens com estoque baixo</a></li>
                         <li><a href="#">Baixa pagamentos</a></li>
                         <li><a href="#">Clientes em atraso</a></li>
                     </ul>

@@ -26,7 +26,11 @@
         <?php echo form_error('RUA_CEP'); ?>
         <input type="text" name="RUA_CEP" value="<?php echo set_value('RUA_CEP'); ?>" maxlength="45" class="cep" />
 
-        <hr><button type="submit" class="btn btn-default" disabled>CADASTRAR</button>
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 

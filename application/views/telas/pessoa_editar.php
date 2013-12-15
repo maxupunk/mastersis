@@ -101,7 +101,11 @@ endif;
         <input type="hidden" value="<?php echo $query->PES_ID ?>" name="id_pessoa" />
         <input type="hidden" value="<?php echo $query->END_ID; ?>" name="id_endereco" />
 
-        <hr><button type="submit" class="btn btn-default" >SALVA ALTERAÇOES</button>
-
+        <hr>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
+        
     </fieldset>
 </form>

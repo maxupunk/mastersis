@@ -57,5 +57,5 @@
 
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" id="imprimir">Imprimir</button>
+    <button class="btn btn-primary" id="imprimir">Imprimir</button>
 </div>

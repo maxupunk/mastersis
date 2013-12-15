@@ -13,6 +13,6 @@ $this->load->view('includes/header');
         <label class="checkbox">
             <input type="checkbox" value="remember-me">Me lembrar
         </label>
-        <button class="btn btn-default" type="submit">Entrar</button>
+        <button class="btn btn-primary" type="submit">Entrar</button>
     </form>
 </div> <!-- /container -->
