@@ -12,16 +12,15 @@ if ($usuario == null) :
 endif;
 ?>
 
-<form action="<?php echo base_url('usuario'); ?>/editar" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('usuario'); ?>/editar/<?php echo $usuario->USUARIO_ID; ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
-        <legend>CADASTRO DE USUARIO</legend>
+        <legend>EDITAR DE USUARIO</legend>
 
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>APELIDO (como é conhecido)</label>
-        <?php echo form_error('USUARIO_APELIDO'); ?>
         <input type="text" name="USUARIO_APELIDO" value="<?php echo set_value('USUARIO_APELIDO', $usuario->USUARIO_APELIDO); ?>" maxlength="45" />
 
 
@@ -34,15 +33,17 @@ endif;
         } else {
             $options[''] = 'Cadastre um cargo';
         }
-        echo form_dropdown('CARG_ID', $options, $usuario->USUARIO_SENHA);
+        echo form_dropdown('CARG_ID', $options, $cargo->CARG_NOME);
         ?>
 
-        <input type="hidden" name="PES_ID" id="PES_ID" value=""/>
+        <?php echo form_dropdown('USUARIO_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('PRO_ESTATUS', $usuario->USUARIO_ESTATUS)); ?>
+        
+        <input type="hidden" name="usuario_id" value="<?php echo $usuario->USUARIO_ID; ?>"/>
 
 
         <hr>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" disabled>Salvar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
         </div>
 

@@ -36,7 +36,7 @@
                     <ul class="dropdown-menu">
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_ordem_servico"); ?></li>
                         <li><? echo anchor('ordemservico', $this->lang->line("menu_ordem_dash")); ?></li>
-                        <li><? echo anchor('ordemservico', $this->lang->line("menu_ordem_abrir")); ?></li>
+                        <li><? echo anchor('ordemservico/abrir', $this->lang->line("menu_ordem_abrir")); ?></li>
                     </ul>
                 </li>
 

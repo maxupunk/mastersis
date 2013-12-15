@@ -18,7 +18,8 @@ endif;
         <legend>EXCLUIR A UNIDADE ABAIXO?</legend>
 
 
-        <label>CODIGO: <?php echo $query->MEDI_ID ?></label>
+        <label>Codigo:</label>
+        <input type="text" name="MEDI_ID" value="<?php echo set_value('', $query->MEDI_ID); ?>" readonly />
         
         <label>Nome:</label>
         <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" readonly />
