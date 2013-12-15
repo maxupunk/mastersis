@@ -38,7 +38,7 @@ class Usuario extends CI_Controller {
         if ($this->form_validation->run() == TRUE):
 
             $formulario = $this->input->post();
-            $senha = array('USUARIO_SENHA' => md5($formulario['USUARIO_SENHA']));
+            $senha = array('USUARIO_SENHA' => hash("sha512", $formulario['USUARIO_SENHA']));
             $novo_form = array_replace($formulario, $senha);
 
             $dados = elements(array('PES_ID', 'USUARIO_APELIDO', 'USUARIO_LOGIN', 'USUARIO_SENHA', 'CARG_ID'), $novo_form);

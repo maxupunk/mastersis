@@ -28,8 +28,10 @@ class Home extends CI_Controller {
 
     function dologin() {
         $usuario = $this->input->post('usuario');
-        $senha = md5($this->input->post('senha'));
+        $senha = hash("sha512", $this->input->post('senha'));
 
+        //echo hash("sha512", $this->input->post('senha'));
+        
         if ($usuario == "" || $this->input->post('senha') == "") {
             redirect(base_url() . 'home/login', 'refresh');
             exit();
