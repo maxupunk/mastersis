@@ -259,30 +259,81 @@
             </div>
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Geral</div>
+                    <div class="panel-heading">Concluidos (Aguardando entrega).</div>
                     <div class="panel-body">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>OS abertas</th>
-                                    <th>OS pendentes</th>
-                                    <th>OS fechadas</th>
-                                    <th>Total de OS</th>
+                                    <th>Id</th>
+                                    <th>Cliente</th>
+                                    <th>Opções</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        15
+                                        0001123
                                     </td>
                                     <td>
-                                        3
+                                        Raimundo Alan Freire Moreira
                                     </td>
                                     <td>
-                                        150
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        0201123
                                     </td>
                                     <td>
-                                        168
+                                        Cicrano dos Anzois
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        0201123
+                                    </td>
+                                    <td>
+                                        Cicrano dos Anzois
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        0201123
+                                    </td>
+                                    <td>
+                                        Cicrano dos Anzois
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        0201123
+                                    </td>
+                                    <td>
+                                        Cicrano dos Anzois
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        0201123
+                                    </td>
+                                    <td>
+                                        Cicrano dos Anzois
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
                                     </td>
                                 </tr>
                             </tbody>
