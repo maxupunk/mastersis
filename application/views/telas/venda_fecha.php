@@ -6,9 +6,9 @@
 
     <div class="recibo">
     <p class="cabeca-recibo">
-        <?php echo $empresa->EMPRE_NOME ?><br>
+        <?php echo $empresa->EMPRE_NOME ?> - <?php echo $empresa->EMPRE_SLOGAN ?><br>
         CNPJ: <?php echo $empresa->EMPRE_CNPJ ?> - Fone/Fax: <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
-        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php //echo $empresa->EMPRE_SITE ?><br>
+        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?><br>
     </p>
     <?php
     setlocale(LC_MONETARY, "pt_BR");
@@ -50,7 +50,7 @@
         <tr>
             <td></td>
             <td></td>
-            <td align="right"><b><?php echo date("d / m / Y") ?></b></td>
+            <td align="right"><b><?php echo $pedido->PEDIDO_DATA; //echo date("d / m / Y") ?></b></td>
         </tr>
     </table>
     </div>

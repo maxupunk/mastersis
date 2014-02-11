@@ -12,7 +12,7 @@
         
         <label>NOME DA PESSOA</label>
         <?php echo form_error('PES_ID'); ?>
-        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" />
+        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>"/>
 
         <label>APELIDO (como é conhecido)</label>
         <?php echo form_error('USUARIO_APELIDO'); ?>
@@ -44,7 +44,7 @@
         echo form_dropdown('CARG_ID', $options, $this->input->post('CARG_ID'));
         ?>
 
-        <input type="hidden" name="PES_ID" id="PES_ID" value=""/>
+        <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
 
         <hr>

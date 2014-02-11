@@ -23,12 +23,7 @@
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-barcode"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="titulo-menu"><?php echo $this->lang->line("menu_vendas"); ?></li>
-                        <li><? echo anchor('venda', $this->lang->line("menu_venda_fazer")); ?></li>
-                        <li><a href="#">Busca Venda</a></li>
-                    </ul>
+                    <? echo anchor('venda', '<span class="glyphicon glyphicon-barcode">', 'class="dropdown-toggle"'); ?>
                 </li>
 
                 <li class="dropdown">

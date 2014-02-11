@@ -21,7 +21,7 @@
 </div><!-- /.modal -->
 
 <!-- jquery -->
-<script src="<?php echo base_url('assets/js/jquery/jquery-1.10.2.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/jquery-2.0.2.min.js'); ?>"></script>
 
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>

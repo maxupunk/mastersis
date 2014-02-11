@@ -15,10 +15,6 @@ $this->table->set_template($tmpl);
 echo $this->table->generate();
 ?>
 
-<div class="pagination" id="pagination">
-    <ul>
-
+<ul class="pagination" id="pagination">
         <? if ($paginacao) echo $paginacao; ?>
-
-    </ul>
-</div>
+</ul>

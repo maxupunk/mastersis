@@ -160,7 +160,7 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
         $('.cpf-cnpj').mask('999.999.999-99', {reverse: true});
         $('.cpf-cnpj-label').html('CPF *:');
         $('input[name="PES_NASC_DATA"]').prop('disabled', false);
-        $('input[name="PES_NOME_PAI"]').prop('disabled', false);
+        $('input[name="nome_pes_PAI"]').prop('disabled', false);
         $('input[name="PES_NOME_MAE"]').prop('disabled', false);
     } else {
         $('.cpf-cnpj').mask('99.999.999.9999-99', {reverse: true});
@@ -176,8 +176,9 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-// AUTOCOMPLETE VENDA
+// SCRIPTS DE VENDAS
 ////////////////////////////////////////////////////////////////////////////////
+//AUTOCOMPLETAR
 var cliente = $('#nome_pes').typeahead({
     name: 'cliente',
     minLength: 1,
@@ -187,11 +188,33 @@ var cliente = $('#nome_pes').typeahead({
     },
 });
 cliente.on('typeahead:selected', function(evt, data) {
-    $("#venda").load("venda/abrir/" + data.id);
+    $("#venda").load("venda/cliente/" + data.id);
 });
 $("#nome_pes").focus();
+/////////
+// NOVA VENDA
+$(document).on("click", "#AbrirVenda", function() {
+    $("#venda").load($(this).attr('href'));
+    $("#lista").html('');
+    return false;
+});
+/////////
+// LISTAR VENDAS
+/////////
+$(document).on("click", "#ListarVenda", function() {
+    $("#lista").load($(this).attr('href'));
+    return false;
+});
 //
+// PAGINAÇÃO DA LISTA DE PEDIDO
 //
+$(document).on("click", "#PagPedidos a", function() {
+    $("#lista").load($(this).attr('href'));
+    return false;
+});
+
+////////////////////////
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // AUTOCOMPLETE USUARIO
@@ -287,8 +310,8 @@ $(document).on('change', '#quantidade', function() {
     $("#lista").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
 });
 // EXCLUIR PRODUTOS
-$(document).on('click', '#excluir-produto', function() {
-    $("#lista").load("venda/excluir/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
+$(document).on('click', '#excluir-item', function() {
+    $("#lista").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
 });
 //  INICIA A FINALIZAÇÃO DA VENDA
 $(document).on('click', '#pagamento', function() {
@@ -297,7 +320,7 @@ $(document).on('click', '#pagamento', function() {
 });
 // CONCLUI A VENDA
 $(document).on('click', '#finaliza-venda', function() {
-    $("#modal-content").load("venda/fecha_pedido/" + $('input[name="PEDIDO_ID"]').val());
+    $("#modal-content").load("venda/fechapedido/" + $('input[name="PEDIDO_ID"]').val());
 });
 // IMPRESÃO DE RECIBO
 $(document).on('click', '#imprimir', function() {
@@ -312,6 +335,31 @@ $(document).on('click', '#imprimir', function() {
 });
 ////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////
+// ORDEM DE SERVIÇO
+////////////////////////////////////////////////////////////////////////////////
+
+// NOVO SERVIÇO
+$(document).on('click', '#NovoOs', function() {
+    $("#modal-content").load('ordemservico/cadastrar');
+    $('#modal').modal('show');
+});
+
+// GRAVA OS - FORMULARIO
+$(document).on("submit", 'form[name="GravaOs"]', function() {
+    $.ajax({
+        type: "POST",
+        url: $(this).attr('action'),
+        dataType: "html",
+        data: $(this).serialize(),
+        // enviado com sucesso
+        success: function(response) {
+            $("#modal-content").html(response);
+            alteracao = false;
+        }
+    });
+    return false;
+});
 
 
 

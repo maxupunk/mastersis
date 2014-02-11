@@ -87,7 +87,6 @@ class Pessoa extends CI_Controller {
         $config['base_url'] = base_url('produto/listar');
         $config['total_rows'] = $this->crud_model->pega_tudo("PRODUTOS")->num_rows();
         $config['per_page'] = 10;
-        $quant = $config['per_page'];
 
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
@@ -99,13 +98,19 @@ class Pessoa extends CI_Controller {
         $config['prev_link'] = '&lt;';
         $config['prev_tag_open'] = '<li>';
         $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+        $config['first_link'] = 'Primeira';
+        $config['last_link'] = 'Ultima';
 
         $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
 
         $this->pagination->initialize($config);
 
         $dados = array(
-            'produtos' => $this->crud_model->pega_tudo("PRODUTOS", $quant, $inicial)->result(),
+            'produtos' => $this->crud_model->pega_tudo("PRODUTOS", $config['per_page'], $inicial)->result(),
             'tela' => 'prod_listar',
             'total' => $this->crud_model->pega_tudo("PRODUTOS")->num_rows(),
             'paginacao' => $this->pagination->create_links(),
@@ -145,7 +150,7 @@ class Pessoa extends CI_Controller {
         $dados = array(
             'tela' => "pessoa_editar",
             'mensagem' => $this->mensagem,
-            'query' => $this->join_model->endereco_completo($id_pessoa)->row(),
+            'query' => $this->join_model->EnderecoCompleto($id_pessoa)->row(),
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
         );
         $this->load->view('contente', $dados);

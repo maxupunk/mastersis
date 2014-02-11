@@ -24,6 +24,7 @@ class Usuario extends CI_Controller {
 
     public function cadastrar() {
         // validar o formulario
+        $this->form_validation->set_rules('PES_NOME', 'CLIENTE', 'required|strtoupper');
         $this->form_validation->set_rules('PES_ID', 'NOME DA PESSOA', 'required|is_unique[USUARIO.PES_ID]');
         $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required');
         $this->form_validation->set_rules('USUARIO_LOGIN', 'LOGIN', 'required|is_unique[USUARIO.USUARIO_LOGIN]');
@@ -102,7 +103,6 @@ class Usuario extends CI_Controller {
         $config['base_url'] = base_url('usuario/listar');
         $config['total_rows'] = $this->crud_model->pega_tudo("USUARIO")->num_rows();
         $config['per_page'] = 10;
-        $quant = $config['per_page'];
 
         $config['num_tag_open'] = '<li>';
         $config['num_tag_close'] = '</li>';
@@ -114,13 +114,19 @@ class Usuario extends CI_Controller {
         $config['prev_link'] = '&lt;';
         $config['prev_tag_open'] = '<li>';
         $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+        $config['first_link'] = 'Primeira';
+        $config['last_link'] = 'Ultima';
 
         $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
 
         $this->pagination->initialize($config);
 
         $dados = array(
-            'usuarios' => $this->crud_model->pega_tudo("USUARIO", $quant, $inicial)->result(),
+            'usuarios' => $this->crud_model->pega_tudo("USUARIO", $config['per_page'], $inicial)->result(),
             'tela' => 'usuario_listar',
             'total' => $this->crud_model->pega_tudo("USUARIO")->num_rows(),
             'paginacao' => $this->pagination->create_links(),

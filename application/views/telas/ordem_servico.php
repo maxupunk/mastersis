@@ -1,7 +1,7 @@
 <div  class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">Ordem de Serviços em aberto.</div>
+            <div class="panel-heading">Ordem de Serviços em aberto.<a href="#" class="btn btn-success btn-xs pull-right" id="NovoOs">Nova</a></div>
             <div class="panel-body">
                 <table class="table table-hover">
                     <thead>

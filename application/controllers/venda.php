@@ -6,6 +6,7 @@ if (!defined('BASEPATH'))
 class Venda extends CI_Controller {
 
     var $mensagem;
+
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model', 'geral_model'));
@@ -20,8 +21,18 @@ class Venda extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
+    public function cliente($id_cliente) {
+
+        $dados = array(
+            'tela' => 'venda_cliente',
+            'cliente' => $this->join_model->EnderecoCompleto($id_cliente)->row(),
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
     public function abrir($id_cliente) {
-        
+
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->crud_model->pega("PESSOAS", array('PES_ID' => $id_cliente))->row() != NULL) {
             $pedido = $this->crud_model->pega("PEDIDO", array('PES_ID' => $id_cliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
@@ -46,7 +57,7 @@ class Venda extends CI_Controller {
         $dados = array(
             'tela' => 'venda_abrir',
             'id_venda' => $id_venda,
-            'cliente' => $this->join_model->endereco_completo($id_cliente)->row(),
+            'cliente' => $this->join_model->EnderecoCompleto($id_cliente)->row(),
             'pedido' => $pedido,
             'mensagem' => $this->mensagem,
         );
@@ -54,9 +65,9 @@ class Venda extends CI_Controller {
     }
 
     public function addproduto($id_pedido, $id_produto) {
-        
+
         //verifica se o produto existe e tem um estoque maior que zero
-        $produto = $this->join_model->produto_estoque($id_produto)->row();
+        $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
         if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
             //verifica se existe realmente um pedido com o id passado
             $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
@@ -83,15 +94,16 @@ class Venda extends CI_Controller {
             $this->mensagem = "Erro:<br> - O produto está com o estoque zerado!<br> - Produto esta desativo.";
         }
         $dados = array(
-            'tela' => 'venda_lista',
+            'tela' => 'venda_itens',
             'mensagem' => $this->mensagem,
-            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+            'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
+            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
         );
         $this->load->view('contente', $dados);
     }
 
     public function atualizar($id_pedido, $lista_ped_id, $id_estoque, $quantidade) {
-        
+
         // verifica se existe o pedido
         $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
         if ($pedido != NULL) {
@@ -111,15 +123,16 @@ class Venda extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => 'venda_lista',
+            'tela' => 'venda_itens',
             'mensagem' => @$this->mensagem,
-            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+            'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
+            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function excluir($id_pedido, $lista_ped_id) {
-        
+    public function excluiritem($id_pedido, $lista_ped_id) {
+
         if ($this->crud_model->excluir("LISTA_PEDIDO", array('LIST_PED_ID' => $lista_ped_id)) === TRUE) {
             $this->mensagem = $this->lang->line("msg_excluir_sucesso");
         } else {
@@ -127,16 +140,16 @@ class Venda extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => 'venda_lista',
+            'tela' => 'venda_itens',
             'mensagem' => $this->mensagem,
-            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+            'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
         );
         $this->load->view('contente', $dados);
     }
 
-
-    public function cansela($id_pedido) {
-        $this->geral_model->delete_pedido($id_pedido);
+    public function excluirpedido($id_pedido) {
+        $this->geral_model->ExcluirPedido($id_pedido);
         redirect(base_url() . 'venda');
     }
 
@@ -145,18 +158,18 @@ class Venda extends CI_Controller {
 
         $dados = array(
             'tela' => "venda_avista",
-            'total' => $this->geral_model->total_pedido($id_pedido)->row(),
-            'pessoa' => $this->join_model->endereco_completo($pedido->PES_ID)->row(),
+            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+            'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
             'id_pedido' => $id_pedido,
         );
         $this->load->view('contente', $dados);
     }
 
-    public function fecha_pedido($id_pedido) {
-               
+    public function fechapedido($id_pedido) {
+
         $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
 
-        if ($this->geral_model->fecha_pedido($id_pedido) > 0) {
+        if ($this->geral_model->FechaPedido($id_pedido) > 0) {
             $this->mensagem = 'Venda concluida com sucesso!';
         } else {
             $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
@@ -165,17 +178,57 @@ class Venda extends CI_Controller {
         $dados = array(
             'tela' => "venda_fecha",
             'mensagem' => $this->mensagem,
-            'lista_pedido' => $this->join_model->lista_pedido($id_pedido)->result(),
+            'pedido' => $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row(),
+            'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
             'empresa' => $this->crud_model->pega_tudo("EMPRESA")->row(),
-            'pessoa' => $this->join_model->endereco_completo($pedido->PES_ID)->row(),
+            'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
         );
-        
+
+        $this->load->view('contente', $dados);
+    }
+
+    public function listar($id_cliente) {
+
+        $this->load->library('pagination');
+        $config['base_url'] = base_url('venda/listar/' . $id_cliente);
+        $config['total_rows'] = $this->geral_model->PedidosCliente($id_cliente)->num_rows();
+        $config['per_page'] = 10;
+        $config['uri_segment'] = 4;
+        $config['num_links'] = 30;
+
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="disabled"><a>';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['next_link'] = '&gt;';
+        $config['next_tag_open'] = '<li>';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_link'] = '&lt;';
+        $config['prev_tag_open'] = '<li>';
+        $config['prev_tag_close'] = '</li>';
+        $config['first_tag_open'] = '<li>';
+        $config['first_tag_close'] = '</li>';
+        $config['last_tag_open'] = '<li>';
+        $config['last_tag_close'] = '</li>';
+        $config['first_link'] = 'Primeira';
+        $config['last_link'] = 'Ultima';
+
+        $this->uri->segment(4) != '' ? $inicial = $this->uri->segment(4) : $inicial = 0;
+
+        $this->pagination->initialize($config);
+
+
+        $dados = array(
+            'pedidos_cliente' => $this->geral_model->PedidosCliente($id_cliente, $config['per_page'], $inicial)->result(),
+            'tela' => 'venda_listar',
+            'paginacao' => $this->pagination->create_links(),
+        );
         $this->load->view('contente', $dados);
     }
 
     public function teste() {
         echo "<pre>";
-        print_r($this->join_model->pedido_busca("a")->result());
+        print_r($this->geral_model->PedidosCliente("2")->result());
         echo "</pre>";
     }
 
