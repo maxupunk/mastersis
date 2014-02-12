@@ -361,6 +361,12 @@ $(document).on("submit", 'form[name="GravaOs"]', function() {
     return false;
 });
 
+// DETAHLES DO OS
+$(document).on('click', '#detalhes', function() {
+    $("#modal-content").load($(this).attr('href'));
+    $('#modal').modal('show');
+    return false;
+});
 
 
 //

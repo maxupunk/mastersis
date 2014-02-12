@@ -27,12 +27,7 @@
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-wrench"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="titulo-menu"><?php echo $this->lang->line("menu_ordem_servico"); ?></li>
-                        <li><? echo anchor('ordemservico', $this->lang->line("menu_ordem_dash")); ?></li>
-                        <li><? echo anchor('ordemservico/abrir', $this->lang->line("menu_ordem_abrir")); ?></li>
-                    </ul>
+                    <? echo anchor('ordemservico', '<span class="glyphicon glyphicon-wrench">', 'class="dropdown-toggle"'); ?>
                 </li>
 
                 <li class="dropdown">

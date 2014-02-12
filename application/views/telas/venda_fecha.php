@@ -14,16 +14,15 @@
     setlocale(LC_MONETARY, "pt_BR");
     $this->table->set_heading('COD', 'QNT', 'DESCRIÇÃO', 'PREÇO(UN)', 'SUB.TOTAL');
 
-    $total = 0;
     foreach ($lista_pedido as $linha) {
 
         $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
-        $total = ($total + $sub_total);
+        
 
         $this->table->add_row($linha->PRO_ID, $linha->LIST_PED_QNT . $linha->MEDI_SIGLA, $linha->PRO_DESCRICAO, \money_format('%n', $linha->LIST_PED_PRECO), money_format('%n', $sub_total));
     }
 
-    $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $total));
+    $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $total->total));
 
     $tmpl = array('table_open' => '<table class="lista-recibo">');
     $this->table->set_template($tmpl);

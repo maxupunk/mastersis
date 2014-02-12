@@ -180,6 +180,7 @@ class Venda extends CI_Controller {
             'mensagem' => $this->mensagem,
             'pedido' => $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row(),
             'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
+            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
             'empresa' => $this->crud_model->pega_tudo("EMPRESA")->row(),
             'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
         );
@@ -224,12 +225,6 @@ class Venda extends CI_Controller {
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);
-    }
-
-    public function teste() {
-        echo "<pre>";
-        print_r($this->geral_model->PedidosCliente("2")->result());
-        echo "</pre>";
     }
 
 }

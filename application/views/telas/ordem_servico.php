@@ -1,341 +1,108 @@
-<div  class="row">
-    <div class="col-md-6">
+<div class="row">
+
+    <div class="col-md-6"><!-- coluna esquerda -->
         <div class="panel panel-default">
-            <div class="panel-heading">Ordem de Serviços em aberto.<a href="#" class="btn btn-success btn-xs pull-right" id="NovoOs">Nova</a></div>
+            <div class="panel-heading">
+                Ordem de Serviços em aberto.
+                <span class="badge"><?php echo count($emabertos) ?></span>
+                <a href="#" class="btn btn-success btn-xs pull-right" id="NovoOs">Nova</a>
+            </div>
             <div class="panel-body">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Cliente</th>
-                            <th>Opções</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                0001123
-                            </td>
-                            <td>
-                                Raimundo Alan Freire Moreira
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                0201123
-                            </td>
-                            <td>
-                                Cicrano dos Anzois
-                            </td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <?php
+                if ($emabertos <> NULL) {
+                    
+                $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
+
+                foreach ($emabertos as $linha) {
+                    $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="#" id="detalhes" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" id="detalhes" class="btn btn-danger btn-xs">Apagar</a>');
+                }
+
+                $tmpl = array('table_open' => '<table class="table table-hover">');
+                $this->table->set_template($tmpl);
+
+                echo $this->table->generate();
+                } else {
+                            echo "Não á serviço(s) em aberto!";
+                }
+                ?>
             </div>
         </div>
     </div>
 
-
-
-    <div class="col-md-6">
+    <div class="col-md-6"><!-- coluna direita -->
         <div class="row">
             <div class="col-lg-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Ordem de serviços pendentes. </div>
+                    <div class="panel-heading">
+                        Ordem de serviços pendentes.
+                        <span class="badge"><?php echo count($pendentes) ?></span>
+                    </div>
                     <div class="panel-body">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Motivo</th>
-                                    <th>Opções</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        0001123
-                                    </td>
-                                    <td>
-                                        Falta uma placa-mãe compatível
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Testar HD e memória.
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Testar HD e memória.
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Testar HD e memória.
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Testar HD e memória.
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Testar HD e memória.
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-info btn-xs">Detalhes</a>
-                                        <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                                        <a href="#" class="btn btn-danger btn-xs">Apagar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                        <?php
+                        if ($pendentes <> NULL) {
+
+                            $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
+
+                            foreach ($pendentes as $linha) {
+                                $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="#" id="detalhes" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" id="detalhes" class="btn btn-danger btn-xs">Apagar</a>');
+                            }
+
+                            $tmpl = array('table_open' => '<table class="table table-hover">');
+                            $this->table->set_template($tmpl);
+
+                            echo $this->table->generate();
+                        } else {
+                            echo "Não á serviço(s) pendente(s)!";
+                        }
+                        ?>
+
                     </div>
                 </div>
             </div>
 
             <div class="col-md-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Concluidos (Aguardando entrega).</div>
+                    <div class="panel-heading">
+                        Concluidos (Aguardando entrega).
+                        <span class="badge"><?php echo count($concluidos) ?></span>
+                    </div>
                     <div class="panel-body">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Cliente</th>
-                                    <th>Opções</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        0001123
-                                    </td>
-                                    <td>
-                                        Raimundo Alan Freire Moreira
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Cicrano dos Anzois
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Cicrano dos Anzois
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Cicrano dos Anzois
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Cicrano dos Anzois
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        0201123
-                                    </td>
-                                    <td>
-                                        Cicrano dos Anzois
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-success btn-xs">Entregar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <?php
+                        if ($concluidos <> NULL) {
+
+                            $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
+
+                            foreach ($concluidos as $linha) {
+                                $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="#" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" class="btn btn-danger btn-xs">Apagar</a>');
+                            }
+
+                            $tmpl = array('table_open' => '<table class="table table-hover">');
+                            $this->table->set_template($tmpl);
+
+                            echo $this->table->generate();
+                        } else {
+                            echo "Não á serviço(s) concluido(s)!";
+                        }
+                        ?>
+
                     </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</div>
+    </div> <!-- coluna direita -->
+
+</div> <!-- ROW principal -->
 
 <div  class="row">
     <div class="col-md-12">

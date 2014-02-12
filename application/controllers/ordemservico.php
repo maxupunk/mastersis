@@ -1,9 +1,5 @@
 <?php
 
-///////
-///// obs.: nada funcionando. somente index
-///////
-
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -13,15 +9,18 @@ class Ordemservico extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('crud_model');
+        $this->load->model(array('crud_model', 'join_model', 'geral_model'));
         $this->load->library(array('form_validation', 'table'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {
-
+        
         $dados = array(
             'tela' => "ordem_servico",
+            'emabertos' => $this->join_model->OsStatus('1')->result(),
+            'pendentes' => $this->join_model->OsStatus('2')->result(),
+            'concluidos' => $this->join_model->OsStatus('3')->result(),
         );
         $this->load->view('home', $dados);
     }
@@ -58,95 +57,22 @@ class Ordemservico extends CI_Controller {
         );
         $this->load->view('contente', $dados);
     }
-
-    public function listar() {
-        $this->load->library('pagination');
-
-        $config['base_url'] = base_url('servico/listar');
-        $config['total_rows'] = $this->crud_model->pega_tudo('SERVICOS')->num_rows();
-        $config['per_page'] = 10;
-
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="disabled"><a>';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_link'] = '&gt;';
-        $config['next_tag_open'] = '<li>';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lt;';
-        $config['prev_tag_open'] = '<li>';
-        $config['prev_tag_close'] = '</li>';
-        $config['first_tag_open'] = '<li>';
-        $config['first_tag_close'] = '</li>';
-        $config['last_tag_open'] = '<li>';
-        $config['last_tag_close'] = '</li>';
-        $config['first_link'] = 'Primeira';
-        $config['last_link'] = 'Ultima';
-
-        $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
-
-        $this->pagination->initialize($config);
-
+    
+    public function detalhes($id) {
         $dados = array(
-            'servico' => $this->crud_model->pega_tudo("SERVICOS", $config['per_page'], $inicial)->result(),
-            'tela' => 'serv_listar',
-            'total' => $this->crud_model->pega_tudo("SERVICOS")->num_rows(),
-            'paginacao' => $this->pagination->create_links(),
+            'tela' => "os_detalhes",
+            'Detalhes' => $this->join_model->OsDetalhes($id)->row(),
+            'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
+            'ListaServico' => $this->join_model->ListaServico($id)->result(),
         );
         $this->load->view('contente', $dados);
     }
-
-    public function busca() {
-        $busca = $_GET['buscar'];
-        $dados = array(
-            'tela' => "serv_busca",
-            'query' => $this->crud_model->buscar("SERVICOS", array('SERV_ID' => $busca, 'SERV_NOME' => $busca))->result(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function editar() {
-
-        $this->form_validation->set_rules('SERV_NOME', 'NOME SERVICO', 'required|max_length[45]');
-
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
-
-            $dados = elements(array('SERV_NOME', 'SERV_DESC', 'SERV_ESTATUS'), $this->input->post());
-            if ($this->crud_model->update("SERVICOS", $dados, array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_editar_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_editar_erro");
-            }
-
-        endif;
-
-        $dados = array(
-            'tela' => "serv_editar",
-            'mensagem' => $this->mensagem,
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function excluir($id_servico) {
-
-        if ($this->input->post('id_servico') > 0):
-            if ($this->crud_model->excluir("SERVICOS", array('SERV_ID' => $this->input->post('id_servico'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_excluir_erro");
-            }
-        endif;
-
-        $dados = array(
-            'tela' => "serv_excluir",
-            'mensagem' => $this->mensagem,
-            'query' => $this->crud_model->pega("SERVICOS", array('SERV_ID' => $id_servico))->row(),
-        );
-        $this->load->view('contente', $dados);
+    
+    public function teste(){
+        echo "<pre>";
+        print_r($this->geral_model->TotalServico(40)->row());
+        echo "</pre>";
     }
 
 }
