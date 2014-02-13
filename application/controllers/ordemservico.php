@@ -65,13 +65,14 @@ class Ordemservico extends CI_Controller {
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
             'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
             'ListaServico' => $this->join_model->ListaServico($id)->result(),
+            'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
         );
         $this->load->view('contente', $dados);
     }
     
     public function teste(){
         echo "<pre>";
-        print_r($this->geral_model->TotalServico(40)->row());
+        print_r($this->join_model->ListaServico(40)->result());
         echo "</pre>";
     }
 

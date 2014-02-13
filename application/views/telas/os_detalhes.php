@@ -42,22 +42,6 @@ setlocale(LC_MONETARY, "pt_BR");
             </div>
 
             <div class="row">
-                <span> OBSERVAÇÃO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_OBSERVACAO ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6 BordaOs">
-                    <span>SAIDA: </span><?php echo $Detalhes->OS_DATA_SAI ?>
-                </div>
-                <div class="col-sm-6 BordaOs">
-                    <span>USUARIO: </span><?php echo $usuario->USUARIO_LOGIN ?>
-                </div>
-            </div>
-
-            <div class="row">
                 <span>PRODUTOS:</span>
                 <div class="col-sm-12 BordaOs">
                     <?php
@@ -89,15 +73,14 @@ setlocale(LC_MONETARY, "pt_BR");
                     <?php
                     if ($ListaServico <> NULL) {
 
-                        $this->table->set_heading('COD', 'DESCRIÇÃO', 'VALOR');
+                        $this->table->set_heading('COD', 'DESCRIÇÃO', 'QNT', 'VALOR', 'SUBTOTAL');
 
-                        $total = 0;
                         foreach ($ListaServico as $linha) {
-                            $total = $linha->SERV_VALOR+$total;
-                            $this->table->add_row($linha->LIST_SRV_ID, $linha->SERV_NOME, $linha->SERV_VALOR);
+                            $sub_total = ($linha->LIST_SRV_QNT * $linha->LIST_SRV_PRECO);
+                            $this->table->add_row($linha->LIST_SRV_ID, $linha->SERV_NOME, $linha->LIST_SRV_QNT, $linha->LIST_SRV_PRECO, $sub_total);
                         }
 
-                        $this->table->add_row('', '', 'TOTAL: '.money_format('%n', $total));
+                        $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $ListaServicoTotal->total));
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
                         $this->table->set_template($tmpl);
@@ -107,6 +90,28 @@ setlocale(LC_MONETARY, "pt_BR");
                         echo "<p align='center'>Não foi feito servico(s)!</p>";
                     }
                     ?>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-5 BordaOs pull-right">
+                    TOTAL A PAGAR : <?php echo money_format('%n', $ListaProdutoTotal->total + $ListaServicoTotal->total) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <span> OBSERVAÇÃO:</span>
+                <div class="col-sm-12 BordaOs">
+                    <?php echo $Detalhes->OS_OBSERVACAO ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 BordaOs">
+                    <span>ENTREGUE: </span><?php echo $Detalhes->OS_DATA_SAI ?>
+                </div>
+                <div class="col-sm-6 BordaOs">
+                    <span>USUARIO: </span><?php echo $usuario->USUARIO_LOGIN ?>
                 </div>
             </div>
 
