@@ -45,7 +45,7 @@ class Geral_model extends CI_Model {
     public function PedidosCliente($id_cliente, $quant = 0, $inicial = 0, $ordeby = NULL) {
         if ($id_cliente != NULL) {
             if ($ordeby != NULL)
-                $this->db->order_by($ordeby, "asc");
+                $this->db->order_by($ordeby);
             if ($quant > 0)
                 $this->db->limit($quant, $inicial);
 

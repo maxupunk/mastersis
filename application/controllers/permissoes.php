@@ -31,7 +31,7 @@ class Permissoes extends CI_Controller {
             'tela' => 'permissoes_gerenciar',
             'usuario' => $this->crud_model->pega("USUARIO", array('USUARIO_ID' => $id_usuario))->row(),
             'permissoes' => $array,
-            'metodos' => $this->crud_model->pega_tudo("METODOS", "0", "0", "METOD_CLASS")->result(),
+            'metodos' => $this->crud_model->pega_tudo("METODOS", "0", "0", "METOD_CLASS asc")->result(),
         );
         $this->load->view('contente', $dados);
     }

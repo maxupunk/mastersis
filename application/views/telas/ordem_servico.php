@@ -15,9 +15,9 @@
 
                 foreach ($emabertos as $linha) {
                     $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
-                             <a href="#" id="detalhes" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="#" id="detalhes" class="btn btn-danger btn-xs">Apagar</a>');
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="ordemservico/editar/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                 }
 
                 $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -49,9 +49,9 @@
 
                             foreach ($pendentes as $linha) {
                                 $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
-                             <a href="#" id="detalhes" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="#" id="detalhes" class="btn btn-danger btn-xs">Apagar</a>');
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="ordemservico/editar/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                             }
 
                             $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -81,9 +81,9 @@
 
                             foreach ($concluidos as $linha) {
                                 $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="detalhes" class="btn btn-info btn-xs">Detalhes</a>
-                             <a href="#" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="#" class="btn btn-danger btn-xs">Apagar</a>');
+                            '<a href="ordemservico/detalhes/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                             <a href="ordemservico/editar/'.$linha->OS_ID.'" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="#" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                             }
 
                             $tmpl = array('table_open' => '<table class="table table-hover">');

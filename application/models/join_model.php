@@ -94,7 +94,7 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
     
-    public function OsDetalhes($id) {
+    public function OsDados($id) {
         $this->db->select('*');
         $this->db->from('PESSOAS', 'ORDEM_SERV');
         $this->db->join('ORDEM_SERV', 'PESSOAS.PES_ID = ORDEM_SERV.PES_ID');

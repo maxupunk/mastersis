@@ -10,12 +10,12 @@ class Ordemservico extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model', 'geral_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'convert'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {
-        
+
         $dados = array(
             'tela' => "ordem_servico",
             'emabertos' => $this->join_model->OsStatus('1')->result(),
@@ -23,6 +23,25 @@ class Ordemservico extends CI_Controller {
             'concluidos' => $this->join_model->OsStatus('3')->result(),
         );
         $this->load->view('home', $dados);
+    }
+
+    public function estatus($id) {
+        $estatus = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
+        switch ($estatus->OS_ESTATUS) {
+            case '1':
+                $retorno = 'ABERTO';
+                break;
+            case '2':
+                $retorno = 'PENDENTE';
+                break;
+            case '3':
+                $retorno = 'CONCLUIDO';
+                break;
+            case '4':
+                $retorno = 'ESTREGUE';
+                break;
+        }
+        return $retorno;
     }
 
     public function cadastrar() {
@@ -45,7 +64,7 @@ class Ordemservico extends CI_Controller {
 
             $dados = elements(array('PES_ID', 'OS_EQUIPAMENT', 'OS_DSC_DEFEITO', 'OS_ESTATUS', 'USUARIO_ID', 'OS_DATA_ENT', 'OS_ESTATUS'), $formulario);
             if ($this->crud_model->inserir("ORDEM_SERV", $dados) == TRUE) {
-                $this->mensagem = $this->lang->line("msg_cadastro_os_sucesso").$this->db->insert_id();
+                $this->mensagem = $this->lang->line("msg_cadastro_os_sucesso") . $this->db->insert_id();
             } else {
                 $this->mensagem = $this->lang->line("msg_cadastro_os_erro");
             }
@@ -57,20 +76,50 @@ class Ordemservico extends CI_Controller {
         );
         $this->load->view('contente', $dados);
     }
-    
+
     public function detalhes($id) {
         $dados = array(
             'tela' => "os_detalhes",
-            'Detalhes' => $this->join_model->OsDetalhes($id)->row(),
+            'Detalhes' => $this->join_model->OsDados($id)->row(),
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
             'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
             'ListaServico' => $this->join_model->ListaServico($id)->result(),
             'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
+            'Estatus' => $this->estatus($id),
         );
         $this->load->view('contente', $dados);
     }
-    
-    public function teste(){
+
+    public function editar($id) {
+
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
+        $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->form_validation->run() == TRUE):
+
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS', 'PRO_PESO'), $this->input->post());
+            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
+                $this->mensagem = $this->lang->line("msg_editar_sucesso");
+            } else {
+                $this->mensagem = $this->lang->line("msg_editar_erro");
+            }
+        endif;
+
+        $dados = array(
+            'tela' => "os_editar",
+            'mensagem' => $this->mensagem,
+            'OsDados' => $this->join_model->OsDados($id)->row(),
+            'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
+            'ListaServico' => $this->join_model->ListaServico($id)->result(),
+            'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
+            'Estatus' => $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function teste() {
         echo "<pre>";
         print_r($this->join_model->ListaServico(40)->result());
         echo "</pre>";

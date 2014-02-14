@@ -32,9 +32,9 @@ endif;
         <?php echo form_error('SERV_DESC'); ?>
         <textarea name="SERV_DESC" rows="10"><?php echo set_value('SERV_DESC', $query->SERV_DESC); ?></textarea>
 
-        <label>Descrição:</label>
+        <label>Valor:</label>
         <?php echo form_error('SERV_VALOR'); ?>
-        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR', number_format($query->SERV_VALOR, 2, ',', '.')); ?>" />
+        <input type="text" name="SERV_VALOR" value="<?php echo set_value('SERV_VALOR', number_format($query->SERV_VALOR, 2, ',', '.')); ?>" class="valor" />
 
         <?php echo form_dropdown('SERV_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('SERV_ESTATUS', $query->SERV_ESTATUS)); ?>
 

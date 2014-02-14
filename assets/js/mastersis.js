@@ -20,12 +20,21 @@ $(document).on('click', '.alert', function() {
     $(this).hide();
 });
 
+$('.TooltipMenu').tooltip();
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Ativador de mascaras
+//
+$(document).on("click", ".valor", function() {
+    $('.valor').mask('0.000.000.000,00', {reverse: true});
+    return false;
+});
 ////////////////////////////////////////////////////////////////////////////////
 // Regras de carregamentos
 //
 $(document).ajaxStart(function() {
-    $("#modal-ajax-content").html("<img src='assets/img/carregando.gif'>");
+    $("#modal-ajax-content").html("Aguarde carregando..."); //<img src='assets/img/carregando.gif'>
     $('#modal-ajax').modal('show');
 });
 
@@ -157,13 +166,13 @@ $(document).on('change', 'select[name="BAIRRO_ID"]', function() {
 
 $(document).on('change', 'select[name="PES_TIPO"]', function() {
     if ($(this).val() == "f") {
-        $('.cpf-cnpj').mask('999.999.999-99', {reverse: true});
+        $('.cpf-cnpj').mask('000.000.000-00', {reverse: true});
         $('.cpf-cnpj-label').html('CPF *:');
         $('input[name="PES_NASC_DATA"]').prop('disabled', false);
         $('input[name="nome_pes_PAI"]').prop('disabled', false);
         $('input[name="PES_NOME_MAE"]').prop('disabled', false);
     } else {
-        $('.cpf-cnpj').mask('99.999.999.9999-99', {reverse: true});
+        $('.cpf-cnpj').mask('00.000.000.0000-00', {reverse: true});
         $('.cpf-cnpj-label').html('CNPJ *:');
         $('input[name="PES_NASC_DATA"]').prop('disabled', true);
         $('input[name="PES_NOME_PAI"]').prop('disabled', true);
@@ -362,7 +371,7 @@ $(document).on("submit", 'form[name="GravaOs"]', function() {
 });
 
 // DETAHLES DO OS
-$(document).on('click', '#detalhes', function() {
+$(document).on('click', '#LinkOS', function() {
     $("#modal-content").load($(this).attr('href'));
     $('#modal').modal('show');
     return false;

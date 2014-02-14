@@ -1,12 +1,9 @@
-<?php
-$usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->USUARIO_ID))->row();
-?>
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="row">
-            <div class="col-sm-6"><label>CLIENTE</label><br><?php echo $Detalhes->PES_NOME ?></div>
-            <div class="col-sm-4"><label>ENTRADA</label><br><?php echo $Detalhes->OS_DATA_ENT ?></div>
-            <div class="col-sm-2"><label>OS N.</label><br><?php echo $Detalhes->OS_ID ?></div>
+            <div class="col-sm-6"><label>CLIENTE</label><br><?php echo $OsDados->PES_NOME ?></div>
+            <div class="col-sm-4"><label>ENTRADA</label><br><?php echo $OsDados->OS_DATA_ENT ?></div>
+            <div class="col-sm-2"><label>OS N.</label><br><?php echo $OsDados->OS_ID ?></div>
         </div>
     </div>
     <div class="panel-body">
@@ -15,33 +12,37 @@ $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->U
             <div class="row">
                 <span>EQUIPAMENTO:</span>
                 <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_EQUIPAMENT ?>
+                    <?php echo $OsDados->OS_EQUIPAMENT ?>
                 </div>
             </div>
 
             <div class="row">
                 <span>DEFEITO:</span>
                 <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_DEFEITO ?>
+                    <?php echo form_error('OS_DSC_DEFEITO'); ?>
+                    <textarea name="OS_DSC_DEFEITO" rows="6"><?php echo set_value('OS_DSC_DEFEITO', $OsDados->OS_DSC_DEFEITO); ?></textarea>
                 </div>
             </div>
 
             <div class="row">
                 <span>SOLUÇÃO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_SOLUC ?>
+                <div class="col-sm-12 BordaOs">             
+                    <?php echo form_error('OS_DSC_SOLUC'); ?>
+                    <textarea name="OS_DSC_SOLUC" rows="6"><?php echo set_value('OS_DSC_SOLUC', $OsDados->OS_DSC_DEFEITO); ?></textarea>
                 </div>
             </div>
 
             <div class="row">
                 <span>DEPENDENCIA:</span>
                 <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_PENDENT ?>
+                    <?php echo form_error('OS_DSC_PENDENT'); ?>
+                    <textarea name="OS_DSC_PENDENT" rows="6"><?php echo set_value('OS_DSC_PENDENT', $OsDados->OS_DSC_PENDENT); ?></textarea>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-12">
+                <span>PRODUTOS:</span>
+                <div class="col-sm-12 BordaOs" id="ListaProduto">
                     <?php
                     if ($ListaProduto <> NULL) {
 
@@ -66,7 +67,8 @@ $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->U
             </div>
 
             <div class="row">
-                <div class="col-sm-12">
+                <span>SERVICOS:</span>
+                <div class="col-sm-12 BordaOs" id="ListaServico">
                     <?php
                     if ($ListaServico <> NULL) {
 
@@ -92,26 +94,20 @@ $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->U
 
             <div class="row">
                 <div class="col-sm-5 BordaOs pull-right">
-                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total);//$this->convert->em_real(); ?>
+                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total) ?>
                 </div>
             </div>
 
             <div class="row">
-                <span> OBSERVAÇÃO:</span>
+                <span>OBSERVAÇÃO:</span>
                 <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_OBSERVACAO ?>
+                    <?php echo $OsDados->OS_OBSERVACAO ?>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-6 BordaOs">
-                    <span>ENTREGUE: </span><?php echo $Detalhes->OS_DATA_SAI ?>
-                </div>
-                <div class="col-sm-4 BordaOs">
-                    <span>USUARIO: </span><?php echo $usuario->USUARIO_LOGIN ?>
-                </div>
-                <div class="col-sm-2 BordaOs">
-                    <?php echo $Estatus ?>
+                <div class="col-sm-4 pull-right">
+                    <?php echo form_dropdown('OS_ESTATUS', array('1' => 'ABERTO', '2' => 'PENDENTE', '3' => 'CONCLUIDO', '4' => 'ESTREGUE'), set_value('OS_ESTATUS', $Estatus->OS_ESTATUS)); ?>
                 </div>
             </div>
 

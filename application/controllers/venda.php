@@ -10,7 +10,7 @@ class Venda extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model', 'geral_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'convert'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
@@ -220,7 +220,7 @@ class Venda extends CI_Controller {
 
 
         $dados = array(
-            'pedidos_cliente' => $this->geral_model->PedidosCliente($id_cliente, $config['per_page'], $inicial)->result(),
+            'pedidos_cliente' => $this->geral_model->PedidosCliente($id_cliente, $config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
             'tela' => 'venda_listar',
             'paginacao' => $this->pagination->create_links(),
         );

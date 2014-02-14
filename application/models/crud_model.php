@@ -28,7 +28,7 @@ class Crud_model extends CI_Model {
 
     public function pega_tudo($tabela, $quant = 0, $inicial = 0, $ordeby = NULL) {
         if ($ordeby != NULL)
-            $this->db->order_by($ordeby, "asc");
+            $this->db->order_by($ordeby);
         if ($quant > 0)
             $this->db->limit($quant, $inicial);
 

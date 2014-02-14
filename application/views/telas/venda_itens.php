@@ -16,7 +16,7 @@ foreach ($lista_pedido as $linha) {
     $this->table->add_row($linha->PRO_ID, '<img src="assets/img_produto/' . $icone . '" class="img-rounded" width="80" height="80">', '<input type="number" id="quantidade" min="1.00" step="1.00" max="' . $linha->ESTOQ_ATUAL . '" list_ped_id="' . $linha->LIST_PED_ID . '" id_estoque="' . $linha->ESTOQ_ID . '" value="' . $linha->LIST_PED_QNT . '">', $linha->MEDI_SIGLA, $linha->PRO_DESCRICAO, $linha->PRO_PESO, \money_format('%n', $linha->LIST_PED_PRECO), money_format('%n', $sub_total), '<button type="button" class="close" id="excluir-item" list_ped_id="' . $linha->LIST_PED_ID . '">&times;</button>');
 }
 
-$this->table->add_row('', '', '', '', '', '', 'TOTAL:', money_format('%n', $total->total), '');
+$this->table->add_row('', '', '', '', '', '', 'TOTAL:', $total->total, '');
 
 $tmpl = array('table_open' => '<table class="table table-hover">');
 $this->table->set_template($tmpl);
