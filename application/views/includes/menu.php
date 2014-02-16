@@ -4,7 +4,7 @@
         <div class="centraliza-menu">
             <ul class="nav navbar-nav"><!-- MENU DROPDOWN -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Cadastrar"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign"></span></a>
                     <ul class="dropdown-menu">
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_cadastro"); ?></li>
                         <li><? echo anchor('produto', $this->lang->line("menu_cad_produto")); ?></li>

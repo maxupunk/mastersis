@@ -1,5 +1,5 @@
 <div class="well">
-<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" method="post" name="GravaOs" accept-charset="utf-8">
+<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" method="post" accept-charset="utf-8">
 
     <fieldset>
 

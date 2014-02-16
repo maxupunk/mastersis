@@ -85,11 +85,17 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function OsStatus($status) {
+    public function OsStatus($status, $ordeby = NULL, $limit = NULL) {
         $this->db->select('*');
         $this->db->from('PESSOAS', 'ORDEM_SERV');
         $this->db->join('ORDEM_SERV', 'PESSOAS.PES_ID = ORDEM_SERV.PES_ID');
-        $this->db->order_by("OS_DATA_ENT", "desc");
+        
+        if ($ordeby != NULL)
+            $this->db->order_by($ordeby);
+        
+        if ($limit != NULL)
+            $this->db->limit($limit);
+        //$this->db->order_by("OS_DATA_ENT", "desc");
         $this->db->where('ORDEM_SERV.OS_ESTATUS =' . $status);
         return $this->db->get();
     }

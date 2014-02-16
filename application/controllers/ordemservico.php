@@ -18,9 +18,10 @@ class Ordemservico extends CI_Controller {
 
         $dados = array(
             'tela' => "ordem_servico",
-            'emabertos' => $this->join_model->OsStatus('1')->result(),
-            'pendentes' => $this->join_model->OsStatus('2')->result(),
-            'concluidos' => $this->join_model->OsStatus('3')->result(),
+            'emabertos' => $this->join_model->OsStatus('1', 'OS_DATA_ENT desc')->result(),
+            'pendentes' => $this->join_model->OsStatus('2', 'OS_DATA_ENT desc')->result(),
+            'concluidos' => $this->join_model->OsStatus('3', 'OS_DATA_ENT desc')->result(),
+            'entregues' => $this->join_model->OsStatus('4', 'OS_DATA_SAI desc', '15')->result(),
         );
         $this->load->view('home', $dados);
     }
@@ -64,10 +65,11 @@ class Ordemservico extends CI_Controller {
 
             $dados = elements(array('PES_ID', 'OS_EQUIPAMENT', 'OS_DSC_DEFEITO', 'OS_ESTATUS', 'USUARIO_ID', 'OS_DATA_ENT', 'OS_ESTATUS'), $formulario);
             if ($this->crud_model->inserir("ORDEM_SERV", $dados) == TRUE) {
-                $this->mensagem = $this->lang->line("msg_cadastro_os_sucesso") . $this->db->insert_id();
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_cadastro_sucesso"));
             } else {
-                $this->mensagem = $this->lang->line("msg_cadastro_os_erro");
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_cadastro_erro"));
             }
+            redirect(base_url('ordemservico'));
         endif;
 
         $dados = array(
@@ -92,23 +94,23 @@ class Ordemservico extends CI_Controller {
 
     public function editar($id) {
 
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
+        $this->form_validation->set_rules('OS_ESTATUS', 'estatus', 'required');
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS', 'PRO_PESO'), $this->input->post());
-            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_editar_sucesso");
+            $dados = elements(array('OS_DSC_SOLUC', 'OS_DSC_PENDENT', 'OS_ESTATUS'), $this->input->post());
+            if ($this->crud_model->update("ORDEM_SERV", $dados, array('OS_ID' => $this->input->post('id_os'))) === TRUE) {
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_sucesso"));
             } else {
-                $this->mensagem = $this->lang->line("msg_editar_erro");
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_erro"));
             }
+            redirect(base_url('ordemservico'));
         endif;
 
         $dados = array(
             'tela' => "os_editar",
-            'mensagem' => $this->mensagem,
             'OsDados' => $this->join_model->OsDados($id)->row(),
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
             'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
@@ -119,9 +121,27 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
+    public function excluir($id) {
+
+        if ($this->input->post('id_os') > 0):
+            if ($this->geral_model->ExcluirOs($id) === TRUE) {
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_sucesso"));
+            } else {
+                $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_erro"));
+            }
+            redirect(base_url('ordemservico'));
+        endif;
+
+        $dados = array(
+            'tela' => "os_excluir",
+            'OsDados' => $this->join_model->OsDados($id)->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
     public function teste() {
         echo "<pre>";
-        print_r($this->join_model->ListaServico(40)->result());
+        print_r($this->geral_model->ExcluirOs(44));
         echo "</pre>";
     }
 

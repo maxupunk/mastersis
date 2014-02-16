@@ -29,7 +29,7 @@ endif;
 
         <input type="hidden" name="id_medida" value="<?php echo $query->MEDI_ID ?>" />
 
-        <hr><button type="submit" class="btn btn-warning">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
 
     </fieldset>
 

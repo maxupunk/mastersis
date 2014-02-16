@@ -28,8 +28,6 @@ $lang["msg_permissao_add_erro"] = "Erro ao adiciona permisão!";
 $lang["msg_permissao_rm_sucesso"] = "Permissão removida com sucesso!";
 $lang["msg_permissao_rm_erro"] = "Erro ao remover a permisão!";
 
-$lang["msg_cadastro_os_sucesso"] = "Ordem gravado com sucesso! - Codigo da ordem: ";
-$lang["msg_cadastro_os_erro"] = "Ordem gravado com sucesso!";
 //
 // Tradução do menu
 //

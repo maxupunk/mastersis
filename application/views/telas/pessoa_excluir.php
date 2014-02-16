@@ -25,7 +25,7 @@ endif;
 
         <input type="hidden" name="id_pessoa" value="<?php echo $query->PES_ID ?>" />
 
-        <hr><button type="submit" class="btn btn-warning">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
 
     </fieldset>
 

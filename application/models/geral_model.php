@@ -10,6 +10,7 @@ class Geral_model extends CI_Model {
         $this->db->delete('PEDIDO', array('PEDIDO_ID' => $id_pedido));
         return $this->db->trans_status();
     }
+
     // Soma toda lista de pedidos
     public function TotalPedido($id_pedido) {
         $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
@@ -17,6 +18,7 @@ class Geral_model extends CI_Model {
         $this->db->where('LISTA_PEDIDO.PEDIDO_ID', $id_pedido);
         return $this->db->get();
     }
+
     // soma toda a lista de produto na Ordem de Seviço
     public function TotalProduto($id) {
         $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
@@ -24,12 +26,19 @@ class Geral_model extends CI_Model {
         $this->db->where('LISTA_PRODUTO_OS.OS_ID', $id);
         return $this->db->get();
     }
-    
+
     public function TotalServico($id) {
         $this->db->select('format(SUM(LIST_SRV_QNT * LIST_SRV_PRECO), 2) as total', FALSE);
         $this->db->from('LISTA_SERVICO_OS');
         $this->db->where('LISTA_SERVICO_OS.OS_ID', $id);
         return $this->db->get();
+    }
+
+    public function ExcluirOs($id) {
+        $this->db->delete('LISTA_PRODUTO_OS', array('OS_ID' => $id));
+        $this->db->delete('LISTA_SERVICO_OS', array('OS_ID' => $id));
+        $this->db->delete('ORDEM_SERV', array('OS_ID' => $id));
+        return $this->db->trans_status();
     }
 
     public function FechaPedido($id_pedido) {

@@ -27,7 +27,7 @@ endif;
 
         <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
 
-        <br><button type="submit" class="btn btn-warning">SIM, EXCLUIR</button>
+        <br><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
 
     </fieldset>
 

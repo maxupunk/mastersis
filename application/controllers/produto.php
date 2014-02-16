@@ -167,7 +167,7 @@ class Produto extends CI_Controller {
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $this->mensagem = $this->lang->line("msg_excluir_sucesso");
             } else {
-                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = $this->lang->line("msg_excluir_erro");
             }
         endif;
 

@@ -26,7 +26,7 @@ endif;
 
         <input type="hidden" name="id_servico" value="<?php echo $query->SERV_ID ?>" />
 
-        <br><button type="submit" class="btn btn-warning">SIM, EXCLUIR</button>
+        <br><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
 
     </fieldset>
 
