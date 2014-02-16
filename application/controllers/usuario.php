@@ -14,14 +14,6 @@ class Usuario extends CI_Controller {
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
-    public function index() {
-
-        $dados = array(
-            'tela' => "usuario",
-        );
-        $this->load->view('home', $dados);
-    }
-
     public function cadastrar() {
         // validar o formulario
         $this->form_validation->set_rules('PES_NOME', 'CLIENTE', 'required|strtoupper');

@@ -13,13 +13,6 @@ class Medida extends CI_Controller {
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
-    public function index() {
-
-        $dados = array(
-            'tela' => "medida",
-        );
-        $this->load->view('home', $dados);
-    }
 
     public function cadastrar() {
 

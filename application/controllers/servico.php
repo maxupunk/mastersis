@@ -13,14 +13,6 @@ class Servico extends CI_Controller {
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
-    public function index() {
-
-        $dados = array(
-            'tela' => "servico",
-        );
-        $this->load->view('home', $dados);
-    }
-
     public function cadastrar() {
 
         $this->form_validation->set_rules('SERV_NOME', 'DESCRIÇÃO DO SERVICO', 'required|max_length[45]|strtoupper|is_unique[SERVICOS.SERV_NOME]');

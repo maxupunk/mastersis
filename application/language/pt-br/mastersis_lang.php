@@ -41,7 +41,7 @@ $lang["menu_cad_usario"] = "Usuario";
 $lang["menu_cad_permissoes"] = "Permisões";
 $lang["menu_cad_endereco"] = "Endereço";
 $lang["menu_cad_categoria"] = "Categoria";
-$lang["menu_cad_unid_medida"] = "Unidade de Medida";
+$lang["menu_cad_unid_medida"] = "Un. Med.";
 $lang["menu_cad_avaria"] = "Avaria";
 // FIM DO MENU DE CADASTRO
 

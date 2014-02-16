@@ -15,6 +15,13 @@ class Home extends CI_Controller {
         $this->output->enable_profiler(TRUE);
         $this->load->view('gadget');
     }
+    
+    public function cadastro() {
+        $dados = array(
+            'tela' => "cadastro",
+        );
+        $this->load->view('home', $dados);
+    }
 
     public function sempermissao() {
         $this->load->view('home_sem_permicoa');

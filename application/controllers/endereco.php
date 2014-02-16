@@ -12,11 +12,11 @@ class Endereco extends CI_Controller {
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
-    public function index() {
+    public function cadastrar(){
         $dados = array(
             'tela' => "endereco",
         );
-        $this->load->view('home', $dados);
+        $this->load->view('contente', $dados);
     }
 
     public function bairro() {        

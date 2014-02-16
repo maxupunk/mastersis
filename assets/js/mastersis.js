@@ -64,7 +64,16 @@ $(document).on("click", "#resultado a, #pagination a", function() {
     return false;
 });
 
-$(document).on("click", "#sub_menu button", function() {
+$(document).on("click", "#SubMenu", function() {
+    $("#cadastro").load($(this).attr('url')+'/cadastrar');
+    $("#busca").attr("url",$(this).attr('url-busca')+'/busca?buscar=');
+    $(".active").attr("class","");
+    $(this).attr("class","active");
+    $(".BordaCad").show();
+    return false;
+});
+
+$(document).on("click", "#MenuInterno", function() {
     $("#cadastro").load($(this).attr('url'));
     return false;
 });

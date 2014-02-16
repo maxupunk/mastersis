@@ -4,22 +4,7 @@
         <div class="centraliza-menu">
             <ul class="nav navbar-nav"><!-- MENU DROPDOWN -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="titulo-menu"><?php echo $this->lang->line("menu_cadastro"); ?></li>
-                        <li><? echo anchor('produto', $this->lang->line("menu_cad_produto")); ?></li>
-                        <li><? echo anchor('servico', $this->lang->line("menu_cad_servico")); ?></li>
-                        <li class="divider"></li>
-                        <li><? echo anchor('pessoa', $this->lang->line("menu_cad_pessoa")); ?></a></li>
-                        <li><? echo anchor('usuario', $this->lang->line("menu_cad_usario")); ?></li>
-                        <li><? echo anchor('permissoes', $this->lang->line("menu_cad_permissoes")); ?></li>
-                        <li class="divider"></li>
-                        <li><? echo anchor('endereco', $this->lang->line("menu_cad_endereco")); ?></li>
-                        <li><? echo anchor('categoria', $this->lang->line("menu_cad_categoria")); ?></li>
-                        <li><? echo anchor('medida', $this->lang->line("menu_cad_unid_medida")); ?></li>
-                        <li class="divider"></li>
-                        <li><? echo anchor('avaria', $this->lang->line("menu_cad_avaria")); ?></li>
-                    </ul>
+                    <? echo anchor('cadastros', '<span class="glyphicon glyphicon glyphicon-plus-sign">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Cadastros"'); ?>
                 </li>
 
                 <li class="dropdown">

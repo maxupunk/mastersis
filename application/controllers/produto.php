@@ -13,13 +13,6 @@ class Produto extends CI_Controller {
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
-    public function index() {
-        $dados = array(
-            'tela' => "produto",
-        );
-        $this->load->view('home', $dados);
-    }
-
     public function cadastrar() {
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');

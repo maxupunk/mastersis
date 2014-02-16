@@ -12,13 +12,6 @@ class Categoria extends CI_Controller {
         $this->load->library(array('form_validation', 'table'));
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
-
-    public function index() {
-        $dados = array(
-            'tela' => "categoria",
-        );
-        $this->load->view('home', $dados);
-    }
     
     public function cadastrar() {
 
