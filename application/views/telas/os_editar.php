@@ -1,18 +1,19 @@
 <form action="<?php echo base_url('ordemservico'); ?>/editar/<?php echo $OsDados->OS_ID ?>" method="post" accept-charset="utf-8">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-6"><label>CLIENTE</label><br><?php echo $OsDados->PES_NOME ?></div>
-                <div class="col-sm-4"><label>ENTRADA</label><br><?php echo $OsDados->OS_DATA_ENT ?></div>
-                <div class="col-sm-2"><label>OS N.</label><br><?php echo $OsDados->OS_ID ?></div>
-            </div>
+            Edição de Ordem de Serviço
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="panel-body">
 
             <div class="col-sm-12">
-                
-                <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
-                
+
+                <div class="row BordaOs">
+                    <div class="col-sm-6"><label>CLIENTE</label><br><?php echo $OsDados->PES_NOME ?></div>
+                    <div class="col-sm-4"><label>ENTRADA</label><br><?php echo $OsDados->OS_DATA_ENT ?></div>
+                    <div class="col-sm-2"><label>OS N.</label><br><?php echo $OsDados->OS_ID ?></div>
+                </div>
+
                 <div class="row">
                     <span>EQUIPAMENTO:</span>
                     <div class="col-sm-12 BordaOs">

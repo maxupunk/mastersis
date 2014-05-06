@@ -3,7 +3,7 @@
 
     <fieldset>
 
-        <legend>NOVA ORDEM DE SERVIÇO <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
+        <legend>Nova Ordem de Serviço<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
 
         <?php
         if (isset($mensagem) and $mensagem != NULL)

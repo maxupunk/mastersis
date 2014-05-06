@@ -21,24 +21,24 @@ class Venda extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function cliente($id_cliente) {
+    public function cliente($IdCliente) {
 
         $dados = array(
             'tela' => 'venda_cliente',
-            'cliente' => $this->join_model->EnderecoCompleto($id_cliente)->row(),
+            'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
-    public function abrir($id_cliente) {
+    public function abrir($IdCliente) {
 
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->crud_model->pega("PESSOAS", array('PES_ID' => $id_cliente))->row() != NULL) {
-            $pedido = $this->crud_model->pega("PEDIDO", array('PES_ID' => $id_cliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
+        if ($this->crud_model->pega("PESSOAS", array('PES_ID' => $IdCliente))->row() != NULL) {
+            $pedido = $this->crud_model->pega("PEDIDO", array('PES_ID' => $IdCliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
             if ($pedido == NULL) {
                 $dados = array(
-                    'PES_ID' => $id_cliente,
+                    'PES_ID' => $IdCliente,
                     'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
                     'PEDIDO_DATA' => date("Y-m-d h:i:s"),
                     'PEDIDO_ESTATUS' => '1',
@@ -57,7 +57,7 @@ class Venda extends CI_Controller {
         $dados = array(
             'tela' => 'venda_abrir',
             'id_venda' => $id_venda,
-            'cliente' => $this->join_model->EnderecoCompleto($id_cliente)->row(),
+            'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
             'pedido' => $pedido,
             'mensagem' => $this->mensagem,
         );
@@ -188,11 +188,11 @@ class Venda extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function listar($id_cliente) {
+    public function listar($IdCliente) {
 
         $this->load->library('pagination');
-        $config['base_url'] = base_url('venda/listar/' . $id_cliente);
-        $config['total_rows'] = $this->geral_model->PedidosCliente($id_cliente)->num_rows();
+        $config['base_url'] = base_url('venda/listar/' . $IdCliente);
+        $config['total_rows'] = $this->geral_model->PedidosCliente($IdCliente)->num_rows();
         $config['per_page'] = 10;
         $config['uri_segment'] = 4;
         $config['num_links'] = 30;
@@ -220,7 +220,7 @@ class Venda extends CI_Controller {
 
 
         $dados = array(
-            'pedidos_cliente' => $this->geral_model->PedidosCliente($id_cliente, $config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
+            'pedidos_cliente' => $this->geral_model->PedidosCliente($IdCliente, $config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
             'tela' => 'venda_listar',
             'paginacao' => $this->pagination->create_links(),
         );

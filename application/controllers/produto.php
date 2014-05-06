@@ -4,8 +4,9 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Produto extends CI_Controller {
-    
+
     var $mensagem;
+
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -21,8 +22,8 @@ class Produto extends CI_Controller {
         $this->form_validation->set_rules('MEDI_ID', 'MEDIDA', 'required');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-        
-        
+
+
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -43,50 +44,13 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function listar() {
-
-        $this->load->library('pagination');
-        $config['base_url'] = base_url('produto/listar');
-        $config['total_rows'] = $this->crud_model->pega_tudo("PRODUTOS")->num_rows();
-        $config['per_page'] = 10;
-
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="disabled"><a>';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_link'] = '&gt;';
-        $config['next_tag_open'] = '<li>';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lt;';
-        $config['prev_tag_open'] = '<li>';
-        $config['prev_tag_close'] = '</li>';
-        $config['first_tag_open'] = '<li>';
-        $config['first_tag_close'] = '</li>';
-        $config['last_tag_open'] = '<li>';
-        $config['last_tag_close'] = '</li>';
-        $config['first_link'] = 'Primeira';
-        $config['last_link'] = 'Ultima';
-
-        $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
-
-        $this->pagination->initialize($config);
-
-        $dados = array(
-            'produtos' => $this->crud_model->pega_tudo("PRODUTOS", $config['per_page'], $inicial)->result(),
-            'tela' => 'prod_listar',
-            'total' => $this->crud_model->pega_tudo("PRODUTOS")->num_rows(),
-            'paginacao' => $this->pagination->create_links(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
     public function editar($id_produto) {
 
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
 
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
-        
+
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -107,7 +71,7 @@ class Produto extends CI_Controller {
     }
 
     public function imagem() {
-        
+
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
@@ -155,7 +119,7 @@ class Produto extends CI_Controller {
     }
 
     public function excluir($id_produto) {
-        
+
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $this->mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -182,23 +146,39 @@ class Produto extends CI_Controller {
     }
 
     public function exibir() {
+
+        $id_produto = $this->uri->segment(3);
+
+        if ($id_produto == NULL):
+            $this->mensagem = 'ERRO NA URL! Tente novamente';
+        endif;
+
         $dados = array(
             'tela' => "prod_exibir",
+            'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function avaria() {
+        $dados = array(
+            'tela' => "prod_avaria",
         );
         $this->load->view('contente', $dados);
     }
 
     public function pegaproduto() {
         $this->load->model('join_model');
-        
-        $busca = $_GET['buscar'];        
+
+        $busca = $_GET['buscar'];
         $rows = $this->join_model->ProdutoBusca($busca)->result();
-        
+
         setlocale(LC_MONETARY, "pt_BR");
-        
+
         $json_array = array();
         foreach ($rows as $row)
-            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO.' | '. $row->ESTOQ_ATUAL.' | '.money_format('%n', $row->ESTOQ_PRECO)));
+            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $row->ESTOQ_ATUAL . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
 
         $dados = array(
             'query' => $json_array,

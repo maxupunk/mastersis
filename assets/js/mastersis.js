@@ -2,8 +2,6 @@
  * MasterSis script comportamento dos forms
  */
 
-// minha função de debuga objeto
-
 var alteracao = false;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,10 +63,10 @@ $(document).on("click", "#resultado a, #pagination a", function() {
 });
 
 $(document).on("click", "#SubMenu", function() {
-    $("#cadastro").load($(this).attr('url')+'/cadastrar');
-    $("#busca").attr("url",$(this).attr('url-busca')+'/busca?buscar=');
-    $(".active").attr("class","");
-    $(this).attr("class","active");
+    $("#cadastro").load($(this).attr('url'));
+    $("#busca").attr("url", $(this).attr('url-busca') + '/busca?buscar=');
+    $(".active").attr("class", "");
+    $(this).attr("class", "active");
     $(".BordaCad").show();
     return false;
 });
@@ -206,28 +204,29 @@ var cliente = $('#nome_pes').typeahead({
     },
 });
 cliente.on('typeahead:selected', function(evt, data) {
-    $("#venda").load("venda/cliente/" + data.id);
+    $("#ListaVenda").load("venda/cliente/" + data.id);
+    $(this).val('');
 });
 $("#nome_pes").focus();
 /////////
 // NOVA VENDA
 $(document).on("click", "#AbrirVenda", function() {
     $("#venda").load($(this).attr('href'));
-    $("#lista").html('');
+    $("#ListaVenda").html('');
     return false;
 });
 /////////
 // LISTAR VENDAS
 /////////
-$(document).on("click", "#ListarVenda", function() {
-    $("#lista").load($(this).attr('href'));
+$(document).on("click", "#MostraVendas", function() {
+    $("#ListaVenda").load($(this).attr('href'));
     return false;
 });
 //
 // PAGINAÇÃO DA LISTA DE PEDIDO
 //
 $(document).on("click", "#PagPedidos a", function() {
-    $("#lista").load($(this).attr('href'));
+    $("#ListaVenda").load($(this).attr('href'));
     return false;
 });
 
@@ -268,7 +267,7 @@ $(document).on('click', '#produto_venda', function() {
         },
     });
     produto.on('typeahead:selected', function(evt, data) {
-        $("#lista").load("venda/addproduto/" + $('input[name="PEDIDO_ID"]').val() + "/" + data.id);
+        $("#ListaVenda").load("venda/addproduto/" + $('input[name="PEDIDO_ID"]').val() + "/" + data.id);
         $(this).val('');
     });
     $(this).val('');
@@ -325,11 +324,11 @@ $(document).on('click', '#selec-all-permi', function() {
 ////////////////////////////////////////////////////////////////////////////////
 // ALTERA QUATIDADE DE PRODUTOS
 $(document).on('change', '#quantidade', function() {
-    $("#lista").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
+    $("#ListaVenda").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
 });
 // EXCLUIR PRODUTOS
 $(document).on('click', '#excluir-item', function() {
-    $("#lista").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
+    $("#ListaVenda").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
 });
 //  INICIA A FINALIZAÇÃO DA VENDA
 $(document).on('click', '#pagamento', function() {
@@ -340,18 +339,26 @@ $(document).on('click', '#pagamento', function() {
 $(document).on('click', '#finaliza-venda', function() {
     $("#modal-content").load("venda/fechapedido/" + $('input[name="PEDIDO_ID"]').val());
 });
-// IMPRESÃO DE RECIBO
+////////////////////////////////////////////////////////////////////////////////
+// FUNÇÃO PARA IMPRESÃO IN DIV
+////////////////////////////////////////////////////////////////////////////////
 $(document).on('click', '#imprimir', function() {
-    $(".impresao").printThis({
-        debug: false,
-        importCSS: true,
-        printContainer: true,
-        loadCSS: "assets/css/mastersis.css",
-        pageTitle: "IMPRESSAO DE RECIBO",
-        removeInline: false
-    });
+    var extraCss = "assets/css/mastersis.css";
+    var keepAttr = ["id", "class", "style"];
+    var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
+    $('.impresao').printArea(options);
+    return false;
 });
 ////////////////////////////////////////////////////////////////////////////////
+// COMPORTAMENTO DAS COMPRAS
+////////////////////////////////////////////////////////////////////////////////
+$(document).on("click", "#SubMenuComp", function() {
+    $("#compra").load($(this).attr('url'));
+    $(".active").attr("class", "");
+    $(this).attr("class", "active");
+    return false;
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // ORDEM DE SERVIÇO

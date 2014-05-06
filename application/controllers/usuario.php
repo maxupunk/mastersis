@@ -89,43 +89,6 @@ class Usuario extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function listar() {
-
-        $this->load->library('pagination');
-        $config['base_url'] = base_url('usuario/listar');
-        $config['total_rows'] = $this->crud_model->pega_tudo("USUARIO")->num_rows();
-        $config['per_page'] = 10;
-
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="disabled"><a>';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_link'] = '&gt;';
-        $config['next_tag_open'] = '<li>';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lt;';
-        $config['prev_tag_open'] = '<li>';
-        $config['prev_tag_close'] = '</li>';
-        $config['first_tag_open'] = '<li>';
-        $config['first_tag_close'] = '</li>';
-        $config['last_tag_open'] = '<li>';
-        $config['last_tag_close'] = '</li>';
-        $config['first_link'] = 'Primeira';
-        $config['last_link'] = 'Ultima';
-
-        $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
-
-        $this->pagination->initialize($config);
-
-        $dados = array(
-            'usuarios' => $this->crud_model->pega_tudo("USUARIO", $config['per_page'], $inicial)->result(),
-            'tela' => 'usuario_listar',
-            'total' => $this->crud_model->pega_tudo("USUARIO")->num_rows(),
-            'paginacao' => $this->pagination->create_links(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
     public function pegausuario() {
         $busca = $_GET['buscar'];
 

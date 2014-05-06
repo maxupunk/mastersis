@@ -16,13 +16,7 @@
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-shopping-cart"></span></a>
-                    <ul class="dropdown-menu">
-                        <li class="titulo-menu"><?php echo $this->lang->line("menu_compras"); ?></li>
-                        <li><a href="#">Fazer Compra</a></li>
-                        <li><a href="#">Lista Compras</a></li>
-                        <li><a href="#">Receber Compra</a></li>
-                    </ul>
+                    <? echo anchor('compra', '<span class="glyphicon glyphicon-shopping-cart">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Compras"'); ?>
                 </li>
 
                 <li class="dropdown">
@@ -56,6 +50,7 @@
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_ferramentas"); ?></li>
                         <li><? echo anchor('home', $this->lang->line("menu_ferra_principal")); ?></li>
                         <li class="divider"></li>
+                        <li><? echo anchor('permissoes', $this->lang->line("menu_cad_permissoes")); ?></li>
                         <li><? echo anchor('configuracoes', $this->lang->line("menu_ferra_config")); ?></li>
                         <li><? echo anchor('ferramentas/logsistema', $this->lang->line("menu_ferra_logsistema"), 'class="nocorpo"'); ?></li>
                         <li><a href="#">Log de acesso</a></li>

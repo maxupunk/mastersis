@@ -1,14 +1,11 @@
 <?php
-$id_produto = $this->uri->segment(3);
-
-if ($id_produto == NULL):
-    echo '<div class="alert alert-error">ERRO NA URL! Tente novamente.</div?>';
+if (isset($mensagem) and $mensagem != NULL) {
+    echo '<div class="alert alert-error">' . $mensagem . '</div>';
     exit();
-endif;
+}
 
-$query = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row();
 if ($query == null) :
-    echo '<div class="alert alert-error">Esse item não existe!</div>';
+    echo '<div class="alert alert-error">Esse item não existe ou foi apagado!<div>';
     exit();
 endif;
 

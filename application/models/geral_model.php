@@ -57,8 +57,10 @@ class Geral_model extends CI_Model {
                 $this->db->order_by($ordeby);
             if ($quant > 0)
                 $this->db->limit($quant, $inicial);
-
-            return $this->db->get_where('PEDIDO', array('PES_ID' => $id_cliente));
+            
+            $this->db->where('PEDIDO.PES_ID', $id_cliente);
+            $this->db->where('PEDIDO.PEDIDO_ESTATUS >=', '2');
+            return $this->db->get('PEDIDO');
         }
     }
 

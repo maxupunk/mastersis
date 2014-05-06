@@ -32,7 +32,7 @@
 
 <!-- plug-ins -->
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/jquery/plugins/printThis.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
 
 
 </body>

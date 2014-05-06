@@ -6,5 +6,5 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-12" id="lista"></div>
+    <div class="col-sm-12" id="ListaVenda"></div>
 </div>

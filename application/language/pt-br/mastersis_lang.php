@@ -38,10 +38,9 @@ $lang["menu_cad_produto"] = "Produto";
 $lang["menu_cad_servico"] = "Serviço";
 $lang["menu_cad_pessoa"] = "Pessoa";
 $lang["menu_cad_usario"] = "Usuario";
-$lang["menu_cad_permissoes"] = "Permisões";
 $lang["menu_cad_endereco"] = "Endereço";
 $lang["menu_cad_categoria"] = "Categoria";
-$lang["menu_cad_unid_medida"] = "Un. Med.";
+$lang["menu_cad_unid_medida"] = "Un.Medida";
 $lang["menu_cad_avaria"] = "Avaria";
 // FIM DO MENU DE CADASTRO
 
@@ -70,6 +69,7 @@ $lang["menu_relatorio"] = "Relatorio";
 $lang["menu_ferramentas"] = "Ferramentas";
 
 $lang["menu_ferra_principal"] = "Pagina Principal";
+$lang["menu_cad_permissoes"] = "Permisões";
 $lang["menu_ferra_config"] = "Configuraçoes";
 $lang["menu_ferra_logsistema"] = "Logs do sistema";
 $lang["menu_ferra_backup"] = "Backup do banco de dados";

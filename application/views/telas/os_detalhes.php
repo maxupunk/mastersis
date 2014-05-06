@@ -1,17 +1,18 @@
-<?php
-$usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->USUARIO_ID))->row();
-?>
+<?php $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->USUARIO_ID))->row(); ?>
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="row">
-            <div class="col-sm-6"><label>CLIENTE</label><br><?php echo $Detalhes->PES_NOME ?></div>
-            <div class="col-sm-4"><label>ENTRADA</label><br><?php echo $Detalhes->OS_DATA_ENT ?></div>
-            <div class="col-sm-2"><label>OS N.</label><br><?php echo $Detalhes->OS_ID ?></div>
-        </div>
+        Detalhes da ordem
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
     <div class="panel-body">
 
-        <div class="col-sm-12">
+        <div class="col-sm-12 impresao">
+            <div class="row BordaOs">
+                <div class="col-sm-6"><label>CLIENTE: </label><?php echo $Detalhes->PES_NOME ?></div>
+                <div class="col-sm-4"><label>ENTRADA: </label><?php echo $Detalhes->OS_DATA_ENT ?></div>
+                <div class="col-sm-2"><label>OS N.: </label><?php echo $Detalhes->OS_ID ?></div>
+            </div>
+
             <div class="row">
                 <span>EQUIPAMENTO:</span>
                 <div class="col-sm-12 BordaOs">
@@ -92,7 +93,7 @@ $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->U
 
             <div class="row">
                 <div class="col-sm-5 BordaOs pull-right">
-                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total);//$this->convert->em_real(); ?>
+                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total); //$this->convert->em_real();     ?>
                 </div>
             </div>
 
@@ -115,6 +116,12 @@ $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->U
                 </div>
             </div>
 
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" id="imprimir" class="btn btn-primary">Imprimir</button>
+            </div>
         </div>
 
     </div>
