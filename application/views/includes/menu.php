@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="navbar-brand"> MasterSis
+            <div class="navbar-brand"> MasterSis<i class="glyphicon glyphicon glyphicon-leaf"></i>
                 <span class="carregando">.:Carragando:.</span>
             </div>
         </div>

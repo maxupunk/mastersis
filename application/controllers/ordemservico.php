@@ -79,9 +79,9 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function detalhes($id) {
+    public function imprimir($id) {
         $dados = array(
-            'tela' => "os_detalhes",
+            'tela' => "os_imprimir",
             'Detalhes' => $this->join_model->OsDados($id)->row(),
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
             'ListaProdutoTotal' => $this->geral_model->TotalProdOs($id)->row(),
@@ -137,6 +137,19 @@ class Ordemservico extends CI_Controller {
             'OsDados' => $this->join_model->OsDados($id)->row(),
         );
         $this->load->view('contente', $dados);
+    }
+    
+    public function itens($id_os) {
+        $dados = array(
+            'tela' => 'os_gerenciaitem',
+            'mensagem' => $this->mensagem,
+            'ListaProduto' => $this->join_model->ListaProduto($id_os)->result(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'ListaServico' => $this->join_model->ListaServico($id_os)->result(),
+            'ListaServicoTotal' => $this->geral_model->TotalServico($id_os)->row(),
+        );
+        $this->load->view('contente', $dados);
+        
     }
 
     public function addproduto($id_os, $id_produto) {

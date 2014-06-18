@@ -19,7 +19,8 @@
 
                         foreach ($emabertos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                            '<a href="ordemservico/itens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-success btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
                              <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                         }
@@ -51,7 +52,7 @@
 
                         foreach ($pendentes as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
                              <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                         }
@@ -86,7 +87,7 @@
 
                         foreach ($concluidos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/detalhes/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
                              <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                         }
@@ -118,7 +119,7 @@
 
                         foreach ($entregues as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME, 
-                            '<a href="ordemservico/detalhes/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Detalhes</a>
+                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>');
                         }
 
