@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('medida'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('medida'); ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 

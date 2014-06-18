@@ -1,24 +1,30 @@
 <div class="panel-group" id="accordion">
-    <?php foreach ($pedidos_cliente as $linha) { ?>
+    <?php if ($pedidos_cliente == null) { ?>
+        <div class="alert alert-info">Não existe vendas para esse cliente.</div>
     <?php
-    $total = $this->geral_model->TotalPedido($linha->PEDIDO_ID)->row();
-    $ToralItens = $this->join_model->ListaPedido($linha->PEDIDO_ID)->num_rows()
-    ?>
+        exit();
+    }
+
+    foreach ($pedidos_cliente as $linha) {
+
+        $total = $this->geral_model->TotalPedido($linha->PEDIDO_ID)->row();
+        $ToralItens = $this->join_model->ListaPedido($linha->PEDIDO_ID)->num_rows()
+        ?>
 
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#accordion" href="#<?php echo $linha->PEDIDO_ID ?>">
-                        
+
                         <span class="badge pull-right">+</span>
                         N. do Pedido: <?php echo $linha->PEDIDO_ID ?> / Estatus: <?php echo $linha->PEDIDO_ESTATUS ?> / Data: <?php echo $linha->PEDIDO_DATA ?> /  N. Itens: <?php echo $ToralItens; ?> / Total: <?php echo $this->convert->em_real($total->total); ?>
-                        
+
                     </a>
                 </h4>
             </div>
             <div id="<?php echo $linha->PEDIDO_ID ?>" class="panel-collapse collapse">
                 <div class="panel-body">
-                    
+
                     <?php
                     $pedido = $this->join_model->ListaPedido($linha->PEDIDO_ID)->result();
 
@@ -37,13 +43,13 @@
                     $this->table->set_template($tmpl);
                     echo $this->table->generate();
                     ?>
-                    
+
                 </div>
             </div>
         </div>
 
     <?php } ?>
 </div>
-    <ul class="pagination" id="PagPedidos">
-        <? if ($paginacao) echo $paginacao; ?>
+<ul class="pagination" id="PagPedidos">
+<? if ($paginacao) echo $paginacao; ?>
 </ul>

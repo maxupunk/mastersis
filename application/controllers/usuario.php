@@ -14,7 +14,7 @@ class Usuario extends CI_Controller {
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
-    public function cadastrar() {
+    public function index() {
         // validar o formulario
         $this->form_validation->set_rules('PES_NOME', 'CLIENTE', 'required|strtoupper');
         $this->form_validation->set_rules('PES_ID', 'NOME DA PESSOA', 'required|is_unique[USUARIO.PES_ID]');

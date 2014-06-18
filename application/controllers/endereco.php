@@ -12,7 +12,7 @@ class Endereco extends CI_Controller {
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
 
-    public function cadastrar(){
+    public function index(){
         $dados = array(
             'tela' => "endereco",
         );

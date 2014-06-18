@@ -14,7 +14,7 @@ class Produto extends CI_Controller {
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
-    public function cadastrar() {
+    public function index() {
         // validar o formulario
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
@@ -80,8 +80,6 @@ class Produto extends CI_Controller {
         $img['max_size'] = '2048';
         $img['file_name'] = $this->input->post('id_produto');
         $img['overwrite'] = TRUE;
-        $img['max_width'] = '1024';
-        $img['max_heigh'] = '768';
 
         $this->upload->initialize($img);
 

@@ -14,7 +14,7 @@ class Medida extends CI_Controller {
     }
 
 
-    public function cadastrar() {
+    public function index() {
 
         $this->form_validation->set_rules('MEDI_NOME', 'UNIDADE DE MEDIDA', 'required|max_length[45]|strtoupper|is_unique[MEDIDAS.MEDI_NOME]');
         $this->form_validation->set_rules('MEDI_SIGLA', 'SIGLA', 'required|max_length[4]|strtoupper|is_unique[MEDIDAS.MEDI_SIGLA]');

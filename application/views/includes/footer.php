@@ -21,11 +21,13 @@
 </div><!-- /.modal -->
 
 <!-- jquery -->
-<script src="<?php echo base_url('assets/js/jquery/jquery-2.0.2.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/jquery-2.1.1.min.js'); ?>"></script>
 
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/bootstrap/typeahead.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap/bloodhound.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap/typeahead.jquery.min.js'); ?>"></script>
+
 
 <!-- custom -->
 <script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>

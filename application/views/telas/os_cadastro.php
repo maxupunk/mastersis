@@ -9,19 +9,19 @@
         if (isset($mensagem) and $mensagem != NULL)
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
         ?>
-
         
-        <label>NOME DA PESSOA</label>
+        
+        <label>NOME DA PESSOA</label> | <span id="pessoa-selec"><?php echo set_value('PES_ID'); ?> - <?php echo set_value('PES_NOME'); ?></span>
         <?php echo form_error('PES_ID'); ?>
-        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" />
+        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" required />
 
         <label>DESCRIÇÃO EQUIPAMENTO</label>
         <?php echo form_error('OS_EQUIPAMENT'); ?>
-        <textarea name="OS_EQUIPAMENT" rows="3"><?php echo set_value('OS_EQUIPAMENT'); ?></textarea>
+        <textarea name="OS_EQUIPAMENT" rows="3" required /><?php echo set_value('OS_EQUIPAMENT'); ?></textarea>
         
         <label>DEFEITO</label>
         <?php echo form_error('OS_DSC_DEFEITO'); ?>
-        <textarea name="OS_DSC_DEFEITO" rows="3"><?php echo set_value('OS_DSC_DEFEITO'); ?></textarea>
+        <textarea name="OS_DSC_DEFEITO" rows="3" required /><?php echo set_value('OS_DSC_DEFEITO'); ?></textarea>
 
         <label>OBSERVAÇÃO</label>
         <?php echo form_error('OS_OBSERVACAO'); ?>
@@ -38,3 +38,4 @@
 
 </form>
 </div>
+<script src="<?php echo base_url('assets/js/pessoa.js'); ?>"></script>

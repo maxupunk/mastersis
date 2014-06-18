@@ -47,17 +47,19 @@ class Venda extends CI_Controller {
                 if ($this->crud_model->inserir('PEDIDO', $dados) != TRUE) {
                     $this->mensagem = $this->lang->line("msg_pedido_erro");
                 } else {
-                    $id_venda = $this->db->insert_id();
+                    $pedido_id = $this->db->insert_id();
                 }
             } else {
-                $id_venda = $pedido->PEDIDO_ID;
+                $pedido_id = $pedido->PEDIDO_ID;
                 $this->mensagem = "Já existe um pedido em aberto para essse clientes!";
             }
         }
         $dados = array(
             'tela' => 'venda_abrir',
-            'id_venda' => $id_venda,
+            'pedido_id' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
+            'lista_pedido' => $this->join_model->ListaPedido($pedido_id)->result(),
+            'total' => $this->geral_model->TotalPedido($pedido_id)->row(),
             'pedido' => $pedido,
             'mensagem' => $this->mensagem,
         );
@@ -65,7 +67,6 @@ class Venda extends CI_Controller {
     }
 
     public function addproduto($id_pedido, $id_produto) {
-
         //verifica se o produto existe e tem um estoque maior que zero
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
         if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
@@ -73,7 +74,7 @@ class Venda extends CI_Controller {
             $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
             if ($pedido != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
-                $lista_pedido = $this->crud_model->pega("LISTA_PEDIDO", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row();
+                $lista_pedido = $this->crud_model->pega("LISTA_PRODUTO", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row();
                 if ($lista_pedido == NULL) {
                     //inseri os dados abaixo no db
                     $dados = array(
@@ -81,11 +82,11 @@ class Venda extends CI_Controller {
                         'ESTOQ_ID' => $produto->ESTOQ_ID,
                         'LIST_PED_QNT' => '1',
                         'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
-                    if ($this->crud_model->inserir('LISTA_PEDIDO', $dados) != TRUE) {
+                    if ($this->crud_model->inserir('LISTA_PRODUTO', $dados) != TRUE) {
                         $this->mensagem = $this->lang->line("msg_pedido_erro");
                     }
                 } else {
-                    $this->mensagem = $this->lang->line("msg_addproduto_existente");
+                    $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
                 }
             } else {
                 $this->mensagem = $this->lang->line("msg_pedido_erro");
@@ -102,24 +103,26 @@ class Venda extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function atualizar($id_pedido, $lista_ped_id, $id_estoque, $quantidade) {
+    public function atualizar($id_pedido, $lista_ped_id = null, $id_estoque = null, $quantidade = null) {
 
         // verifica se existe o pedido
-        $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
-        if ($pedido != NULL) {
-            //verifica se existe a quatidade de produto pedido
-            $produto = $this->crud_model->pega("ESTOQUE", array('ESTOQ_ID' => $id_estoque))->row();
-            if ($produto->ESTOQ_ATUAL < $quantidade) {
-                $this->mensagem = $this->lang->line("msg_estoque_insuficiente");
-                $quantidade = $produto->ESTOQ_ATUAL;
+        if ($lista_ped_id != NULL and $id_estoque != null and $quantidade != null) {
+            $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
+            if ($pedido != NULL) {
+                //verifica se existe a quatidade de produto pedido
+                $produto = $this->crud_model->pega("ESTOQUE", array('ESTOQ_ID' => $id_estoque))->row();
+                if ($produto->ESTOQ_ATUAL < $quantidade) {
+                    $this->mensagem = $this->lang->line("msg_estoque_insuficiente");
+                    $quantidade = $produto->ESTOQ_ATUAL;
+                }
+                $atualizar = array('LIST_PED_QNT' => $quantidade);
+                $condicao = array('LIST_PED_ID' => $lista_ped_id);
+                if ($this->crud_model->update("LISTA_PRODUTO", $atualizar, $condicao) === \FALSE) {
+                    $this->mensagem = $this->lang->line("msg_atualuzado_erro");
+                }
+            } else {
+                $this->mensagem = $this->lang->line("msg_pedido_erro");
             }
-            $atualizar = array('LIST_PED_QNT' => $quantidade);
-            $condicao = array('LIST_PED_ID' => $lista_ped_id);
-            if ($this->crud_model->update("LISTA_PEDIDO", $atualizar, $condicao) === \FALSE) {
-                $this->mensagem = $this->lang->line("msg_atualuzado_erro");
-            }
-        } else {
-            $this->mensagem = $this->lang->line("msg_pedido_erro");
         }
 
         $dados = array(
@@ -131,9 +134,31 @@ class Venda extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
+    public function itens($id_pedido) {
+
+        // verifica se existe o pedido
+        $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->result();
+        if ($pedido != NULL) {
+            $dados = array(
+                'tela' => 'venda_itens',
+                'mensagem' => @$this->mensagem,
+                'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
+                'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+            );
+        } else {
+            $dados = array(
+                'tela' => 'venda_itens',
+                'mensagem' => @$this->mensagem,
+                'lista_pedido' => NULL,
+            );
+        }
+
+        $this->load->view('contente', $dados);
+    }
+
     public function excluiritem($id_pedido, $lista_ped_id) {
 
-        if ($this->crud_model->excluir("LISTA_PEDIDO", array('LIST_PED_ID' => $lista_ped_id)) === TRUE) {
+        if ($this->crud_model->excluir("LISTA_PRODUTO", array('LIST_PED_ID' => $lista_ped_id)) === TRUE) {
             $this->mensagem = $this->lang->line("msg_excluir_sucesso");
         } else {
             $this->mensagem = $this->lang->line("msg_excluir_sucesso");
@@ -153,11 +178,11 @@ class Venda extends CI_Controller {
         redirect(base_url() . 'venda');
     }
 
-    public function avista($id_pedido) {
+    public function pagamento($id_pedido) {
         $pedido = $this->crud_model->pega("PEDIDO", array('PEDIDO_ID' => $id_pedido))->row();
 
         $dados = array(
-            'tela' => "venda_avista",
+            'tela' => "venda_pagar",
             'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
             'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
             'id_pedido' => $id_pedido,

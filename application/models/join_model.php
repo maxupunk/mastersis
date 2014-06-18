@@ -58,30 +58,30 @@ class Join_model extends CI_Model {
     // lista os produtos em venda
     public function ListaPedido($id_pedido) {
         $this->db->select('*');
-        $this->db->from('PRODUTOS', 'ESTOQUE', 'LISTA_PEDIDO', 'MEDIDAS');
+        $this->db->from('PRODUTOS', 'ESTOQUE', 'LISTA_PRODUTO', 'MEDIDAS');
         $this->db->join('ESTOQUE', 'PRODUTOS.PRO_ID = ESTOQUE.PRO_ID');
-        $this->db->join('LISTA_PEDIDO', 'ESTOQUE.ESTOQ_ID = LISTA_PEDIDO.ESTOQ_ID');
+        $this->db->join('LISTA_PRODUTO', 'ESTOQUE.ESTOQ_ID = LISTA_PRODUTO.ESTOQ_ID');
         $this->db->join('MEDIDAS', 'PRODUTOS.MEDI_ID = MEDIDAS.MEDI_ID');
-        $this->db->where('LISTA_PEDIDO.PEDIDO_ID = ', $id_pedido);
+        $this->db->where('LISTA_PRODUTO.PEDIDO_ID = ', $id_pedido);
         return $this->db->get();
     }
     
     // Lista de produtos na ordem de serviço
     public function ListaProduto($id_pedido) {
         $this->db->select('*');
-        $this->db->from('PRODUTOS', 'ESTOQUE', 'LISTA_PRODUTO_OS', 'MEDIDAS');
+        $this->db->from('PRODUTOS', 'ESTOQUE', 'LISTA_PRODUTO', 'MEDIDAS');
         $this->db->join('ESTOQUE', 'PRODUTOS.PRO_ID = ESTOQUE.PRO_ID');
-        $this->db->join('LISTA_PRODUTO_OS', 'ESTOQUE.ESTOQ_ID = LISTA_PRODUTO_OS.ESTOQ_ID');
+        $this->db->join('LISTA_PRODUTO', 'ESTOQUE.ESTOQ_ID = LISTA_PRODUTO.ESTOQ_ID');
         $this->db->join('MEDIDAS', 'PRODUTOS.MEDI_ID = MEDIDAS.MEDI_ID');
-        $this->db->where('LISTA_PRODUTO_OS.OS_ID = ', $id_pedido);
+        $this->db->where('LISTA_PRODUTO.OS_ID = ', $id_pedido);
         return $this->db->get();
     }
     // Lista os serviços
     public function ListaServico($id_pedido) {
         $this->db->select('*');
-        $this->db->from('SERVICOS', 'LISTA_SERVICO_OS');
-        $this->db->join('LISTA_SERVICO_OS', 'SERVICOS.SERV_ID = LISTA_SERVICO_OS.SERV_ID');
-        $this->db->where('LISTA_SERVICO_OS.OS_ID = ', $id_pedido);
+        $this->db->from('SERVICOS', 'LISTA_SERVICO');
+        $this->db->join('LISTA_SERVICO', 'SERVICOS.SERV_ID = LISTA_SERVICO.SERV_ID');
+        $this->db->where('LISTA_SERVICO.OS_ID = ', $id_pedido);
         return $this->db->get();
     }
 

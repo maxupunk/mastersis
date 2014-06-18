@@ -33,7 +33,7 @@ endif;
             if (isset($mensagem) and $mensagem != NULL)
                 echo '<div class="alert alert-info">' . $mensagem . '</div>';
             ?>
-            <label class="file_input_button">Click para seleciona arquivo!
+            <label class="file_input_button">Seleciona arquivo
                 <input type="file" name="userfile" />
             </label>
             <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
@@ -46,5 +46,5 @@ endif;
 
 
 <div class="row">
-    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-sm-12">' ?>
+    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-sm-12 hidden-xs">' ?>
 </div>

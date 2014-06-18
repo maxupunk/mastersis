@@ -1,28 +1,32 @@
 <div class="container">
 
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation"><!-- INICIO DO MENU -->
-        <div class="centraliza-menu">
-            <ul class="nav navbar-nav"><!-- MENU DROPDOWN -->
-                <li class="dropdown">
-                    <? echo anchor('cadastros', '<span class="glyphicon glyphicon glyphicon-plus-sign">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Cadastros"'); ?>
-                </li>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cel">
+                <span class="sr-only">Menu de navegação</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="navbar-brand"> MasterSis
+                <span class="carregando">.:Carragando:.</span>
+            </div>
+        </div>
+        <div class="collapse navbar-collapse navbar-cel centraliza-menu">
+            <ul class="nav navbar-nav side-nav"><!-- MENU DROPDOWN -->
+                <li><? echo anchor('cadastros', 'Cadastros'); ?></li>
+
+                <li><? echo anchor('venda', 'Vendas'); ?></li>
+
+                <li><? echo anchor('ordemservico', 'O.S'); ?></li>
+
+                <li><? echo anchor('compra', 'Compras'); ?></li>
 
                 <li class="dropdown">
-                    <? echo anchor('venda', '<span class="glyphicon glyphicon-barcode">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Vendas"'); ?>
-                </li>
-
-                <li class="dropdown">
-                    <? echo anchor('ordemservico', '<span class="glyphicon glyphicon-wrench">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Ordem de Serviços"'); ?>
-                </li>
-
-                <li class="dropdown">
-                    <? echo anchor('compra', '<span class="glyphicon glyphicon-shopping-cart">', 'class="dropdown-toggle TooltipMenu" data-toggle="tooltip" data-placement="bottom" title="Compras"'); ?>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-credit-card"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiros</a>
                     <ul class="dropdown-menu">
-                        <li class="titulo-menu"><?php echo $this->lang->line("menu_financeiro"); ?></li>
+                        <li class="titulo-menu"></li>
                         <li><a href="#">Contas a receber</a></li>
                         <li><a href="#">Contas a pagar</a></li>
                         <li><a href="#">Receita/Despesa avulsa</a></li>
@@ -31,7 +35,7 @@
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-print"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatorios</a>
                     <ul class="dropdown-menu">
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_relatorio"); ?></li>
                         <li><a href="#">Vendas</a></li>
@@ -45,7 +49,7 @@
                 </li>
 
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações</a>
                     <ul class="dropdown-menu">
                         <li class="titulo-menu"><?php echo $this->lang->line("menu_ferramentas"); ?></li>
                         <li><? echo anchor('home', $this->lang->line("menu_ferra_principal")); ?></li>

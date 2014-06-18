@@ -2,49 +2,54 @@
  * MasterSis script comportamento dos forms
  */
 
-var alteracao = false;
-
 ////////////////////////////////////////////////////////////////////////////////
 // Aviso de alterações de dados
 //
-$(window).on('beforeunload', function() {
-    if (alteracao == true) {
-        return "As mudanças deste formulário não foram salvas.\n\
-        Saindo desta página, todas as mudanças serão perdidas.";
-    }
-});
 
+function ConfirmSair(on) {
+    var message = "As mudanças deste formulário não foram salvas. \nSaindo desta página, todas as mudanças serão perdidas.";
+    window.onbeforeunload = (on) ? function() {
+        return message;
+    } : null;
+}
+
+// ocuta alertas
 $(document).on('click', '.alert', function() {
     $(this).hide();
 });
 
-$('.TooltipMenu').tooltip();
+// regra do ajax
+$.ajaxSetup({
+    cache: false,
+    error: function(x, request, settings)
+    {
+        $('#modal').modal('show');
+        $("#modal-content").html(x.responseText);
+        $("#modal-content").append("Para mais informações: Sistema > Log de sistema");
+    },
+    xhrFields: {
+        onprogress: function(e) {
+            if (e.lengthComputable) {
+                console.log(e.loaded / e.total * 100 + '%')
+            }
+        }
+    },
+    complete: function()
+    {
+        $(".carregando").hide();
+    }
+});
+$(document).ajaxStart(function() {
+    $(".carregando").show();
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ativador de mascaras
-//
+////////////////////////////////////////////////////////////////////////////////
 $(document).on("click", ".valor", function() {
     $('.valor').mask('0.000.000.000,00', {reverse: true});
-    return false;
 });
-////////////////////////////////////////////////////////////////////////////////
-// Regras de carregamentos
-//
-$(document).ajaxStart(function() {
-    $("#modal-ajax-content").html("Aguarde carregando..."); //<img src='assets/img/carregando.gif'>
-    $('#modal-ajax').modal('show');
-});
-
-$(document).ajaxError(function(event, request, settings) {
-    $("#modal-ajax-content").html(request.responseText);
-    $("#modal-ajax-content").append(settings.url);
-});
-
-$(document).ajaxSuccess(function() {
-    $('#modal-ajax').modal('hide');
-});
-
 
 //
 // Submenu abrir no corpo
@@ -58,28 +63,32 @@ $(document).on("click", ".nocorpo", function() {
 // MasterSis script do CRUD
 //
 $(document).on("click", "#resultado a, #pagination a", function() {
-    $("#cadastro").load($(this).attr('href'));
+    $("#content-sub-menu").load($(this).attr('href'));
     return false;
 });
-
-$(document).on("click", "#SubMenu", function() {
-    $("#cadastro").load($(this).attr('url'));
-    $("#busca").attr("url", $(this).attr('url-busca') + '/busca?buscar=');
-    $(".active").attr("class", "");
-    $(this).attr("class", "active");
-    $(".BordaCad").show();
-    return false;
-});
-
+// Menu do cadastro de endereço
 $(document).on("click", "#MenuInterno", function() {
-    $("#cadastro").load($(this).attr('url'));
+    $("#content-sub-menu").load($(this).attr('url'));
     return false;
 });
 
 $(document).on("keyup", "#busca", function() {
-    if ($(this).val().length > 0) {
-        $("#resultado").load($(this).attr('url') + encodeURI($(this).val()));
+    url = $(this).attr('itemref');
+    valor = $(this).val();
+    if (valor.length > 0 && url != "#") {
+        $("#resultado").load(url + encodeURI(valor));
     }
+});
+
+$(document).on("click", ".sub-menu>li", function() {
+    href = $(this).find("a").attr('href');
+    $(this).siblings('li.active').removeClass("active");
+    $(this).addClass("active");
+    $("#busca").attr("itemref", href + '/busca?buscar=');
+    $("#content-sub-menu").load(href);
+    $(".BordaCad").show();
+    $("#busca").val("");
+    return false;
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +102,8 @@ $(document).on("submit", 'form[name="grava"]', function() {
         data: $(this).serialize(),
         // enviado com sucesso
         success: function(response) {
-            $("#cadastro").html(response);
-            alteracao = false;
+            $("#content-sub-menu").html(response);
+            ConfirmSair(false);
         }
     });
     return false;
@@ -109,7 +118,7 @@ $(document).on("submit", 'form[name="form-data"]', function() {
         processData: false,
         contentType: false,
         success: function(response) {
-            $("#cadastro").html(response);
+            $("#content-sub-menu").html(response);
         }
     });
     return false;
@@ -119,7 +128,7 @@ $(document).on('keypress', 'form[name="grava"]', function() {
     $(this).change(function() {
         $('button[type="submit"]').removeAttr("disabled");
         $(".alert").hide();
-        alteracao = true;
+        ConfirmSair(true);
     });
 });
 
@@ -195,85 +204,76 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
 // SCRIPTS DE VENDAS
 ////////////////////////////////////////////////////////////////////////////////
 //AUTOCOMPLETAR
-var cliente = $('#nome_pes').typeahead({
-    name: 'cliente',
-    minLength: 1,
-    limit: 10,
-    remote: {
-        url: 'pessoa/pegapessoa?buscar=%QUERY'
-    },
+// aplica as configuração do autocomplete
+var NomeDoCliente = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
 });
-cliente.on('typeahead:selected', function(evt, data) {
-    $("#ListaVenda").load("venda/cliente/" + data.id);
-    $(this).val('');
+// inicialisa o autocomplete
+NomeDoCliente.initialize();
+
+// inicialisa typeahead UI
+$('#nome_pes').typeahead(null, {
+    source: NomeDoCliente.ttAdapter()
+}).on('typeahead:selected', function(object, data) {
+    $("#venda").load("venda/cliente/" + data.id);
 });
-$("#nome_pes").focus();
-/////////
 // NOVA VENDA
 $(document).on("click", "#AbrirVenda", function() {
     $("#venda").load($(this).attr('href'));
     $("#ListaVenda").html('');
     return false;
 });
-/////////
 // LISTAR VENDAS
-/////////
 $(document).on("click", "#MostraVendas", function() {
-    $("#ListaVenda").load($(this).attr('href'));
+    $("#venda").load($(this).attr('href'));
     return false;
 });
-//
+// Atualisa
+$(document).on("click", "#atualiza-pedido", function() {
+    $("#ListaVenda").load("venda/atualizar/" + $('#pedido_id').val())
+    return false;
+});
+
 // PAGINAÇÃO DA LISTA DE PEDIDO
-//
 $(document).on("click", "#PagPedidos a", function() {
-    $("#ListaVenda").load($(this).attr('href'));
+    $("#venda").load($(this).attr('href'));
     return false;
 });
-
-////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////
-// AUTOCOMPLETE USUARIO
-////////////////////////////////////////////////////////////////////////////////
-$(document).on('click', '#pessoa', function() {
-    var usuario = $('#pessoa').typeahead({
-        name: 'pessoa',
-        minLength: 1,
-        limit: 10,
-        remote: {
-            url: 'pessoa/pegapessoa?buscar=%QUERY'
-        },
-    });
-    usuario.on('typeahead:selected', function(evt, data) {
-        $("#PES_ID").val(data.id);
-    });
-    usuario.on('typeahead:autocompleted', function(evt, data) {
-        $("#PES_ID").val(data.id);
-    });
-    $("#pessoa").focus();
+// ALTERA QUATIDADE DE PRODUTOS
+$(document).on('change', '#quantidade', function() {
+    $("#ListaVenda").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
 });
-
-////////////////////////////////////////////////////////////////////////////////
-// AUTOCOMPLETE PRODUTOS
-////////////////////////////////////////////////////////////////////////////////
-$(document).on('click', '#produto_venda', function() {
-    var produto = $('#produto_venda').typeahead({
-        name: 'produtos',
-        minLength: 1,
-        limit: 10,
-        remote: {
-            url: 'produto/pegaproduto?buscar=%QUERY'
-        },
-    });
-    produto.on('typeahead:selected', function(evt, data) {
-        $("#ListaVenda").load("venda/addproduto/" + $('input[name="PEDIDO_ID"]').val() + "/" + data.id);
-        $(this).val('');
-    });
-    $(this).val('');
-    $("#produto_venda").focus();
+// EXCLUIR PRODUTOS
+$(document).on('click', '#excluir-item', function() {
+    $("#ListaVenda").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
 });
-
+// INICIA A FINALIZAÇÃO DA VENDA
+$(document).on('click', '#pagamento', function() {
+    $("#modal-content").load($(this).attr('href') + "/" + $('input[name="PEDIDO_ID"]').val());
+    $('#modal').modal('show');
+    return false;
+});
+// CONCLUI A VENDA
+$(document).on('click', '#finaliza-venda', function() {
+    $("#modal-content").load("venda/fechapedido/" + $('input[name="PEDIDO_ID"]').val());
+});
+// FUNÇÃO PARA IMPRESÃO IN DIV
+$(document).on('click', '#imprimir', function() {
+    var extraCss = "assets/css/mastersis.css";
+    var keepAttr = ["id", "class", "style"];
+    var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
+    $('.impresao').printArea(options);
+    return false;
+});
+// COMPORTAMENTO DAS COMPRAS
+$(document).on("click", "#SubMenuComp", function() {
+    $("#compra").load($(this).attr('url'));
+    $(".active").attr("class", "");
+    $(this).attr("class", "active");
+    return false;
+});
 ////////////////////////////////////////////////////////////////////////////////
 // Menu permicoes
 ////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +290,6 @@ usuario.on('typeahead:selected', function(evt, data) {
     $("#permissoes").load("permissoes/gerenciar/" + data.id);
 });
 $("#usuario").focus();
-
 // Selecione uma permisão
 $(document).on('change', '#permissao', function() {
     if ($(this).is(':checked') == true) {
@@ -316,60 +315,16 @@ $(document).on('click', '#selec-all-permi', function() {
         });
     }
 });
-////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////
-// VENDAS
-////////////////////////////////////////////////////////////////////////////////
-// ALTERA QUATIDADE DE PRODUTOS
-$(document).on('change', '#quantidade', function() {
-    $("#ListaVenda").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
-});
-// EXCLUIR PRODUTOS
-$(document).on('click', '#excluir-item', function() {
-    $("#ListaVenda").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
-});
-//  INICIA A FINALIZAÇÃO DA VENDA
-$(document).on('click', '#pagamento', function() {
-    $("#modal-content").load($(this).attr('url') + "/" + $('input[name="PEDIDO_ID"]').val());
-    $('#modal').modal('show');
-});
-// CONCLUI A VENDA
-$(document).on('click', '#finaliza-venda', function() {
-    $("#modal-content").load("venda/fechapedido/" + $('input[name="PEDIDO_ID"]').val());
-});
-////////////////////////////////////////////////////////////////////////////////
-// FUNÇÃO PARA IMPRESÃO IN DIV
-////////////////////////////////////////////////////////////////////////////////
-$(document).on('click', '#imprimir', function() {
-    var extraCss = "assets/css/mastersis.css";
-    var keepAttr = ["id", "class", "style"];
-    var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
-    $('.impresao').printArea(options);
-    return false;
-});
-////////////////////////////////////////////////////////////////////////////////
-// COMPORTAMENTO DAS COMPRAS
-////////////////////////////////////////////////////////////////////////////////
-$(document).on("click", "#SubMenuComp", function() {
-    $("#compra").load($(this).attr('url'));
-    $(".active").attr("class", "");
-    $(this).attr("class", "active");
-    return false;
-});
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // ORDEM DE SERVIÇO
 ////////////////////////////////////////////////////////////////////////////////
-
 // NOVO SERVIÇO
 $(document).on('click', '#NovoOs', function() {
     $("#modal-content").load('ordemservico/cadastrar');
     $('#modal').modal('show');
+    return false;
 });
-
 // GRAVA OS - FORMULARIO
 $(document).on("submit", 'form[name="GravaOs"]', function() {
     $.ajax({
@@ -380,20 +335,17 @@ $(document).on("submit", 'form[name="GravaOs"]', function() {
         // enviado com sucesso
         success: function(response) {
             $("#modal-content").html(response);
-            alteracao = false;
+            ConfirmSair(false);
         }
     });
     return false;
 });
-
 // DETAHLES DO OS
 $(document).on('click', '#LinkOS', function() {
     $("#modal-content").load($(this).attr('href'));
     $('#modal').modal('show');
     return false;
 });
-
-
 //
 // Ferramenta de debuga objetos
 //

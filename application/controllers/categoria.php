@@ -13,7 +13,7 @@ class Categoria extends CI_Controller {
         $this->auth->check_logged($this->router->class , $this->router->method);
     }
     
-    public function cadastrar() {
+    public function index() {
 
         $this->form_validation->set_rules('CATE_NOME', 'CATEGORIA', 'required|max_length[20]|strtoupper|is_unique[CATEGORIA.CATE_NOME]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
@@ -85,8 +85,6 @@ class Categoria extends CI_Controller {
         $img['max_size'] = '2048';
         $img['file_name'] = $this->input->post('id_categoria');
         $img['overwrite'] = TRUE;
-        $img['max_width'] = '1024';
-        $img['max_heigh'] = '768';
 
         $this->upload->initialize($img);
 

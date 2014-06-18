@@ -1,6 +1,11 @@
 <?php
 if (isset($mensagem) and $mensagem != NULL)
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
+
+if ($total->total == NULL) {
+    echo 'Não é possivel finalisa a compras. Não existe item nessa comprar.';
+    exit;
+}
 ?>
 
 <div class="modal-header">

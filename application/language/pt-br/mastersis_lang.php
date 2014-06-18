@@ -18,7 +18,7 @@ $lang["msg_pedido_aberto"] = "Já existe uma compra EM ABERTA para esse cliente!
 $lang["msg_atualuzado_sucesso"] = "Item atualuzado com sucesso!";
 $lang["msg_atualuzado_erro"] = "erro ao atualuzar item!";
 $lang["msg_pedido_erro"] = "erro ao atualuzar item!";
-$lang["msg_addproduto_existente"] = "O item já existe, se deseja altera quantidades, click em umas das setas em QUANTIDADE.";
+$lang["msg_addproduto_existente"] = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
 $lang["msg_pedido_erro"] = "erro ao atualuzar item!";
 $lang["msg_estoque_insuficiente"] = "Não existe estoque suficiente! O estoque maximo foi digitado para você!";
 

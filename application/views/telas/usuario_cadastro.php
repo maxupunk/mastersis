@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('usuario'); ?>/cadastrar" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('usuario'); ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
 
@@ -10,7 +10,7 @@
         ?>
 
         
-        <label>NOME DA PESSOA</label>
+        <label>NOME DA PESSOA</label>  | <span id="pessoa-selec"></span>
         <?php echo form_error('PES_ID'); ?>
         <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>"/>
 
@@ -56,3 +56,4 @@
     </fieldset>
 
 </form>
+<script src="<?php echo base_url('assets/js/pessoa.js'); ?>"></script>

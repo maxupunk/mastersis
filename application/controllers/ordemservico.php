@@ -84,7 +84,7 @@ class Ordemservico extends CI_Controller {
             'tela' => "os_detalhes",
             'Detalhes' => $this->join_model->OsDados($id)->row(),
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProdOs($id)->row(),
             'ListaServico' => $this->join_model->ListaServico($id)->result(),
             'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
             'Estatus' => $this->estatus($id),
@@ -113,7 +113,7 @@ class Ordemservico extends CI_Controller {
             'tela' => "os_editar",
             'OsDados' => $this->join_model->OsDados($id)->row(),
             'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProduto($id)->row(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id)->row(),
             'ListaServico' => $this->join_model->ListaServico($id)->result(),
             'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
             'Estatus' => $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row(),
@@ -139,7 +139,47 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function teste() {
+    public function addproduto($id_os, $id_produto) {
+        //verifica se o produto existe e tem um estoque maior que zero
+        $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
+        if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
+            //verifica se existe realmente um pedido com o id passado
+            $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
+            if ($os != NULL) {
+                //verififca se já existe o prodoto na lista de pedido
+                $lista_pedido = $this->crud_model->pega("LISTA_PRODUTO", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'OS_ID' => $id_os))->row();
+                if ($lista_pedido == NULL) {
+                    //inseri os dados abaixo no db
+                    $dados = array(
+                        'OS_ID' => $id_os,
+                        'ESTOQ_ID' => $produto->ESTOQ_ID,
+                        'LIST_PED_QNT' => '1',
+                        'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
+                    if ($this->crud_model->inserir('LISTA_PRODUTO', $dados) != TRUE) {
+                        $this->mensagem = $this->lang->line("msg_pedido_erro");
+                    }
+                } else {
+                    $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
+                }
+            } else {
+                $this->mensagem = $this->lang->line("msg_pedido_erro");
+            }
+        } else {
+            $this->mensagem = "Erro:<br> - O produto está com o estoque zerado!<br> - Produto esta desativo.";
+        }
+        $dados = array(
+            'tela' => 'os_itens',
+            'mensagem' => $this->mensagem,
+            'ListaProduto' => $this->join_model->ListaProduto($id_os)->result(),
+            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'ListaServico' => $this->join_model->ListaServico($id_os)->result(),
+            'ListaServicoTotal' => $this->geral_model->TotalServico($id_os)->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public
+            function teste() {
         echo "<pre>";
         print_r($this->geral_model->ExcluirOs(44));
         echo "</pre>";

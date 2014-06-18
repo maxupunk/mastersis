@@ -3,6 +3,8 @@ if (isset($mensagem) and $mensagem != NULL) {
     echo '<div class="alert alert-info">' . $mensagem . '</div>';
 }
 
+if ($lista_pedido <> NULL){
+
 $this->table->set_heading('', '', 'QUANTIDADE', 'MEDIDA', 'DESCRIÇÃO', 'PESO(Kg)', 'PREÇO(UN)', 'SUB. TOTAL', '');
 
 foreach ($lista_pedido as $linha) {
@@ -20,9 +22,6 @@ $tmpl = array('table_open' => '<table class="table table-hover">');
 $this->table->set_template($tmpl);
 
 echo $this->table->generate();
-?>
 
-<div class="well">
-    <button class="btn btn-primary" id="pagamento" url="<?php echo base_url('venda/avista'); ?>">Finaliza Venda</button>
-   <!-- <button class="btn btn-primary" id="pagamento" url="">Finaliza Parcelado</button> -->
-</div>
+}
+?>
