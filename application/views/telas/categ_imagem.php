@@ -10,7 +10,7 @@ if ($id_categoria == NULL):
     exit();
 endif;
 
-$query = $this->crud_model->pega("CATEGORIA", array('CATE_ID' => $id_categoria))->row();
+$query = $this->crud_model->pega("CATEGORIAS", array('CATE_ID' => $id_categoria))->row();
 
 if ($query == null):
     echo '<div class="alert alert-error">Esse item não existe!</div>';
@@ -47,5 +47,5 @@ endif;
 </div>
 
 <div class="row">
-    <?php if ($query->CATE_IMG != NULL) echo '<img src="assets/img_categoria/' . $query->CATE_IMG . '" >' ?>
+    <?php if ($query->CATE_IMG != NULL) echo '<img src="assets/arquivos/categoria/' . $query->CATE_IMG . '" >' ?>
 </div>

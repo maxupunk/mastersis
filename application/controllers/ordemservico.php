@@ -39,7 +39,7 @@ class Ordemservico extends CI_Controller {
                 $retorno = 'CONCLUIDO';
                 break;
             case '4':
-                $retorno = 'ESTREGUE';
+                $retorno = 'ENTREGUE';
                 break;
         }
         return $retorno;
@@ -80,14 +80,17 @@ class Ordemservico extends CI_Controller {
     }
 
     public function imprimir($id) {
+        $OsDados = $this->join_model->OsDados($id)->row();
         $dados = array(
             'tela' => "os_imprimir",
-            'Detalhes' => $this->join_model->OsDados($id)->row(),
-            'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProdOs($id)->row(),
-            'ListaServico' => $this->join_model->ListaServico($id)->result(),
-            'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
+            'ListaPedido' => $this->join_model->ListaProdOs($id)->result(),
+            'total' => $this->geral_model->TotalProdOs($id)->row(),
             'Estatus' => $this->estatus($id),
+            'usuario' => $this->crud_model->pega('USUARIOS', array('USUARIO_ID' => $OsDados->USUARIO_ID))->row(),
+            'OsDados' => $OsDados,
+            'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
+            'pessoa' => $this->join_model->EnderecoCompleto($OsDados->PES_ID)->row(),
+
         );
         $this->load->view('contente', $dados);
     }
@@ -112,10 +115,7 @@ class Ordemservico extends CI_Controller {
         $dados = array(
             'tela' => "os_editar",
             'OsDados' => $this->join_model->OsDados($id)->row(),
-            'ListaProduto' => $this->join_model->ListaProduto($id)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id)->row(),
-            'ListaServico' => $this->join_model->ListaServico($id)->result(),
-            'ListaServicoTotal' => $this->geral_model->TotalServico($id)->row(),
+            'total' => $this->geral_model->TotalProdOs($id)->row(),
             'Estatus' => $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row(),
         );
         $this->load->view('contente', $dados);
@@ -129,7 +129,7 @@ class Ordemservico extends CI_Controller {
             } else {
                 $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_erro"));
             }
-            redirect(base_url('ordemservico'));
+            redirect(base_url('ordemservico'), 'refresh');
         endif;
 
         $dados = array(
@@ -138,18 +138,71 @@ class Ordemservico extends CI_Controller {
         );
         $this->load->view('contente', $dados);
     }
-    
-    public function itens($id_os) {
+
+    public function gerenciaitens($id_os) {
         $dados = array(
             'tela' => 'os_gerenciaitem',
             'mensagem' => $this->mensagem,
-            'ListaProduto' => $this->join_model->ListaProduto($id_os)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id_os)->row(),
-            'ListaServico' => $this->join_model->ListaServico($id_os)->result(),
-            'ListaServicoTotal' => $this->geral_model->TotalServico($id_os)->row(),
+            'id_os' => $id_os,
+            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
         );
         $this->load->view('contente', $dados);
-        
+    }
+
+    public function pagamento($id_os) {
+
+        $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
+
+        $dados = array(
+            'tela' => "os_pagar",
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'pessoa' => $this->join_model->EnderecoCompleto($os->PES_ID)->row(),
+            'id_pedido' => $id_os,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function entrega($id_os) {
+
+        $OsDados = $this->join_model->OsDados($id_os)->row();
+
+        if ($this->geral_model->FechaOs($id_os, "4") > 0) {
+            $this->mensagem = 'Ordem entregue com sucesso!';
+        } else {
+            $this->mensagem = 'Essa ordem já foi fechado anteriormente!';
+        }
+
+        $dados = array(
+            'tela' => "os_entrega",
+            'mensagem' => $this->mensagem,
+            'ListaPedido' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOs($id_os)->row(),
+            'OsDados' => $OsDados,
+            'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
+            'pessoa' => $this->join_model->EnderecoCompleto($OsDados->PES_ID)->row(),
+        );
+
+        $this->load->view('contente', $dados);
+    }
+
+    public function reabrir($id_os) {
+        $this->output->enable_profiler(TRUE);
+
+        if ($this->geral_model->ReabrirOs($id_os) > 0) {
+            $this->session->set_flashdata('mensagem', 'Pedido foi reaberto com sucesso!');
+        } else {
+            $this->session->set_flashdata('mensagem', 'Esse pedido já foi aberto anteriormente!');
+        }
+
+        redirect(base_url('ordemservico'));
+
+        $dados = array(
+            'tela' => "os_reabrir",
+            'mensagem' => $this->mensagem
+        );
+
+        $this->load->view('contente', $dados);
     }
 
     public function addproduto($id_os, $id_produto) {
@@ -160,7 +213,7 @@ class Ordemservico extends CI_Controller {
             $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
             if ($os != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
-                $lista_pedido = $this->crud_model->pega("LISTA_PRODUTO", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'OS_ID' => $id_os))->row();
+                $lista_pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'OS_ID' => $id_os))->row();
                 if ($lista_pedido == NULL) {
                     //inseri os dados abaixo no db
                     $dados = array(
@@ -168,7 +221,7 @@ class Ordemservico extends CI_Controller {
                         'ESTOQ_ID' => $produto->ESTOQ_ID,
                         'LIST_PED_QNT' => '1',
                         'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
-                    if ($this->crud_model->inserir('LISTA_PRODUTO', $dados) != TRUE) {
+                    if ($this->crud_model->inserir('LISTA_PRODUTOS', $dados) != TRUE) {
                         $this->mensagem = $this->lang->line("msg_pedido_erro");
                     }
                 } else {
@@ -183,19 +236,67 @@ class Ordemservico extends CI_Controller {
         $dados = array(
             'tela' => 'os_itens',
             'mensagem' => $this->mensagem,
-            'ListaProduto' => $this->join_model->ListaProduto($id_os)->result(),
-            'ListaProdutoTotal' => $this->geral_model->TotalProdOS($id_os)->row(),
-            'ListaServico' => $this->join_model->ListaServico($id_os)->result(),
-            'ListaServicoTotal' => $this->geral_model->TotalServico($id_os)->row(),
+            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public
-            function teste() {
-        echo "<pre>";
-        print_r($this->geral_model->ExcluirOs(44));
-        echo "</pre>";
+    public function updproduto($id_os, $lista_ped_id = null, $id_estoque = null, $quantidade = null) {
+
+        // verifica se existe o pedido
+        if ($lista_ped_id != NULL and $id_estoque != null and $quantidade != null) {
+            $pedido = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->result();
+            if ($pedido != NULL) {
+                //verifica se existe a quatidade de produto pedido
+                $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $id_estoque))->row();
+                if ($produto->ESTOQ_ATUAL < $quantidade) {
+                    $this->mensagem = $this->lang->line("msg_estoque_insuficiente");
+                    $quantidade = $produto->ESTOQ_ATUAL;
+                }
+                $atualizar = array('LIST_PED_QNT' => $quantidade);
+                $condicao = array('LIST_PED_ID' => $lista_ped_id);
+                if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) === \FALSE) {
+                    $this->mensagem = $this->lang->line("msg_atualuzado_erro");
+                }
+            } else {
+                $this->mensagem = $this->lang->line("msg_pedido_erro");
+            }
+        }
+
+        $dados = array(
+            'tela' => 'os_itens',
+            'mensagem' => $this->mensagem,
+            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function excluiritem($id_os, $lista_ped_id) {
+
+        if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) != TRUE) {
+            $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+        }
+
+        $dados = array(
+            'tela' => 'os_itens',
+            'mensagem' => $this->mensagem,
+            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function updlista($id_os) {
+        $dados = array(
+            'tela' => 'os_itens',
+            'mensagem' => $this->mensagem,
+            'id_os' => $id_os,
+            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
+            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
+        );
+        $this->load->view('contente', $dados);
     }
 
 }

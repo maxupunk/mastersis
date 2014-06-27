@@ -39,7 +39,7 @@ class Home extends CI_Controller {
         //echo hash("sha512", $this->input->post('senha'));
         
         if ($usuario == "" || $this->input->post('senha') == "") {
-            redirect(base_url() . 'home/login', 'refresh');
+            redirect(base_url('home/login'), 'refresh');
             exit();
         }
 
@@ -48,7 +48,7 @@ class Home extends CI_Controller {
             setcookie("lembrar", "checked");
         }
 
-        $result = $this->crud_model->pega("USUARIO", array('USUARIO_LOGIN' => $usuario, 'USUARIO_SENHA' => $senha, 'USUARIO_ESTATUS' => 'a'))->row();
+        $result = $this->crud_model->pega("USUARIOS", array('USUARIO_LOGIN' => $usuario, 'USUARIO_SENHA' => $senha, 'USUARIO_ESTATUS' => 'a'))->row();
         if (count($result) < 1) {
             $dados = array('mensagem' => "Login e/ou senha invalido ou usuario desativo no sistema!");
             $this->load->view('home_login', $dados);
@@ -65,11 +65,11 @@ class Home extends CI_Controller {
 
             $data['USUARIO_ID'] = $result->USUARIO_ID;
             $data['LOG_ACESS_IP'] = getenv("REMOTE_ADDR");
-            $data['LOG_ACESS_DATA'] = date("d/m/Y h:i:s");
-            $this->db->insert('LOG_ACESSO', $data);
+            $data['LOG_ACESS_DATA'] = date("Y-m-d h:i:s");
+            $this->db->insert('LOG_ACESSOS', $data);
 
             $this->session->set_userdata($login);
-            redirect(base_url() . 'home', 'refresh');
+            redirect(base_url('home'), 'refresh');
         }
     }
 

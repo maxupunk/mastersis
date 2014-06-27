@@ -19,7 +19,7 @@
 
                         foreach ($emabertos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/itens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-success btn-xs">Itens</a>
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
                              <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
                              <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
@@ -30,7 +30,7 @@
 
                         echo $this->table->generate();
                     } else {
-                        echo "Não á serviço(s) em aberto!";
+                        echo "Não á serviço em aberto!";
                     }
                     ?>
                 </div>
@@ -52,7 +52,8 @@
 
                         foreach ($pendentes as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
                              <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
                         }
@@ -62,7 +63,7 @@
 
                         echo $this->table->generate();
                     } else {
-                        echo "Não á serviço(s) pendente(s)!";
+                        echo "Não á serviço pendente!";
                     }
                     ?>
 
@@ -87,9 +88,10 @@
 
                         foreach ($concluidos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
+                             <a href="ordemservico/pagamento/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-success btn-xs">Entregar</a>');
                         }
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -97,7 +99,7 @@
 
                         echo $this->table->generate();
                     } else {
-                        echo "Não á serviço(s) concluido(s)!";
+                        echo "Não á serviço concluido!";
                     }
                     ?>
 
@@ -120,7 +122,7 @@
                         foreach ($entregues as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME, 
                             '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>');
+                             <a href="ordemservico/reabrir/' . $linha->OS_ID . '" class="btn btn-warning btn-xs">Reabrir</a>');
                         }
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -128,7 +130,7 @@
 
                         echo $this->table->generate();
                     } else {
-                        echo "Não á serviço(s) concluido(s)!";
+                        echo "Não á serviço entregue!";
                     }
                     ?>
 

@@ -1,128 +1,65 @@
-<?php $usuario = $this->crud_model->pega('USUARIO', array('USUARIO_ID' => $Detalhes->USUARIO_ID))->row(); ?>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        Detalhes da ordem
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<?php if (isset($mensagem) and $mensagem != NULL) print '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
+
+<div class="modal-header"><h4 class="modal-title">RECEBO DE PRODUTOS</h4></div>
+<div class="modal-body impresao">
+
+    <div class="recibo">
+    <p class="cabeca-recibo">
+        <?php echo $empresa->EMPRE_NOME ?> - <?php echo $empresa->EMPRE_SLOGAN ?><br>
+        CNPJ: <?php echo $empresa->EMPRE_CNPJ ?> - Fone/Fax: <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
+        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?><br>
+    </p>
+    <p class="descr-os">
+        CLIENTE: <?php echo $pessoa->PES_NOME ?> | FONE: <?php echo $pessoa->PES_CEL1 ?><br>
+        END.: <?php echo $pessoa->RUA_NOME ?> - <?php echo $pessoa->BAIRRO_NOME ?> / 
+        <?php echo $pessoa->CIDA_NOME ?> - <?php echo $pessoa->ESTA_UF ?> | CEP: <?php echo $pessoa->RUA_CEP ?>
+    </p>
+
+    <p class="descr-os">EQUIPAMENTO:<br>
+        <?php echo $OsDados->OS_EQUIPAMENT ?>
+    </p>
+    
+    <p class="descr-os">DEFEITO:<br>
+        <?php echo $OsDados->OS_DSC_DEFEITO ?>
+    </p>
+    
+    <p class="descr-os">SOLUÇÃO:<br>
+        <?php echo $OsDados->OS_DSC_SOLUC ?>
+    </p>
+    
+    <?php
+    setlocale(LC_MONETARY, "pt_BR");
+    $this->table->set_heading('COD', 'QNT', 'DESCRIÇÃO', 'PREÇO(UN)', 'SUB.TOTAL');
+
+    foreach ($ListaPedido as $linha) {
+
+        $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
+        
+
+        $this->table->add_row($linha->PRO_ID, $linha->LIST_PED_QNT . $linha->MEDI_SIGLA, $linha->PRO_DESCRICAO, \money_format('%n', $linha->LIST_PED_PRECO), money_format('%n', $sub_total));
+    }
+
+    $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $total->total));
+
+    $tmpl = array('table_open' => '<table class="lista-produto">');
+    $this->table->set_template($tmpl);
+
+    echo $this->table->generate();
+    ?>
+    
+    <table class="rodape-recibo">
+        <tr>
+            <th>USUARIO</th>
+            <th>ESTATUS</th>
+        </tr>
+        <tr>
+            <td><?php echo $usuario->USUARIO_APELIDO; ?></td>
+            <td><?php echo $Estatus; ?></td>
+        </tr>
+    </table>
     </div>
-    <div class="panel-body">
 
-        <div class="col-sm-12 impresao">
-            <div class="row BordaOs">
-                <div class="col-sm-6"><label>CLIENTE: </label><?php echo $Detalhes->PES_NOME ?></div>
-                <div class="col-sm-4"><label>ENTRADA: </label><?php echo $Detalhes->OS_DATA_ENT ?></div>
-                <div class="col-sm-2"><label>OS N.: </label><?php echo $Detalhes->OS_ID ?></div>
-            </div>
-
-            <div class="row">
-                <span>EQUIPAMENTO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_EQUIPAMENT ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <span>DEFEITO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_DEFEITO ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <span>SOLUÇÃO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_SOLUC ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <span>DEPENDENCIA:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_DSC_PENDENT ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <?php
-                    if ($ListaProduto <> NULL) {
-
-                        $this->table->set_heading('COD', 'DESCRIÇÃO', 'QNT', 'VALOR', 'SUBTOTAL');
-
-                        foreach ($ListaProduto as $linha) {
-                            $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
-                            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $linha->LIST_PED_QNT, $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total));
-                        }
-
-                        $this->table->add_row('', '', '', 'TOTAL', $this->convert->em_real($ListaProdutoTotal->total));
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "<p align='center'>Não foi usado produto(s)!</p>";
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <?php
-                    if ($ListaServico <> NULL) {
-
-                        $this->table->set_heading('COD', 'DESCRIÇÃO', 'QNT', 'VALOR', 'SUBTOTAL');
-
-                        foreach ($ListaServico as $linha) {
-                            $sub_total = ($linha->LIST_SRV_QNT * $linha->LIST_SRV_PRECO);
-                            $this->table->add_row($linha->LIST_SRV_ID, $linha->SERV_NOME, $linha->LIST_SRV_QNT, $this->convert->em_real($linha->LIST_SRV_PRECO), $this->convert->em_real($sub_total));
-                        }
-
-                        $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($ListaServicoTotal->total));
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "<p align='center'>Não foi feito servico(s)!</p>";
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-5 BordaOs pull-right">
-                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total); //$this->convert->em_real();     ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <span> OBSERVAÇÃO:</span>
-                <div class="col-sm-12 BordaOs">
-                    <?php echo $Detalhes->OS_OBSERVACAO ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6 BordaOs">
-                    <span>ENTREGUE: </span><?php echo $Detalhes->OS_DATA_SAI ?>
-                </div>
-                <div class="col-sm-4 BordaOs">
-                    <span>USUARIO: </span><?php echo $usuario->USUARIO_LOGIN ?>
-                </div>
-                <div class="col-sm-2 BordaOs">
-                    <?php echo $Estatus ?>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <button type="button" id="imprimir" class="btn btn-primary">Imprimir</button>
-            </div>
-        </div>
-
-    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" id="imprimir">Imprimir</button>
 </div>

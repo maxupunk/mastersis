@@ -23,3 +23,16 @@ $("#atualiza-exibir").click(function() {
   $("#ListaVenda").load("venda/atualizar/" + $('#pedido_id').val() );
   return false;
 });
+// ALTERA QUATIDADE DE PRODUTOS
+$(document).on('change', '#quantidade', function() {
+    $("#ListaVenda").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
+});
+// EXCLUIR PRODUTOS
+$(document).on('click', '#excluir-item', function() {
+    $("#ListaVenda").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
+});
+// Atualisa
+$(document).on("click", "#atualiza-pedido", function() {
+    $("#ListaVenda").load("venda/updlista/" + $('#pedido_id').val())
+    return false;
+});

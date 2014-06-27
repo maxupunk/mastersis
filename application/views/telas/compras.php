@@ -1,9 +1,10 @@
 <div class="row">
     <div class="col-sm-12">
-        <ul class="nav nav-tabs nav-justified">
-            <li <?php echo 'id="SubMenuComp" url="' . base_url('categoria') . '">' ?><a>Fazer Compra</a></li>
-            <li <?php echo 'id="SubMenuComp" url="' . base_url('medida') . '">' ?><a>Lista Compras</a></li>
-            <li <?php echo 'id="SubMenuComp" url="' . base_url('avaria') . '">' ?><a>Receber Compra</a></li>
+        <ul class="nav nav-tabs nav-justified submenu-compras">
+            <li><a href="<?php echo base_url('compras/fornecedor') ?>">Fazer Compra</a></li>
+            <li><a href="<?php echo base_url('compras/lista') ?>">Lista Compras</a></li>
+            <li><a href="<?php echo base_url('compras/receber') ?>">Receber Compra</a></li>
+            
         </ul>
     </div>
 </div>

@@ -16,7 +16,7 @@ class Produto extends CI_Controller {
 
     public function index() {
         // validar o formulario
-        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|strtoupper|is_unique[PRODUTOS.PRO_DESCRICAO]');
+        $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
         $this->form_validation->set_rules('CATE_ID', 'CATEGORIA', 'required');
         $this->form_validation->set_rules('MEDI_ID', 'MEDIDA', 'required');
@@ -27,7 +27,7 @@ class Produto extends CI_Controller {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO'), $this->input->post());
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
@@ -37,7 +37,7 @@ class Produto extends CI_Controller {
         endif;
         $dados = array(
             'tela' => 'prod_cadastro',
-            'categorias' => $this->crud_model->pega_tudo("CATEGORIA")->result(),
+            'categorias' => $this->crud_model->pega_tudo("CATEGORIAS")->result(),
             'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
             'mensagem' => $this->mensagem,
         );
@@ -54,7 +54,7 @@ class Produto extends CI_Controller {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'PRO_ESTATUS', 'PRO_PESO'), $this->input->post());
+            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
@@ -65,6 +65,8 @@ class Produto extends CI_Controller {
         $dados = array(
             'tela' => "prod_editar",
             'mensagem' => $this->mensagem,
+            'categorias' => $this->crud_model->pega_tudo("CATEGORIAS")->result(),
+            'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
         $this->load->view('contente', $dados);
@@ -75,7 +77,7 @@ class Produto extends CI_Controller {
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
 
-        $img['upload_path'] = 'assets/img_produto/';
+        $img['upload_path'] = 'assets/arquivos/produto/';
         $img['allowed_types'] = 'jpg';
         $img['max_size'] = '2048';
         $img['file_name'] = $this->input->post('id_produto');
@@ -167,9 +169,11 @@ class Produto extends CI_Controller {
     }
 
     public function pegaproduto() {
+
         $this->load->model('join_model');
 
         $busca = $_GET['buscar'];
+        $this->db->cache_on();
         $rows = $this->join_model->ProdutoBusca($busca)->result();
 
         setlocale(LC_MONETARY, "pt_BR");

@@ -46,5 +46,5 @@ endif;
 
 
 <div class="row">
-    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/img_produto/' . $query->PRO_IMG . '" class="col-sm-12 hidden-xs">' ?>
+    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/arquivos/produto/' . $query->PRO_IMG . '" class="col-sm-12 hidden-xs">' ?>
 </div>

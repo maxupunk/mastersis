@@ -4,7 +4,8 @@
 
         <legend>CADASTRO DE PRODUTO</legend>
 
-        <?php if (isset($mensagem) and $mensagem != NULL)
+        <?php
+        if (isset($mensagem) and $mensagem != NULL)
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
         ?>
 
@@ -30,9 +31,10 @@
                     foreach ($categorias as $categoria)
                         $options[$categoria->CATE_ID] = $categoria->CATE_NOME;
                 } else {
-                    $options[''] = 'Cadastre uma categoria antes de continuar';
+                    $options[''] = 'Cadastre uma categoria';
                 }
                 echo form_dropdown('CATE_ID', $options, $this->input->post('CATE_ID'));
+                unset($options);
                 ?>
             </div>
             <div class="col-sm-4">
@@ -43,19 +45,30 @@
                     foreach ($medidas as $medida)
                         $options[$medida->MEDI_ID] = $medida->MEDI_NOME;
                 } else {
-                    $options[''] = 'Cadastre uma unidade de medida antes de continuar';
+                    $options[''] = 'Cadastre uma unidade de medida';
                 }
                 echo form_dropdown('MEDI_ID', $options, $this->input->post('MEDI_ID'));
                 ?>
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-sm-6">
+                <label>Estatus:</label>
+                <?php echo form_dropdown('PRO_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), $this->input->post('PRO_ESTATUS')); ?>
+            </div>
+            <div class="col-sm-6">
+                <label>Tipo (Produto/Serviço):</label>
+                <?php echo form_dropdown('PRO_TIPO', array('p' => 'Produto', 's' => 'Serviço'), $this->input->post('PRO_TIPO')); ?>
+            </div>
+        </div>
+
         <hr>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" disabled>Salvar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
         </div>
-        
+
     </fieldset>
 
 </form>

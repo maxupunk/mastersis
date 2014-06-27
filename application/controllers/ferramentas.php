@@ -36,6 +36,9 @@ class Ferramentas extends CI_Controller {
     }
 
     public function otimizar_db() {
+
+        $this->db->cache_delete_all();
+
         $result = $this->dbutil->optimize_database();
 
         if ($result !== FALSE) {
@@ -45,9 +48,25 @@ class Ferramentas extends CI_Controller {
         }
     }
 
-    public function reparar_tabela($tabela) {
-        if ($this->dbutil->repair_table($tabela)) {
-            echo 'A tabela ' . $tabela . ' foi reparada com sucesso!';
+    public function reparar_tabela($tabela = null) {
+        echo "- Limpando o cache geral<br>";
+        $this->db->cache_delete_all();
+        if ($tabela == null) {
+            $tabelas = $this->db->list_tables();
+
+            foreach ($tabelas as $tabela) {
+                if ($this->dbutil->repair_table($tabela)) {
+                    echo '- A tabela ' . $tabela . ' foi reparada com sucesso!<br>';
+                } else {
+                    echo '- A tabela ' . $tabela . ' não pode ser reparada';
+                }
+            }
+        } else {
+            if ($this->dbutil->repair_table($tabela)) {
+                echo 'A tabela ' . $tabela . ' foi reparada com sucesso!';
+            } else {
+                echo 'A tabela ' . $tabela . ' não pode ser reparada';
+            }
         }
     }
 

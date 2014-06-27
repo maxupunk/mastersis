@@ -61,14 +61,13 @@ class Auth {
                     // Se não vier nenhum resultado da consulta, manda para página de
                     // usuario sem permissão.
                     if (count($result2) == 0) {
-                        redirect(base_url() . 'home/sempermissao');
+                        redirect(base_url('home/sempermissao'));
                     } else {
                         return true;
                     }
-                }
                 // Se não estiver logado, sera redirecionado para o login.
-                else {
-                    redirect(base_url() . 'home/login', 'refresh');
+                } else {
+                    redirect(base_url('home/login'), 'refresh');
                 }
             }
         }

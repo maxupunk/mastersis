@@ -80,7 +80,7 @@ $(document).on("keyup", "#busca", function() {
     }
 });
 
-$(document).on("click", ".sub-menu>li", function() {
+$(document).on("click", ".submenu-cadastro>li", function() {
     href = $(this).find("a").attr('href');
     $(this).siblings('li.active').removeClass("active");
     $(this).addClass("active");
@@ -230,24 +230,10 @@ $(document).on("click", "#MostraVendas", function() {
     $("#venda").load($(this).attr('href'));
     return false;
 });
-// Atualisa
-$(document).on("click", "#atualiza-pedido", function() {
-    $("#ListaVenda").load("venda/atualizar/" + $('#pedido_id').val())
-    return false;
-});
-
 // PAGINAÇÃO DA LISTA DE PEDIDO
 $(document).on("click", "#PagPedidos a", function() {
     $("#venda").load($(this).attr('href'));
     return false;
-});
-// ALTERA QUATIDADE DE PRODUTOS
-$(document).on('change', '#quantidade', function() {
-    $("#ListaVenda").load("venda/atualizar/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
-});
-// EXCLUIR PRODUTOS
-$(document).on('click', '#excluir-item', function() {
-    $("#ListaVenda").load("venda/excluiritem/" + $('input[name="PEDIDO_ID"]').val() + "/" + $(this).attr('list_ped_id'));
 });
 // INICIA A FINALIZAÇÃO DA VENDA
 $(document).on('click', '#pagamento', function() {
@@ -267,6 +253,11 @@ $(document).on('click', '#imprimir', function() {
     $('.impresao').printArea(options);
     return false;
 });
+// FINALIZA A ORDEM
+$(document).on('click', '#finaliza-os', function() {
+    $("#modal-content").load("ordemservico/entrega/" + $('#id_pedido').val());
+});
+
 // COMPORTAMENTO DAS COMPRAS
 $(document).on("click", "#SubMenuComp", function() {
     $("#compra").load($(this).attr('url'));
@@ -344,6 +335,16 @@ $(document).on("submit", 'form[name="GravaOs"]', function() {
 $(document).on('click', '#LinkOS', function() {
     $("#modal-content").load($(this).attr('href'));
     $('#modal').modal('show');
+    return false;
+});
+//
+// menu de compras
+$(document).on("click", ".submenu-compras>li", function() {
+    href = $(this).find("a").attr('href');
+    $(this).siblings('li.active').removeClass("active");
+    $(this).addClass("active");
+    $("#compra").load(href);
+    $(".BordaCad").show();
     return false;
 });
 //

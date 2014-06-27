@@ -5,37 +5,30 @@ var ListaProduto = new Bloodhound({
     remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
 });
 
-var ListaServico = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: {url: 'servico/pegaproduto?buscar=%QUERY'}
-});
-
 // inicialisa o autocomplete
 ListaProduto.initialize();
-ListaServico.initialize();
 
 // inicialisa typeahead UI
 $('#ProdutoServico').typeahead(null, {
-    source: ListaProduto.ttAdapter(),
-    templates: {
-        header: '<h4 class="titulo-busca-os">Produto</h3>'
-    }
-},
-{
-    source: ListaServico.ttAdapter(),
-    templates: {
-        header: '<h4 class="titulo-busca-os">Serviço</h3>'
-    }
+    source: ListaProduto.ttAdapter()
 }).on('typeahead:selected', function(object, data) {
+    $("#ListaProduto").load("ordemservico/addproduto/" + $('#os_id').val() + "/" + data.id);
     $(this).val('');
 });
 
-
-function printObject(o) {
-    var out = '';
-    for (var p in o) {
-        out += p + ': ' + o[p] + '\n';
-    }
-    console.log(out);
-}
+$("#ProdutoServico").click(function() {
+  $(this).val('');
+});
+// ALTERA QUATIDADE DE PRODUTOS
+$(document).on('change', '#quantidade', function() {
+    $("#ListaProduto").load("ordemservico/updproduto/" + $('#os_id').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
+});
+// EXCLUIR PRODUTOS
+$(document).on('click', '#excluir-item', function() {
+    $("#ListaProduto").load("ordemservico/excluiritem/" + $('#os_id').val() + "/" + $(this).attr('list_ped_id'));
+});
+// Atualisa
+$(document).on("click", "#atualiza-lista", function() {
+    $("#ListaProduto").load("ordemservico/updlista/" + $('#os_id').val())
+    return false;
+});

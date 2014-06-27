@@ -13,22 +13,17 @@ endif;
 <form action="produto/excluir/<?php echo $query->PRO_ID ?>" method="post" name="grava" accept-charset="utf-8">
 
     <fieldset>
+        <div class="well">
+            <div>Deseja excluir o produto abaixo?</div>
+            <label>Codigo: <?php echo $query->PRO_ID ?></label><br>
 
-        <legend>EXCLUIR O PRODUTO ABAIXO?</legend>
+            <label>Descrição:</label>
+            <label><?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?></label>
 
+            <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
 
-        <label>CODIGO: <?php echo $query->PRO_ID ?></label>
-
-        <label>Descrição:</label>
-        <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>" readonly />
-
-        <label>Caracteristica Tecnicas:</label>
-        <textarea name="PRO_CARAC_TEC" readonly rows="10"><?php echo set_value('PRO_CARAC_TEC', $query->PRO_CARAC_TEC); ?></textarea>
-
-        <input type="hidden" name="id_produto" value="<?php echo $query->PRO_ID ?>" />
-
-        <br><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
-
+            <br><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
+        </div>
     </fieldset>
 
 </form>

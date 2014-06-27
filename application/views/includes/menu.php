@@ -4,12 +4,9 @@
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-cel">
-                <span class="sr-only">Menu de navegação</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <i class="glyphicon glyphicon-th-list"></i>
             </button>
-            <div class="navbar-brand"> MasterSis<i class="glyphicon glyphicon glyphicon-leaf"></i>
+            <div class="navbar-brand"> MasterSis<i class="glyphicon glyphicon-leaf"></i>
                 <span class="carregando">.:Carragando:.</span>
             </div>
         </div>
@@ -21,7 +18,7 @@
 
                 <li><? echo anchor('ordemservico', 'O.S'); ?></li>
 
-                <li><? echo anchor('compra', 'Compras'); ?></li>
+                <li><? echo anchor('compras', 'Compras'); ?></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiros</a>

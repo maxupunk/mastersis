@@ -1,19 +1,22 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        Gerenciando Itens
+        Gerencia de itens
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
     </div>
     <div class="panel-body">
 
         <div class="row BordaOs">
-            <div class="col-sm-12">
+            <div class="col-sm-10">
                 <input type="text" name="PRO_DESCRICAO" id="ProdutoServico" autocomplete="off"/>
+                <input type="hidden" name="OS_ID" id="os_id" value="<?php echo $id_os ?>"/>
+            </div>
+            <div class="col-sm-2">
+                <?php echo anchor('ordemservico/itens/' . $id_os, 'Atualizar', 'class="btn btn-warning" id="atualiza-lista"'); ?>
             </div>
         </div>
 
         <div class="lista-itens-os">
             <div class="row">
-                <span>PRODUTOS:</span>
                 <div class="col-sm-12 BordaOs" id="ListaProduto">
                     <?php
                     if ($ListaProduto <> NULL) {
@@ -22,12 +25,10 @@
 
                         foreach ($ListaProduto as $linha) {
                             $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
-                            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $linha->LIST_PED_QNT, $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total));
+                            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, '<input type="number" id="quantidade" min="1.00" step="1.00" max="' . $linha->ESTOQ_ATUAL . '" list_ped_id="' . $linha->LIST_PED_ID . '" id_estoque="' . $linha->ESTOQ_ID . '" value="' . $linha->LIST_PED_QNT . '">', $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total), '<button type="button" class="close" id="excluir-item" list_ped_id="' . $linha->LIST_PED_ID . '">&times;</button>');
                         }
 
-                        $this->table->add_row('', '', '', 'TOTAL', $this->convert->em_real($ListaProdutoTotal->total));
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
+                        $tmpl = array('table_open' => '<table class="lista-produto">');
                         $this->table->set_template($tmpl);
 
                         echo $this->table->generate();
@@ -35,38 +36,11 @@
                         echo "<p align='center'>Não foi usado produto(s)!</p>";
                     }
                     ?>
-                </div>
-            </div>
 
-            <div class="row">
-                <span>SERVICOS:</span>
-                <div class="col-sm-12 BordaOs" id="ListaServico">
-                    <?php
-                    if ($ListaServico <> NULL) {
+                    <div class="col-sm-12 BordaOs text-right">
+                        TOTAL A PAGAR : <?php echo $this->convert->em_real($total->total) ?>
+                    </div>
 
-                        $this->table->set_heading('COD', 'DESCRIÇÃO', 'QNT', 'VALOR', 'SUBTOTAL');
-
-                        foreach ($ListaServico as $linha) {
-                            $sub_total = ($linha->LIST_SRV_QNT * $linha->LIST_SRV_PRECO);
-                            $this->table->add_row($linha->LIST_SRV_ID, $linha->SERV_NOME, $linha->LIST_SRV_QNT, $this->convert->em_real($linha->LIST_SRV_PRECO), $this->convert->em_real($sub_total));
-                        }
-
-                        $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($ListaServicoTotal->total));
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "<p align='center'>Não foi feito servico(s)!</p>";
-                    }
-                    ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-5 BordaOs pull-right">
-                    TOTAL A PAGAR : <?php echo $this->convert->somar_real($ListaProdutoTotal->total, $ListaServicoTotal->total) ?>
                 </div>
             </div>
         </div>

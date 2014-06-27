@@ -1,5 +1,4 @@
 <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
-<link href="<?php echo base_url('assets/css/mastersis.css'); ?>" rel="stylesheet" media="screen">
 
 <div class="modal-header"><h4 class="modal-title">RECEBO DE PRODUTOS</h4></div>
 <div class="modal-body impresao">
@@ -24,7 +23,7 @@
 
     $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $total->total));
 
-    $tmpl = array('table_open' => '<table class="lista-recibo">');
+    $tmpl = array('table_open' => '<table class="lista-produto">');
     $this->table->set_template($tmpl);
 
     echo $this->table->generate();
@@ -44,12 +43,12 @@
         <tr>
             <th>ENTREGUE POR:</th>
             <th>RECEBIDO POR:</th>
-            <th></th>
+            <th>DATA:</th>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
-            <td align="right"><b><?php echo $pedido->PEDIDO_DATA; //echo date("d / m / Y") ?></b></td>
+            <td>______________________________</td>
+            <td>______________________________</td>
+            <td><b><?php echo $pedido->PEDIDO_DATA; ?></b></td>
         </tr>
     </table>
     </div>

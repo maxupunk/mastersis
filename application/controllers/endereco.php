@@ -48,7 +48,7 @@ class Endereco extends CI_Controller {
 
     public function rua() {
         // validar o formulario
-        $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|is_unique[RUA.RUA_NOME]');
+        $this->form_validation->set_rules('RUA_NOME', 'NOME', 'required|max_length[45]|is_unique[RUAS.RUA_NOME]');
         $this->form_validation->set_rules('RUA_CEP', 'CEP', 'required');
         $this->form_validation->set_rules('BAIRRO_ID', 'BAIRRO', 'required');
 
@@ -58,7 +58,7 @@ class Endereco extends CI_Controller {
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('RUA_NOME', 'RUA_CEP', 'BAIRRO_ID'), $this->input->post());
-            if ($this->crud_model->inserir('RUA', $dados) === TRUE) {
+            if ($this->crud_model->inserir('RUAS', $dados) === TRUE) {
                 $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
             } else {
                 $this->mensagem = $this->lang->line("msg_cadastro_erro");
@@ -116,7 +116,7 @@ class Endereco extends CI_Controller {
 
     function pegaruas($id) {
 
-        $ruas = $this->crud_model->pega("RUA", array('RUA_ID' => $id))->result();
+        $ruas = $this->crud_model->pega("RUAS", array('RUA_ID' => $id))->result();
 
         if ($ruas === FALSE) {
             echo '[{ "RUA_NOME": "ERRO NO DB" }]';
@@ -138,7 +138,7 @@ class Endereco extends CI_Controller {
         $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "endereco_busca",
-            'busca_rua' => $this->crud_model->buscar("RUA", array('RUA_NOME' => $busca, 'RUA_CEP' => $busca))->result(),
+            'busca_rua' => $this->crud_model->buscar("RUAS", array('RUA_NOME' => $busca, 'RUA_CEP' => $busca))->result(),
             'busca_bairro' => $this->crud_model->buscar("BAIRROS", array('BAIRRO_NOME' => $busca))->result(),
             'busca_cidade' => $this->crud_model->buscar("CIDADES", array('CIDA_NOME' => $busca))->result(),
             'busca_estado' => $this->crud_model->buscar("ESTADOS", array('ESTA_NOME' => $busca))->result(),

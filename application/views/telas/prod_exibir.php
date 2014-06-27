@@ -15,7 +15,7 @@ $query->PRO_IMG != null ? $img = $query->PRO_IMG : $img = "sem_img.gif";
 
 <div class="thumbnail">
     <center><h3><?php echo $query->PRO_DESCRICAO ?></h3></center>
-    <img src="<? echo 'assets/img_produto/' . $img ?>">
+    <img src="<? echo 'assets/arquivos/produto/' . $img ?>">
     <div class="caption">
         VALOR:
         <pre><?php echo $query->PRO_CARAC_TEC ?></pre>

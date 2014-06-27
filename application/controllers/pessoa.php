@@ -16,15 +16,15 @@ class Pessoa extends CI_Controller {
     public function index() {
         // validar o formulario
 
-        $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required|strtoupper');
+        $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required');
 
-        $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|strtoupper|is_unique[PESSOAS.PES_CPF_CNPJ]');
+        $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
 
         
-        if ($this->input->post('PES_TIPO') === 'f') {
-            $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required|strtoupper');
-            $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
+        if ($this->input->post('PES_TIPO') == 'f') {
+            $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required');
+            $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required');
             $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
         }
 
@@ -142,6 +142,7 @@ class Pessoa extends CI_Controller {
     public function pegapessoa() {
         $busca = $_GET['buscar'];
         
+        $this->db->cache_on();
         $rows = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
 
         $json_array = array();
