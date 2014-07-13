@@ -7,7 +7,7 @@ class Geral_model extends CI_Model {
 
     public function ExcluirPedido($id_pedido) {
         $this->db->delete('LISTA_PRODUTOS', array('PEDIDO_ID' => $id_pedido));
-        $this->db->delete('PEDIDO', array('PEDIDO_ID' => $id_pedido));
+        $this->db->delete('PEDIDOS', array('PEDIDO_ID' => $id_pedido));
         return $this->db->trans_status();
     }
 
@@ -33,13 +33,24 @@ class Geral_model extends CI_Model {
         return $this->db->trans_status();
     }
 
-    public function FechaPedido($id_pedido, $estatus = 2) {
+    public function FechaPedido($id_pedido, $estatus = 4) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
             PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . '
             WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
             AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS=1');
+
+        return $this->db->affected_rows();
+    }
+
+    public function ReabrirPedido($id_pedido, $estatus = 1) {
+
+        $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
+            SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL + LISTA_PRODUTOS.LIST_PED_QNT,
+            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . '
+            WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
+            AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS>=2');
 
         return $this->db->affected_rows();
     }
@@ -77,6 +88,17 @@ class Geral_model extends CI_Model {
             $this->db->where('PEDIDOS.PEDIDO_ESTATUS >=', '2');
             return $this->db->get('PEDIDOS');
         }
+    }
+
+    public function PedidosTodos($quant = 0, $inicial = 0, $ordeby = NULL) {
+        if ($ordeby != NULL)
+            $this->db->order_by($ordeby);
+        if ($quant > 0)
+            $this->db->limit($quant, $inicial);
+
+        //$this->db->where('PEDIDOS.PEDIDO_TIPO', 'c');
+        $this->db->where('PEDIDOS.PEDIDO_ESTATUS <=', '3');
+        return $this->db->get('PEDIDOS');
     }
 
 }

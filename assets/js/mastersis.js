@@ -67,8 +67,8 @@ $(document).on("click", "#resultado a, #pagination a", function() {
     return false;
 });
 // Menu do cadastro de endereço
-$(document).on("click", "#MenuInterno", function() {
-    $("#content-sub-menu").load($(this).attr('url'));
+$(document).on("click", "#MenuEndereco", function() {
+    $("#endereco").load($(this).attr('href'));
     return false;
 });
 
@@ -258,13 +258,6 @@ $(document).on('click', '#finaliza-os', function() {
     $("#modal-content").load("ordemservico/entrega/" + $('#id_pedido').val());
 });
 
-// COMPORTAMENTO DAS COMPRAS
-$(document).on("click", "#SubMenuComp", function() {
-    $("#compra").load($(this).attr('url'));
-    $(".active").attr("class", "");
-    $(this).attr("class", "active");
-    return false;
-});
 ////////////////////////////////////////////////////////////////////////////////
 // Menu permicoes
 ////////////////////////////////////////////////////////////////////////////////
@@ -337,14 +330,34 @@ $(document).on('click', '#LinkOS', function() {
     $('#modal').modal('show');
     return false;
 });
-//
-// menu de compras
-$(document).on("click", ".submenu-compras>li", function() {
-    href = $(this).find("a").attr('href');
-    $(this).siblings('li.active').removeClass("active");
-    $(this).addClass("active");
-    $("#compra").load(href);
-    $(".BordaCad").show();
+
+////////////////////////////////////////////////////////////////////////////////
+// COMPRAS
+////////////////////////////////////////////////////////////////////////////////
+
+// aplica as configuração do autocomplete
+var NomeDoFornecedor = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
+});
+// inicialisa o autocomplete
+NomeDoFornecedor.initialize();
+
+// inicialisa typeahead UI
+$('#NomeFornecedor').typeahead(null, {
+    source: NomeDoFornecedor.ttAdapter()
+}).on('typeahead:selected', function(object, data) {
+    $("#ComprasConteiner").load("compras/abrir" + data.id);
+});
+
+$(document).on('click', '#lista-compras', function() {
+    $("#ComprasConteiner").load($(this).attr('href'));
+    return false;
+});
+// PAGINAÇÃO DA LISTA DE PEDIDO
+$(document).on("click", "#PagPedidos a", function() {
+    $("#ComprasConteiner").load($(this).attr('href'));
     return false;
 });
 //

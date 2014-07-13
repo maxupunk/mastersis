@@ -23,5 +23,5 @@ if ($ListaProduto <> NULL) {
 }
 ?>
 <div class="col-sm-12 BordaOs text-right">
-    TOTAL A PAGAR : <?php echo $this->convert->em_real($total->total) ?>
+    TOTAL: <?php echo $this->convert->em_real($total->total) ?>
 </div>

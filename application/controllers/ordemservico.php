@@ -28,21 +28,7 @@ class Ordemservico extends CI_Controller {
 
     public function estatus($id) {
         $estatus = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
-        switch ($estatus->OS_ESTATUS) {
-            case '1':
-                $retorno = 'ABERTO';
-                break;
-            case '2':
-                $retorno = 'PENDENTE';
-                break;
-            case '3':
-                $retorno = 'CONCLUIDO';
-                break;
-            case '4':
-                $retorno = 'ENTREGUE';
-                break;
-        }
-        return $retorno;
+        return $this->convert->EstatusOs($estatus->OS_ESTATUS);
     }
 
     public function cadastrar() {

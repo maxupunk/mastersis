@@ -29,9 +29,9 @@ class Produto extends CI_Controller {
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
+                $this->mensagem = "Produto/Serviço cadastrado com sucesso! <br>- Para permitir adiciona em venda e/ou serivço adicione o valor de venda do mesmo em Compras!";
             } else {
-                $this->mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = "Erro ao gravar no banco de dados! <br>- porfavor tente novamente mais tarde.";
             }
 
         endif;

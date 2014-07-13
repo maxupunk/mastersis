@@ -5,9 +5,9 @@
         <div class="col-sm-3"><label>DATA</label><input type="text"
                                                         value="<?php
                                                         if (isset($pedido->PEDIDO_DATA)) {
-                                                            echo $pedido->PEDIDO_DATA;
+                                                            echo date("d/m/Y - H:i:s", strtotime($pedido->PEDIDO_DATA));
                                                         } else {
-                                                            echo date("Y-m-d h:i:s");
+                                                            echo date("d/m/Y - h:i:s");
                                                         }
                                                         ?>" disabled /></div>
         <div class="col-sm-2"><label>PEDIDO N.</label><input type="text" name="PEDIDO_ID" id="pedido_id" value="<?php echo $pedido_id ?>" disabled /></div>

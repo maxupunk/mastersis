@@ -44,10 +44,10 @@ class Venda extends CI_Controller {
                     'PEDIDO_ESTATUS' => '1',
                     'PEDIDO_LOCAL' => 'l',
                     'PEDIDO_TIPO' => 'v');
-                if ($this->crud_model->inserir('PEDIDOS', $dados) != TRUE) {
-                    $this->mensagem = $this->lang->line("msg_pedido_erro");
-                } else {
+                if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
                     $pedido_id = $this->db->insert_id();
+                } else {
+                    $this->mensagem = "Erro ao grava pedido no banco de dados!";
                 }
             } else {
                 $pedido_id = $pedido->PEDIDO_ID;
@@ -71,7 +71,7 @@ class Venda extends CI_Controller {
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
         if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
             //verifica se existe realmente um pedido com o id passado
-            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row();
             if ($pedido != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
                 $lista_pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row();
@@ -89,7 +89,7 @@ class Venda extends CI_Controller {
                     $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
                 }
             } else {
-                $this->mensagem = $this->lang->line("msg_pedido_erro");
+                $this->mensagem = "O pedido não existe ou já foi fechado!";
             }
         } else {
             $this->mensagem = "Erro:<br> - O produto está com o estoque zerado!<br> - Produto esta desativo.";
@@ -178,6 +178,8 @@ class Venda extends CI_Controller {
             $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
         } else {
             $this->session->set_flashdata('mensagem', "Erro: Esse pedido já foi fechado e não pode ser excluido!");
+            $this->geral_model->ReabrirPedido($id_pedido);
+            $this->geral_model->ExcluirPedido($id_pedido);
         }
         redirect(base_url() . 'venda');
     }

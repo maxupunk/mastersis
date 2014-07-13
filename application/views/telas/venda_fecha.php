@@ -18,10 +18,10 @@
         $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
         
 
-        $this->table->add_row($linha->PRO_ID, $linha->LIST_PED_QNT . $linha->MEDI_SIGLA, $linha->PRO_DESCRICAO, \money_format('%n', $linha->LIST_PED_PRECO), money_format('%n', $sub_total));
+        $this->table->add_row($linha->PRO_ID, $linha->LIST_PED_QNT . $linha->MEDI_SIGLA, $linha->PRO_DESCRICAO, $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total));
     }
 
-    $this->table->add_row('', '', '', 'TOTAL:', money_format('%n', $total->total));
+    $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($total->total));
 
     $tmpl = array('table_open' => '<table class="lista-produto">');
     $this->table->set_template($tmpl);
@@ -48,7 +48,7 @@
         <tr>
             <td>______________________________</td>
             <td>______________________________</td>
-            <td><b><?php echo $pedido->PEDIDO_DATA; ?></b></td>
+            <td><b><?php echo date("d/m/Y - H:i:s", strtotime($pedido->PEDIDO_DATA)) ?></b></td>
         </tr>
     </table>
     </div>
