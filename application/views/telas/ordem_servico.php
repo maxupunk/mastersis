@@ -9,7 +9,7 @@
                 <div class="panel-heading">
                     Ordem de Serviços em aberto.
                     <span class="badge"><?php echo count($emabertos) ?></span>
-                    <a href="#" class="btn btn-success btn-xs pull-right" id="NovoOs">Nova</a>
+                    <a href="ordemservico/cadastrar" class="btn btn-success btn-xs pull-right" id="InModel">Nova</a>
                 </div>
                 <div class="panel-body">
                     <?php
@@ -19,10 +19,10 @@
 
                         foreach ($emabertos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
-                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
+                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="InModel" class="btn btn-danger btn-xs">Apagar</a>');
                         }
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -52,10 +52,10 @@
 
                         foreach ($pendentes as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
-                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-danger btn-xs">Apagar</a>');
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
+                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="InModel" class="btn btn-danger btn-xs">Apagar</a>');
                         }
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -88,10 +88,10 @@
 
                         foreach ($concluidos as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME,
-                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-primary btn-xs">Itens</a>
-                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/pagamento/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-success btn-xs">Entregar</a>');
+                            '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
+                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
+                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
+                             <a href="ordemservico/entregar/' . $linha->OS_ID . '" id="InModel" class="btn btn-success btn-xs">Entregar</a>');
                         }
 
                         $tmpl = array('table_open' => '<table class="table table-hover">');
@@ -121,7 +121,7 @@
 
                         foreach ($entregues as $linha) {
                             $this->table->add_row($linha->OS_ID, $linha->PES_NOME, 
-                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="LinkOS" class="btn btn-info btn-xs">Imprimir</a>
+                            '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
                              <a href="ordemservico/reabrir/' . $linha->OS_ID . '" class="btn btn-warning btn-xs">Reabrir</a>');
                         }
 

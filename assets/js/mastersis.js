@@ -3,9 +3,10 @@
  */
 
 ////////////////////////////////////////////////////////////////////////////////
-// Aviso de alterações de dados
-//
+// Comportamento Geral
+////////////////////////////////////////////////////////////////////////////////
 
+// Aviso de alterações de dados
 function ConfirmSair(on) {
     var message = "As mudanças deste formulário não foram salvas. \nSaindo desta página, todas as mudanças serão perdidas.";
     window.onbeforeunload = (on) ? function() {
@@ -43,6 +44,12 @@ $(document).ajaxStart(function() {
     $(".carregando").show();
 });
 
+// In model
+$(document).on('click', '#InModel', function() {
+    $("#modal-content").load($(this).attr('href'));
+    $('#modal').modal('show');
+    return false;
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 // Ativador de mascaras
@@ -235,16 +242,6 @@ $(document).on("click", "#PagPedidos a", function() {
     $("#venda").load($(this).attr('href'));
     return false;
 });
-// INICIA A FINALIZAÇÃO DA VENDA
-$(document).on('click', '#pagamento', function() {
-    $("#modal-content").load($(this).attr('href') + "/" + $('input[name="PEDIDO_ID"]').val());
-    $('#modal').modal('show');
-    return false;
-});
-// CONCLUI A VENDA
-$(document).on('click', '#finaliza-venda', function() {
-    $("#modal-content").load("venda/fechapedido/" + $('input[name="PEDIDO_ID"]').val());
-});
 // FUNÇÃO PARA IMPRESÃO IN DIV
 $(document).on('click', '#imprimir', function() {
     var extraCss = "assets/css/mastersis.css";
@@ -252,10 +249,6 @@ $(document).on('click', '#imprimir', function() {
     var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
     $('.impresao').printArea(options);
     return false;
-});
-// FINALIZA A ORDEM
-$(document).on('click', '#finaliza-os', function() {
-    $("#modal-content").load("ordemservico/entrega/" + $('#id_pedido').val());
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,12 +296,6 @@ $(document).on('click', '#selec-all-permi', function() {
 ////////////////////////////////////////////////////////////////////////////////
 // ORDEM DE SERVIÇO
 ////////////////////////////////////////////////////////////////////////////////
-// NOVO SERVIÇO
-$(document).on('click', '#NovoOs', function() {
-    $("#modal-content").load('ordemservico/cadastrar');
-    $('#modal').modal('show');
-    return false;
-});
 // GRAVA OS - FORMULARIO
 $(document).on("submit", 'form[name="GravaOs"]', function() {
     $.ajax({
@@ -324,13 +311,6 @@ $(document).on("submit", 'form[name="GravaOs"]', function() {
     });
     return false;
 });
-// DETAHLES DO OS
-$(document).on('click', '#LinkOS', function() {
-    $("#modal-content").load($(this).attr('href'));
-    $('#modal').modal('show');
-    return false;
-});
-
 ////////////////////////////////////////////////////////////////////////////////
 // COMPRAS
 ////////////////////////////////////////////////////////////////////////////////
@@ -348,9 +328,9 @@ NomeDoFornecedor.initialize();
 $('#NomeFornecedor').typeahead(null, {
     source: NomeDoFornecedor.ttAdapter()
 }).on('typeahead:selected', function(object, data) {
-    $("#ComprasConteiner").load("compras/abrir" + data.id);
+    $("#ComprasConteiner").load("compras/abrir/" + data.id);
 });
-
+// lista todas as compras
 $(document).on('click', '#lista-compras', function() {
     $("#ComprasConteiner").load($(this).attr('href'));
     return false;

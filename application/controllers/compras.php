@@ -22,14 +22,6 @@ class Compras extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function fornecedor() {
-
-        $dados = array(
-            'tela' => 'compras_fornecedor',
-        );
-        $this->load->view('contente', $dados);
-    }
-
     public function abrir($IdFornecedor) {
 
         // se for valido ele chama o inserir dentro do produto_model
@@ -54,7 +46,7 @@ class Compras extends CI_Controller {
             }
         }
         $dados = array(
-            'tela' => 'venda_abrir',
+            'tela' => 'compras_fornecedor',
             'pedido_id' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdFornecedor)->row(),
             'lista_pedido' => $this->join_model->ListaPedido($pedido_id)->result(),
@@ -65,11 +57,47 @@ class Compras extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
+    public function excluir($id_pedido) {
+        if ($this->input->post('id_pedido') > 0) {
+            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+            if ($pedido->PEDIDO_ESTATUS <= 1) {
+                $this->geral_model->ExcluirPedido($id_pedido);
+                $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
+            } else {
+                $this->session->set_flashdata('mensagem', "Erro: Esse pedido já foi fechado e não pode ser excluido!");
+                $this->geral_model->ReabrirPedido($id_pedido);
+                $this->geral_model->ExcluirPedido($id_pedido);
+            }
+            redirect('compras', 'refresh');
+        }
+
+        $dados = array(
+            'tela' => "compras_excluir",
+            'PedidoDados' => $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function excluirpedido($id_pedido) {
+        $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+        if ($pedido->PEDIDO_ESTATUS <= 1) {
+            $this->geral_model->ExcluirPedido($id_pedido);
+            $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
+        } else {
+            if ($this->geral_model->ReabrirPedido($id_pedido) >= 1) {
+                if ($this->geral_model->ExcluirPedido($id_pedido) == TRUE) {
+                    $this->session->set_flashdata('mensagem', "Pedido reaberto e excluido!");
+                }
+            }
+        }
+        redirect(base_url() . 'compras');
+    }
+
     public function listar() {
 
         $this->load->library('pagination');
         $config['base_url'] = base_url('compras/listar');
-        $config['total_rows'] = $this->geral_model->PedidosTodos()->num_rows();
+        $config['total_rows'] = $this->geral_model->PedidosFornecedor()->num_rows();
         $config['per_page'] = 10;
         $config['uri_segment'] = 3;
         $config['num_links'] = 30;
@@ -97,7 +125,7 @@ class Compras extends CI_Controller {
 
 
         $dados = array(
-            'pedidos_cliente' => $this->geral_model->PedidosTodos($config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
+            'pedidos_cliente' => $this->geral_model->PedidosFornecedor($config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
             'tela' => 'compras_listar',
             'paginacao' => $this->pagination->create_links(),
         );

@@ -17,11 +17,11 @@
                 <h4 class="panel-title">
 
                     <div class="pull-right">
-                        <a href="" id="compras-receber" class="btn-xs btn-success">Receber</a>
-                        <a href="" id="compras-canselar" class="btn-xs btn-danger">Canselar</a>
+                        <a href="compras/receber/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-success">Receber</a>
+                        <a href="compras/excluir/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-danger">Canselar</a>
                     </div> 
                     <a data-toggle="collapse" data-parent="#accordion" href="#<?php echo $linha->PEDIDO_ID ?>">
-                        <?php echo $Fornecedor->PES_NOME ?> / N: <?php echo $linha->PEDIDO_ID ?> - <?php echo date("d/m/Y - H:i:s", strtotime($linha->PEDIDO_DATA)); ?> / TOTAL: <?php echo $this->convert->em_real($total->total); ?> / <?php echo $this->convert->EstatusPedido($linha->PEDIDO_ESTATUS); ?>
+                        <?php echo $Fornecedor->PES_NOME ?> | PEDIDO: <?php echo $linha->PEDIDO_ID ?> - <?php echo date("d/m/Y - H:i:s", strtotime($linha->PEDIDO_DATA)); ?> | TOTAL: <?php echo $this->convert->em_real($total->total); ?> | <?php echo $this->convert->EstatusPedido($linha->PEDIDO_ESTATUS); ?>
                     </a>  
                 </h4>
             </div>

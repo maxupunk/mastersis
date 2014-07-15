@@ -17,7 +17,7 @@
                     <a data-toggle="collapse" data-parent="#accordion" href="#<?php echo $linha->PEDIDO_ID ?>">
 
                         <span class="badge pull-right">+</span>
-                        N. do Pedido: <?php echo $linha->PEDIDO_ID ?> / Estatus: <?php echo $linha->PEDIDO_ESTATUS ?> / Data: <?php echo $linha->PEDIDO_DATA ?> /  N. Itens: <?php echo $ToralItens; ?> / Total: <?php echo $this->convert->em_real($total->total); ?>
+                        <?php echo date("d/m/Y - H:i:s", strtotime($linha->PEDIDO_DATA)) ?> | PEDIDO: <?php echo $linha->PEDIDO_ID ?> |  N. ITENS: <?php echo $ToralItens; ?> | TOTAL: <?php echo $this->convert->em_real($total->total); ?> | <?php echo $this->convert->EstatusPedido($linha->PEDIDO_ESTATUS); ?>
 
                     </a>
                 </h4>

@@ -22,5 +22,5 @@ if ($total->total == NULL) {
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" id="finaliza-os">Finalizar</button>
+    <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default" id="InModel">Finalizar</button>
 </div>

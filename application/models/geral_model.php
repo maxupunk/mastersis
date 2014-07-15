@@ -37,7 +37,7 @@ class Geral_model extends CI_Model {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
-            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . '
+            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', PEDIDOS.PEDIDO_DATA = NOW()
             WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
             AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS=1');
 
@@ -90,13 +90,13 @@ class Geral_model extends CI_Model {
         }
     }
 
-    public function PedidosTodos($quant = 0, $inicial = 0, $ordeby = NULL) {
+    public function PedidosFornecedor($quant = 0, $inicial = 0, $ordeby = NULL) {
         if ($ordeby != NULL)
             $this->db->order_by($ordeby);
         if ($quant > 0)
             $this->db->limit($quant, $inicial);
 
-        //$this->db->where('PEDIDOS.PEDIDO_TIPO', 'c');
+        $this->db->where('PEDIDOS.PEDIDO_TIPO', 'c');
         $this->db->where('PEDIDOS.PEDIDO_ESTATUS <=', '3');
         return $this->db->get('PEDIDOS');
     }

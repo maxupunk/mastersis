@@ -26,7 +26,7 @@ class Ordemservico extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function estatus($id) {
+    private function estatus($id) {
         $estatus = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
         return $this->convert->EstatusOs($estatus->OS_ESTATUS);
     }
@@ -76,7 +76,6 @@ class Ordemservico extends CI_Controller {
             'OsDados' => $OsDados,
             'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
             'pessoa' => $this->join_model->EnderecoCompleto($OsDados->PES_ID)->row(),
-
         );
         $this->load->view('contente', $dados);
     }
@@ -108,15 +107,14 @@ class Ordemservico extends CI_Controller {
     }
 
     public function excluir($id) {
-
-        if ($this->input->post('id_os') > 0):
+        if ($this->input->post('id_os') > 0) {
             if ($this->geral_model->ExcluirOs($id) === TRUE) {
                 $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_sucesso"));
             } else {
                 $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_erro"));
             }
             redirect(base_url('ordemservico'), 'refresh');
-        endif;
+        }
 
         $dados = array(
             'tela' => "os_excluir",
@@ -136,12 +134,12 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function pagamento($id_os) {
+    public function entregar($id_os) {
 
         $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
 
         $dados = array(
-            'tela' => "os_pagar",
+            'tela' => "os_entregar",
             'total' => $this->geral_model->TotalProdOS($id_os)->row(),
             'pessoa' => $this->join_model->EnderecoCompleto($os->PES_ID)->row(),
             'id_pedido' => $id_os,
@@ -149,7 +147,7 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function entrega($id_os) {
+    public function finaliza($id_os) {
 
         $OsDados = $this->join_model->OsDados($id_os)->row();
 
@@ -160,7 +158,7 @@ class Ordemservico extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => "os_entrega",
+            'tela' => "os_finaliza",
             'mensagem' => $this->mensagem,
             'ListaPedido' => $this->join_model->ListaProdOs($id_os)->result(),
             'total' => $this->geral_model->TotalProdOs($id_os)->row(),
@@ -236,7 +234,7 @@ class Ordemservico extends CI_Controller {
             if ($pedido != NULL) {
                 //verifica se existe a quatidade de produto pedido
                 $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $id_estoque))->row();
-                if ($produto->ESTOQ_ATUAL < $quantidade) {
+                if ($produto->ESTOQ_ATUAL < $quantidade AND $produto->ESTOQ_MIN != -1) {
                     $this->mensagem = $this->lang->line("msg_estoque_insuficiente");
                     $quantidade = $produto->ESTOQ_ATUAL;
                 }

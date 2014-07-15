@@ -12,7 +12,7 @@
                                                         ?>" disabled /></div>
         <div class="col-sm-2"><label>PEDIDO N.</label><input type="text" name="PEDIDO_ID" id="pedido_id" value="<?php echo $pedido_id ?>" disabled /></div>
         <div class="col-sm-1"><br><?php echo anchor('venda/excluirpedido/' . $pedido_id, 'Excluir', 'class="btn btn-warning"'); ?></div>
-        <div class="col-sm-1"><br><?php echo anchor('venda/pagamento', 'Finaliza', 'class="btn btn-primary" id="pagamento"'); ?></div>
+        <div class="col-sm-1"><br><?php echo anchor('venda/pagamento/'.$pedido_id, 'Finaliza', 'class="btn btn-primary" id="InModel"'); ?></div>
     </div>
 </div>
 <div class="well">

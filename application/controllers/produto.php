@@ -28,8 +28,23 @@ class Produto extends CI_Controller {
         if ($this->form_validation->run() == TRUE):
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
+            $this->db->trans_begin();
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
-                $this->mensagem = "Produto/Serviço cadastrado com sucesso! <br>- Para permitir adiciona em venda e/ou serivço adicione o valor de venda do mesmo em Compras!";
+                $produto_id = $this->db->insert_id();
+                $dados['PRO_TIPO'] == "s" ? $estoq_min = -1 AND $estoque_atual = 1 : $estoq_min = NULL AND $estoque_atual = NULL;
+                $estoque = array(
+                    'PRO_ID' => $produto_id,
+                    'ESTOQ_PRECO' => "0",
+                    'ESTOQ_MIN' => $estoq_min,
+                    'ESTOQ_ATUAL' => $estoq_min,
+                    'ESTOQ_ENTRA' => date("Y-m-d h:i:s"));
+                if ($this->crud_model->inserir('ESTOQUES', $estoque) === TRUE) {
+                    $this->db->trans_commit();
+                    $this->mensagem = "Produto/Serviço cadastrado com sucesso! <br>- Para permitir adiciona em venda e/ou serivço adicione o valor de venda do mesmo em Compras!";
+                } else {
+                    $this->db->trans_rollback();
+                    $this->mensagem = "Erro: Problema no banco de dados";
+                }
             } else {
                 $this->mensagem = "Erro ao gravar no banco de dados! <br>- porfavor tente novamente mais tarde.";
             }
@@ -52,15 +67,20 @@ class Produto extends CI_Controller {
 
 
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
-
+        if ($this->form_validation->run() == TRUE) {
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
+                if ($dados['PRO_TIPO'] == "s") {
+                    $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1 );
+                } else {
+                    $estoque = array('ESTOQ_MIN' => NULL);
+                }
+                $this->crud_model->update("ESTOQUES", $estoque, array('PRO_ID' => $this->input->post('id_produto')));
                 $this->mensagem = $this->lang->line("msg_editar_sucesso");
             } else {
                 $this->mensagem = $this->lang->line("msg_editar_erro");
             }
-        endif;
+        }
 
         $dados = array(
             'tela' => "prod_editar",
