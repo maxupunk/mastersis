@@ -14,10 +14,10 @@
 </div><!-- /.modal -->
 
 <div class="modal" id="modal-ajax">
-  <div class="modal-dialog">
-    <div class="modal-content" id="modal-ajax-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-ajax-content">
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- jquery -->
@@ -27,7 +27,6 @@
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/bootstrap/bloodhound.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/bootstrap/typeahead.jquery.min.js'); ?>"></script>
-
 
 <!-- custom -->
 <script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>

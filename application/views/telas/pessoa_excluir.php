@@ -17,15 +17,13 @@ endif;
         <legend>EXCLUIR A PESSOA ABAIXO?</legend>
 
 
-        <label>Nome:</label>
-        <input type="text" name="PES_NOME" value="<?php echo set_value('PES_NOME', $query->PES_NOME); ?>" readonly />
+        <label>Nome: <?php echo set_value('PES_NOME', $query->PES_NOME); ?></label><br>
 
-        <label>CPF/CNPJ:</label>
-        <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ', $query->PES_CPF_CNPJ); ?>" readonly />
+        <label>CPF/CNPJ: <?php echo set_value('PES_CPF_CNPJ', $query->PES_CPF_CNPJ); ?></label>
 
         <input type="hidden" name="id_pessoa" value="<?php echo $query->PES_ID ?>" />
 
-        <hr><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn btn-danger">SIM</button>
 
     </fieldset>
 

@@ -12,7 +12,7 @@ ListaProduto.initialize();
 $('#ProdutoServico').typeahead(null, {
     source: ListaProduto.ttAdapter()
 }).on('typeahead:selected', function(object, data) {
-    $("#ListaProduto").load("ordemservico/addproduto/" + $('#os_id').val() + "/" + data.id);
+    $("#ListaPedido").load("pedido/AddProdOs/" + $('#os_id').val() + "/" + data.id);
     $(this).val('');
 });
 
@@ -21,14 +21,25 @@ $("#ProdutoServico").click(function() {
 });
 // ALTERA QUATIDADE DE PRODUTOS
 $(document).on('change', '#quantidade', function() {
-    $("#ListaProduto").load("ordemservico/updproduto/" + $('#os_id').val() + "/" + $(this).attr('list_ped_id') + "/" + $(this).attr('id_estoque') + "/" + $(this).val());
+    var dados = {Os: $('#os_id').val(), ListPed: $(this).attr('ListPed'), Estoq: $(this).attr('Estoque'), qtd: $(this).val()};
+    $.ajax({
+        type: "POST",
+        url: "pedido/UpdQntOs",
+        dataType: "html",
+        data: dados,
+        // enviado com sucesso
+        success: function(response) {
+            $("#ListaPedido").html(response);
+        }
+    });
+    return false;
 });
 // EXCLUIR PRODUTOS
 $(document).on('click', '#excluir-item', function() {
-    $("#ListaProduto").load("ordemservico/excluiritem/" + $('#os_id').val() + "/" + $(this).attr('list_ped_id'));
+    $("#ListaPedido").load("pedido/DelItemOs/" + $('#os_id').val() + "/" + $(this).attr('ListPed'));
 });
 // Atualisa
 $(document).on("click", "#atualiza-lista", function() {
-    $("#ListaProduto").load("ordemservico/updlista/" + $('#os_id').val())
+    $("#ListaPedido").load("pedido/UpdLstOs/" + $('#os_id').val())
     return false;
 });

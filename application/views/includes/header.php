@@ -11,6 +11,5 @@
         <link href="<?php echo base_url('assets/css/bootstrap-theme.min.css'); ?>" rel="stylesheet" media="screen">
         <link href="<?php echo base_url('assets/css/mastersis.css'); ?>" rel="stylesheet" media="screen">
 
-        
     </head>
     <body>

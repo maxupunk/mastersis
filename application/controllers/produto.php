@@ -25,7 +25,7 @@ class Produto extends CI_Controller {
 
 
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
+        if ($this->form_validation->run() == TRUE){
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             $this->db->trans_begin();
@@ -49,7 +49,7 @@ class Produto extends CI_Controller {
                 $this->mensagem = "Erro ao gravar no banco de dados! <br>- porfavor tente novamente mais tarde.";
             }
 
-        endif;
+        }
         $dados = array(
             'tela' => 'prod_cadastro',
             'categorias' => $this->crud_model->pega_tudo("CATEGORIAS")->result(),

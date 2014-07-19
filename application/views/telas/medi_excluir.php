@@ -18,18 +18,15 @@ endif;
         <legend>EXCLUIR A UNIDADE ABAIXO?</legend>
 
 
-        <label>Codigo:</label>
-        <input type="text" name="MEDI_ID" value="<?php echo set_value('', $query->MEDI_ID); ?>" readonly />
+        <label>Codigo: <?php echo set_value('', $query->MEDI_ID); ?></label><br>
         
-        <label>Nome:</label>
-        <input type="text" name="MEDI_NOME" value="<?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?>" readonly />
-
-        <label>Sigla:</label>
-        <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?>" readonly />
+        <label>Nome: <?php echo set_value('MEDI_NOME', $query->MEDI_NOME); ?></label><br>
+        
+        <label>Sigla: <?php echo set_value('MEDI_SIGLA', $query->MEDI_SIGLA); ?></label>
 
         <input type="hidden" name="id_medida" value="<?php echo $query->MEDI_ID ?>" />
 
-        <hr><button type="submit" class="btn btn-danger">SIM, EXCLUIR</button>
+        <hr><button type="submit" class="btn btn-danger">SIM</button>
 
     </fieldset>
 

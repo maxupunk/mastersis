@@ -59,14 +59,6 @@ $(document).on("click", ".valor", function() {
 });
 
 //
-// Submenu abrir no corpo
-//
-$(document).on("click", ".nocorpo", function() {
-    $("#corpo").load($(this).attr('href'));
-    return false;
-});
-
-//
 // MasterSis script do CRUD
 //
 $(document).on("click", "#resultado a, #pagination a", function() {
@@ -100,7 +92,7 @@ $(document).on("click", ".submenu-cadastro>li", function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Comportamento dos formulario do CRUD
-//
+////////////////////////////////////////////////////////////////////////////////
 $(document).on("submit", 'form[name="grava"]', function() {
     $.ajax({
         type: "POST",
@@ -206,6 +198,7 @@ $(document).on('change', 'select[name="PES_TIPO"]', function() {
     }
     $(".cpf-cnpj").focus();
 });
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // SCRIPTS DE VENDAS

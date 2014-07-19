@@ -17,7 +17,7 @@
 
         <div class="lista-itens-os">
             <div class="row">
-                <div class="col-sm-12 BordaOs" id="ListaProduto">
+                <div class="col-sm-12 BordaOs" id="ListaPedido">
                     <?php
                     if ($ListaProduto <> NULL) {
 
@@ -25,7 +25,9 @@
 
                         foreach ($ListaProduto as $linha) {
                             $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
-                            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, '<input type="number" id="quantidade" min="1.00" step="1.00" max="' . $linha->ESTOQ_ATUAL . '" list_ped_id="' . $linha->LIST_PED_ID . '" id_estoque="' . $linha->ESTOQ_ID . '" value="' . $linha->LIST_PED_QNT . '">', $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total), '<button type="button" class="close" id="excluir-item" list_ped_id="' . $linha->LIST_PED_ID . '">&times;</button>');
+                            $quantidade = '<input type="number" id="quantidade" min="1.00" step="1.00" ListPed="' . $linha->LIST_PED_ID . '" Estoque="' . $linha->ESTOQ_ID . '" value="' . $linha->LIST_PED_QNT . '">';
+                            $excluir = '<button type="button" class="close" id="excluir-item" ListPed="' . $linha->LIST_PED_ID . '">&times;</button>';
+                            $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO, $quantidade, $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total), $excluir);
                         }
 
                         $tmpl = array('table_open' => '<table class="lista-produto">');
