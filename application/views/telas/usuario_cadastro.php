@@ -2,14 +2,12 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE USUARIO</legend>
-
         <?php
         if (isset($mensagem) and $mensagem != NULL)
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
         ?>
 
-        
+
         <label>NOME DA PESSOA</label>  | <span id="pessoa-selec"></span>
         <?php echo form_error('PES_ID'); ?>
         <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>"/>
@@ -48,10 +46,8 @@
 
 
         <hr>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 

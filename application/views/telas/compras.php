@@ -11,11 +11,12 @@
 
         <div class="well">
             <div class="row">
-                <div class="col-sm-10">
+                <div class="col-sm-9">
                     <input type="text" name="PES_NOME" id="NomeFornecedor" autocomplete="off" placeholder="Para novas compras digite o nome do fornecedor" />
                 </div>
-                <div class="col-sm-2">
-                    <?php echo anchor('compras/listar', 'Compras Pendentes', 'class="btn btn-warning" id="lista-compras"'); ?>
+                <div class="col-sm-3">
+                    <?php echo anchor('pessoa', 'Add Fornecedor', 'class="btn btn-success" id="InModel"'); ?>
+                    <?php echo anchor('compras/listar', 'Pendentes', 'class="btn btn-default" id="lista-compras"'); ?>
                 </div>
             </div>
         </div>

@@ -2,8 +2,6 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE PRODUTO</legend>
-
         <?php
         if (isset($mensagem) and $mensagem != NULL)
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
@@ -64,10 +62,8 @@
         </div>
 
         <hr>
-        <div class="form-group">
             <button type="submit" class="btn btn-primary">Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
 
     </fieldset>
 

@@ -58,8 +58,8 @@ class Venda extends CI_Controller {
             'tela' => 'venda_abrir',
             'pedido_id' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
-            'lista_pedido' => $this->join_model->ListaPedido($pedido_id)->result(),
-            'total' => $this->geral_model->TotalPedido($pedido_id)->row(),
+            'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),
+            'Total' => $this->geral_model->TotalPedido($pedido_id)->row(),
             'pedido' => $pedido,
             'mensagem' => $this->mensagem,
         );

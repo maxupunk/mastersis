@@ -1,9 +1,13 @@
 <?php if (isset($mensagem) and $mensagem != NULL) { ?>
     <div class="alert alert-info"><?php echo $mensagem ?></div>
-    <?php
-}
+<?php } ?>
 
+    <input type="hidden" name="IdPed" value="<?php echo $IdPed; ?>">
+    
+<?php
 if ($LstProd <> NULL) {
+
+    echo validation_errors();
 
     $this->table->set_heading('COD', 'DESCRIÇÃO', 'QNT', 'VALOR', 'SUBTOTAL');
 

@@ -54,14 +54,17 @@ $(document).on('click', '#InModel', function() {
 ////////////////////////////////////////////////////////////////////////////////
 // Ativador de mascaras
 ////////////////////////////////////////////////////////////////////////////////
-$(document).on("click", ".valor", function() {
+$(document).on("focus", "input", function() {
+    $('.fone').mask('(00)0000-0000');
     $('.valor').mask('0.000.000.000,00', {reverse: true});
+    $('.cpf').mask('000.000.000-00', {reverse: true});
+    $('.cnpj').mask('00.000.000.0000-00', {reverse: true});
 });
 
-//
+////////////////////////////////////////////////////////////////////
 // MasterSis script do CRUD
-//
-$(document).on("click", "#resultado a, #pagination a", function() {
+////////////////////////////////////////////////////////////////////
+$(document).on("click", "#InContent ,#pagination a", function() {
     $("#content-sub-menu").load($(this).attr('href'));
     return false;
 });
@@ -90,9 +93,6 @@ $(document).on("click", ".submenu-cadastro>li", function() {
     return false;
 });
 
-////////////////////////////////////////////////////////////////////////////////
-// Comportamento dos formulario do CRUD
-////////////////////////////////////////////////////////////////////////////////
 $(document).on("submit", 'form[name="grava"]', function() {
     $.ajax({
         type: "POST",
@@ -101,7 +101,11 @@ $(document).on("submit", 'form[name="grava"]', function() {
         data: $(this).serialize(),
         // enviado com sucesso
         success: function(response) {
-            $("#content-sub-menu").html(response);
+            if ($("#modal-content").is(':visible')) {
+                $("#modal-content").html(response);
+            } else {
+                $("#content-sub-menu").html(response);
+            }
             ConfirmSair(false);
         }
     });
@@ -181,13 +185,13 @@ $(document).on('change', 'select[name="BAIRRO_ID"]', function() {
 
 $(document).on('change', 'select[name="PES_TIPO"]', function() {
     if ($(this).val() == "f") {
-        $('.cpf-cnpj').mask('000.000.000-00', {reverse: true});
+        $('#cpf-cnpj').attr("class", "cpf");
         $('.cpf-cnpj-label').html('CPF *:');
         $('input[name="PES_NASC_DATA"]').prop('disabled', false);
-        $('input[name="nome_pes_PAI"]').prop('disabled', false);
+        $('input[name="PES_NOME_PAI"]').prop('disabled', false);
         $('input[name="PES_NOME_MAE"]').prop('disabled', false);
     } else {
-        $('.cpf-cnpj').mask('00.000.000.0000-00', {reverse: true});
+        $('#cpf-cnpj').attr("class", "cnpj");
         $('.cpf-cnpj-label').html('CNPJ *:');
         $('input[name="PES_NASC_DATA"]').prop('disabled', true);
         $('input[name="PES_NOME_PAI"]').prop('disabled', true);

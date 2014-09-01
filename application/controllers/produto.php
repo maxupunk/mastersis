@@ -193,7 +193,7 @@ class Produto extends CI_Controller {
         $this->load->model('join_model');
 
         $busca = $_GET['buscar'];
-        $this->db->cache_on();
+        $this->db->cache_off();
         $rows = $this->join_model->ProdutoBusca($busca)->result();
 
         setlocale(LC_MONETARY, "pt_BR");
@@ -202,11 +202,7 @@ class Produto extends CI_Controller {
         foreach ($rows as $row)
             array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $row->ESTOQ_ATUAL . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
 
-        $dados = array(
-            'query' => $json_array,
-        );
-
-
+        $dados = array('query' => $json_array);
         $this->load->view('json', $dados);
     }
 

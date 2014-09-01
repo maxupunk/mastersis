@@ -2,15 +2,13 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE RUA</legend>
-
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <?php
         $options = array('' => 'Escolha o Estado');
         foreach ($estados as $estado)
             $options[$estado->ESTA_ID] = $estado->ESTA_NOME;
-        echo form_dropdown('ESTA_ID', $options, '' ,'autofocus');
+        echo form_dropdown('ESTA_ID', $options, '', 'autofocus');
         ?>
 
         <?php echo form_dropdown('CIDA_ID', array('' => 'Escolha a cidade')); ?>
@@ -27,10 +25,8 @@
         <input type="text" name="RUA_CEP" value="<?php echo set_value('RUA_CEP'); ?>" maxlength="45" class="cep" />
 
         <hr>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 

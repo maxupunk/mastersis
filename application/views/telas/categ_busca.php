@@ -6,7 +6,9 @@ foreach ($query as $linha) {
 
     $linha->CATE_ESTATUS == 'd' ? $estatus = '<strike>' . $linha->CATE_NOME . '</strike>' : $estatus = $linha->CATE_NOME;
 
-    $this->table->add_row($linha->CATE_ID, $estatus, anchor("categoria/editar/$linha->CATE_ID", '<span class="glyphicon glyphicon-edit"></span>') . ' ' . anchor("categoria/imagem/$linha->CATE_ID", '<span class="glyphicon glyphicon-picture"></span>'));
+    $this->table->add_row($linha->CATE_ID, $estatus,
+            anchor("categoria/editar/$linha->CATE_ID", '<span class="glyphicon glyphicon-edit"></span>', 'id="InContent"') . ' ' .
+            anchor("categoria/imagem/$linha->CATE_ID", '<span class="glyphicon glyphicon-picture"></span>', 'id="InContent"'));
 }
 
 $tmpl = array('table_open' => '<table class="table table-hover">');

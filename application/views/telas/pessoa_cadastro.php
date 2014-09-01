@@ -1,8 +1,6 @@
 <form action="<?php echo base_url('pessoa'); ?>" method="post" class="form-inline" name="grava" accept-charset="utf-8">
     <fieldset>
 
-        <legend>CADASTRO DE PESSOAS</legend>
-
         <?php
         if (isset($mensagem) and $mensagem != NULL) {
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
@@ -21,7 +19,7 @@
                 </div>
                 <div class="col-sm-5">
                     <label class="cpf-cnpj-label">C.P.F *:</label>
-                    <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ'); ?>" class="cpf-cnpj" required />
+                    <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ'); ?>" class="cpf" id="cpf-cnpj" required />
                 </div>
                 <div class="col-sm-5">
                     <label>Dt.Nasc.:</label>
@@ -87,10 +85,8 @@
 
         <input type="hidden" name="PES_DATE" />
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 </form>

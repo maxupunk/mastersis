@@ -19,6 +19,13 @@ class Convert {
         return $this->em_real($campo1 + $campo2);
     }
 
+    function EmDecimal($campo = NULL) {
+        $source = array('.', ',');
+        $replace = array('', '.');
+        $valor = str_replace($source, $replace, $campo);
+        return $valor;
+    }
+
     function EstatusPedido($estatus) {
         switch ($estatus) {
             case '1':

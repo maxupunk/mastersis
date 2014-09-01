@@ -2,8 +2,6 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE MEDIDA</legend>
-        
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Medida:</label>
@@ -15,10 +13,8 @@
         <input type="text" name="MEDI_SIGLA" value="<?php echo set_value('MEDI_SIGLA'); ?>" maxlength="4" />
 
         <hr>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 

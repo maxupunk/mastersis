@@ -2,8 +2,6 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE BAIRRO</legend>
-
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <?php
@@ -21,10 +19,8 @@
         <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" />
 
         <hr>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 

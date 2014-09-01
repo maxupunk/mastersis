@@ -1,4 +1,3 @@
-<div class="well">
     <form action="<?php echo base_url('compras'); ?>/excluir/<?php echo $PedidoDados->PEDIDO_ID ?>" method="post" accept-charset="utf-8">
         <fieldset>
 
@@ -32,4 +31,3 @@
 
         </fieldset>
     </form>
-</div>

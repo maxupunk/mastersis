@@ -2,8 +2,6 @@
 
     <fieldset>
 
-        <legend>CADASTRO DE CATEGORIA</legend>
-        
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
         <label>Categoria:</label>
@@ -13,11 +11,10 @@
         <label>Descrição:</label>
         <?php echo form_error('CATE_DESCRIC'); ?>
         <textarea name="CATE_DESCRIC" rows="10"><?php echo set_value('CATE_DESCRIC'); ?></textarea>                    
+
         <hr>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <input type="reset" class="btn btn-warning" value="Limpar"/>
-        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>
 

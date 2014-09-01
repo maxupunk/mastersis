@@ -6,25 +6,28 @@
     <div class="recibo">
     <p class="cabeca-recibo">
         <?php echo $empresa->EMPRE_NOME ?> - <?php echo $empresa->EMPRE_SLOGAN ?><br>
-        CNPJ: <?php echo $empresa->EMPRE_CNPJ ?> - Fone/Fax: <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
-        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?><br>
+        <b>CNPJ:</b> <?php echo $empresa->EMPRE_CNPJ ?> - <b>Fone/Fax:</b> <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
+        <b>E-mail/site:</b> <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?>
     </p>
-    <p class="descr-os">
-        CLIENTE: <?php echo $pessoa->PES_NOME ?><br>
-        END.: <?php echo $pessoa->RUA_NOME ?> - <?php echo $pessoa->BAIRRO_NOME ?> / 
+    <p align="center" class="descr-os">
+        <b>CLIENTE:</b> <?php echo $pessoa->PES_NOME ?><br>
+        <b>END.:</b> <?php echo $pessoa->RUA_NOME ?> - <?php echo $pessoa->BAIRRO_NOME ?> / 
         <?php echo $pessoa->CIDA_NOME ?> - <?php echo $pessoa->ESTA_UF ?> CEP: <?php echo $pessoa->RUA_CEP ?><br>
-        C.P.F: <?php echo $pessoa->PES_CPF_CNPJ ?> | FONE: <?php echo $pessoa->PES_CEL1 ?>
+        <b>C.P.F:</b> <?php echo $pessoa->PES_CPF_CNPJ ?> | <b>FONE:</b> <?php echo $pessoa->PES_CEL1 ?>
     </p>
 
-    <p class="descr-os">EQUIPAMENTO:<br>
+    <b>Equipamento:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_EQUIPAMENT ?>
     </p>
     
-    <p class="descr-os">DEFEITO:<br>
+    <b>Defeito:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_DSC_DEFEITO ?>
     </p>
     
-    <p class="descr-os">SOLUÇÃO:<br>
+    <b>Solução:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_DSC_SOLUC ?>
     </p>
     

@@ -81,29 +81,32 @@ class Ordemservico extends CI_Controller {
     }
 
     public function editar($id) {
-
         $this->form_validation->set_rules('OS_ESTATUS', 'estatus', 'required');
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
-
-            $dados = elements(array('OS_DSC_SOLUC', 'OS_DSC_PENDENT', 'OS_ESTATUS'), $this->input->post());
-            if ($this->crud_model->update("ORDEM_SERV", $dados, array('OS_ID' => $this->input->post('id_os'))) === TRUE) {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_sucesso"));
-            } else {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_erro"));
+        $ordem = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
+        // Verifica se a ordem não foi entregue
+        if ($ordem->OS_ESTATUS <= 3) {
+            // se for valido ele chama o inserir dentro do produto_model
+            if ($this->form_validation->run() == TRUE) {
+                $dados = elements(array('OS_DSC_SOLUC', 'OS_DSC_PENDENT', 'OS_ESTATUS'), $this->input->post());
+                if ($this->crud_model->update("ORDEM_SERV", $dados, array('OS_ID' => $this->input->post('id_os'))) === TRUE) {
+                    $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_sucesso"));
+                } else {
+                    $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_erro"));
+                }
+                redirect(base_url('ordemservico'));
             }
-            redirect(base_url('ordemservico'));
-        endif;
-
-        $dados = array(
-            'tela' => "os_editar",
-            'OsDados' => $this->join_model->OsDados($id)->row(),
-            'total' => $this->geral_model->TotalProdOs($id)->row(),
-            'Estatus' => $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row(),
-        );
-        $this->load->view('contente', $dados);
+            $dados = array(
+                'tela' => "os_editar",
+                'OsDados' => $this->join_model->OsDados($id)->row(),
+                'total' => $this->geral_model->TotalProdOs($id)->row(),
+                'Estatus' => $ordem->OS_ESTATUS,
+            );
+            $this->load->view('contente', $dados);
+        } else {
+            $dados = array('mensagem' => "Ordem de serviço ja entregue, para edita você deve reabrir!");
+            $this->load->view('mensagem', $dados);
+        }
     }
 
     public function excluir($id) {

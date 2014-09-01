@@ -6,11 +6,12 @@ if (!defined('BASEPATH'))
 class Pessoa extends CI_Controller {
 
     var $mensagem;
+
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model'));
         $this->load->library(array('form_validation', 'table'));
-        $this->auth->check_logged($this->router->class , $this->router->method);
+        $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
     public function index() {
@@ -21,7 +22,7 @@ class Pessoa extends CI_Controller {
         $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
 
-        
+
         if ($this->input->post('PES_TIPO') == 'f') {
             $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required');
             $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required');
@@ -48,11 +49,12 @@ class Pessoa extends CI_Controller {
                 $data_atual = array('PES_DATA' => date("Y-m-d h:i:s"));
 
                 // converte a data pra inserir no db
-                $data_nasc = array('PES_NASC_DATA' => implode("-", array_reverse(explode("/", $post_pessoa['PES_NASC_DATA']))));
-
+                if ($this->input->post('PES_TIPO') == 'f') {
+                    $data_nasc = array('PES_NASC_DATA' => implode("-", array_reverse(explode("/", $post_pessoa['PES_NASC_DATA']))));
+                    $post_pessoa = array_replace($post_pessoa, $data_nasc);
+                }
                 // faz a atualização do array com os dados assima
                 $post_pessoa = array_replace($post_pessoa, $id_ende);
-                $post_pessoa = array_replace($post_pessoa, $data_nasc);
                 $post_pessoa = array_replace($post_pessoa, $data_atual);
 
 
@@ -83,8 +85,8 @@ class Pessoa extends CI_Controller {
             $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required|strtoupper');
             $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
         }
-        
-        
+
+
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -113,12 +115,17 @@ class Pessoa extends CI_Controller {
     }
 
     public function excluir($id_pessoa) {
-        
-        if ($this->input->post('id_pessoa') > 0):
-            if ($this->crud_model->excluir("PESSOAS", array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+
+        if ($this->input->post('pessoa_id') > 0 AND $this->input->post('pessoa_id') > 0):
+            if ($this->crud_model->excluir("PESSOAS", array('PES_ID' => $this->input->post('pessoa_id'))) === TRUE) {
+                $this->mensagem .= "Pessoa excluido com sucesso | ";
+                if ($this->crud_model->excluir("ENDERECOS", array('END_ID' => $this->input->post('endereco_id'))) === TRUE) {
+                    $this->mensagem .= "Endereço excluido com sucesso";
+                } else {
+                    $this->mensagem .= "Erro: Problema a excluir o endereço. N: ". $this->input->post('endereco_id');
+                }
             } else {
-                $this->mensagem = $this->lang->line("msg_excluir_erro");
+                $this->mensagem = "Erro: Problema ao tenta excluir";
             }
         endif;
 
@@ -141,7 +148,7 @@ class Pessoa extends CI_Controller {
 
     public function pegapessoa() {
         $busca = $_GET['buscar'];
-        
+
         $this->db->cache_on();
         $rows = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
 
@@ -152,7 +159,7 @@ class Pessoa extends CI_Controller {
         $dados = array(
             'query' => $json_array,
         );
-        
+
         $this->load->view('json', $dados);
     }
 

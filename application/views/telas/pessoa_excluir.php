@@ -16,12 +16,13 @@ endif;
 
         <legend>EXCLUIR A PESSOA ABAIXO?</legend>
 
-
         <label>Nome: <?php echo set_value('PES_NOME', $query->PES_NOME); ?></label><br>
 
         <label>CPF/CNPJ: <?php echo set_value('PES_CPF_CNPJ', $query->PES_CPF_CNPJ); ?></label>
+        
+        <input type="hidden" name="endereco_id" value="<?php echo $query->END_ID ?>" />
 
-        <input type="hidden" name="id_pessoa" value="<?php echo $query->PES_ID ?>" />
+        <input type="hidden" name="pessoa_id" value="<?php echo $query->PES_ID ?>" />
 
         <hr><button type="submit" class="btn btn-danger">SIM</button>
 

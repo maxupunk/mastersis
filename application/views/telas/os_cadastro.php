@@ -1,4 +1,3 @@
-<div class="well">
 <form action="<?php echo base_url('ordemservico'); ?>/cadastrar" method="post" accept-charset="utf-8">
 
     <fieldset>
@@ -37,5 +36,4 @@
     </fieldset>
 
 </form>
-</div>
 <script src="<?php echo base_url('assets/js/pessoa.js'); ?>"></script>

@@ -1,29 +1,30 @@
 <?php if (isset($mensagem) and $mensagem != NULL) print '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
-
-<div class="modal-header"><h4 class="modal-title">RECEBO DE PRODUTOS</h4></div>
 <div class="modal-body impresao">
 
     <div class="recibo">
     <p class="cabeca-recibo">
-        <?php echo $empresa->EMPRE_NOME ?> - <?php echo $empresa->EMPRE_SLOGAN ?><br>
-        CNPJ: <?php echo $empresa->EMPRE_CNPJ ?> - Fone/Fax: <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
-        E-mail/site: <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?><br>
+        <b><?php echo $empresa->EMPRE_NOME ?> - <?php echo $empresa->EMPRE_SLOGAN ?></b><br>
+        <b>CNPJ:</b> <?php echo $empresa->EMPRE_CNPJ ?> - <b>Fone/Fax:</b> <?php echo $empresa->EMPRE_FONE ?> / <?php echo $empresa->EMPRE_FAX ?><br>
+        <b>E-mail/site:</b> <?php echo $empresa->EMPRE_EMAIL ?> / <?php echo $empresa->EMPRE_SITE ?><br>
     </p>
-    <p class="descr-os">
-        CLIENTE: <?php echo $pessoa->PES_NOME ?> | FONE: <?php echo $pessoa->PES_CEL1 ?><br>
-        END.: <?php echo $pessoa->RUA_NOME ?> - <?php echo $pessoa->BAIRRO_NOME ?> / 
-        <?php echo $pessoa->CIDA_NOME ?> - <?php echo $pessoa->ESTA_UF ?> | CEP: <?php echo $pessoa->RUA_CEP ?>
+    <p align="center" class="descr-os">
+        <b>CLIENTE:</b> <?php echo $pessoa->PES_NOME ?> | <b>FONE:</b> <?php echo $pessoa->PES_CEL1 ?><br>
+        <b>END.:</b> <?php echo $pessoa->RUA_NOME ?> - <?php echo $pessoa->BAIRRO_NOME ?> / 
+        <?php echo $pessoa->CIDA_NOME ?> - <?php echo $pessoa->ESTA_UF ?> | <b>CEP:</b> <?php echo $pessoa->RUA_CEP ?>
     </p>
 
-    <p class="descr-os">EQUIPAMENTO:<br>
+    <b>Equiapmento:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_EQUIPAMENT ?>
     </p>
     
-    <p class="descr-os">DEFEITO:<br>
+    <b>Defeito:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_DSC_DEFEITO ?>
     </p>
     
-    <p class="descr-os">SOLUÇÃO:<br>
+    <b>Solução:</b>
+    <p class="descr-os">
         <?php echo $OsDados->OS_DSC_SOLUC ?>
     </p>
     

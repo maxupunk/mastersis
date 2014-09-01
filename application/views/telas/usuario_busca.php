@@ -6,7 +6,8 @@ foreach ($query as $linha) {
 
     $linha->USUARIO_ESTATUS == 'd' ? $estatus = '<strike>' . $linha->USUARIO_LOGIN . '</strike>' : $estatus = $linha->USUARIO_LOGIN;
 
-    $this->table->add_row($linha->USUARIO_ID, $linha->USUARIO_APELIDO, $estatus, anchor("usuario/editar/$linha->USUARIO_ID", '<span class="glyphicon glyphicon-edit"></i>'));
+    $this->table->add_row($linha->USUARIO_ID, $linha->USUARIO_APELIDO, $estatus,
+            anchor("usuario/editar/$linha->USUARIO_ID", '<span class="glyphicon glyphicon-edit"></i>', 'id="InContent"'));
 }
 
 $tmpl = array('table_open' => '<table class="table table-hover">');
