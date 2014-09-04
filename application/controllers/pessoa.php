@@ -156,11 +156,8 @@ class Pessoa extends CI_Controller {
         foreach ($rows as $row)
             array_push($json_array, array('id' => $row->PES_ID, 'value' => $row->PES_NOME));
 
-        $dados = array(
-            'query' => $json_array,
-        );
 
-        $this->load->view('json', $dados);
+        $this->load->view('json', array('query' => $json_array));
     }
 
 }

@@ -13,6 +13,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+
 <div class="modal" id="modal-ajax">
     <div class="modal-dialog">
         <div class="modal-content" id="modal-ajax-content">
@@ -20,20 +21,17 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- jquery -->
-<script src="<?php echo base_url('assets/js/jquery/jquery-2.1.1.min.js'); ?>"></script>
-
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/bootstrap/bloodhound.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/bootstrap/typeahead.jquery.min.js'); ?>"></script>
 
-<!-- custom -->
-<script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
-
 <!-- plug-ins -->
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
+
+<!-- custom -->
+<script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
 
 
 </body>

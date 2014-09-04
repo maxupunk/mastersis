@@ -91,7 +91,6 @@ a:active {text-decoration: none;}
 .glyphicon {
     margin: 5px auto 10px;
     font-size: 18px;
-    color: #555;
 }
 
 .glyphicon:hover {
@@ -106,7 +105,6 @@ form{
     padding:8px 12px;
 }
 
-
 input[type="text"] {
     display:block;
     width:100%;
@@ -114,7 +112,7 @@ input[type="text"] {
     padding:4px 6px;
     font-size:14px;
     vertical-align:middle;
-    border-style: none;
+    border: 1px solid #999;
     border-radius:6px;
 }
 
@@ -129,7 +127,6 @@ input[type="password"] {
 }
 
 input[type="number"] {
-    width: 70px;
     font-size:14px;
     border: none;
 }
@@ -193,12 +190,22 @@ input[type="date"], input[type="email"] {
     border-radius:4px;
 }
 
+.IdPed {
+    display:block;
+    height:32px;
+    padding:4px 6px;
+    font-size:14px;
+    vertical-align:middle;
+    border: 1px solid #999;
+    border-radius:6px;
+}
+
 .cep{
     max-width: 120px;
 }
 
 .valor {
-    max-width: 80px;
+    max-width: 160px;
 }
 
 .fone{

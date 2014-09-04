@@ -26,6 +26,13 @@ class Ordemservico extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
+    public function Ordens($id = 1) {
+        $Lista = $this->join_model->OsStatus($id, 'OS_DATA_ENT desc')->result();
+        if (isset($Lista)) {
+            $this->load->view('json', array('query' => $Lista));
+        }
+    }
+
     private function estatus($id) {
         $estatus = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
         return $this->convert->EstatusOs($estatus->OS_ESTATUS);
@@ -131,8 +138,8 @@ class Ordemservico extends CI_Controller {
             'tela' => 'os_gerenciaitem',
             'mensagem' => $this->mensagem,
             'id_os' => $id_os,
-            'ListaProduto' => $this->join_model->ListaProdOs($id_os)->result(),
-            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'LstProd' => $this->join_model->ListaProdOs($id_os)->result(),
+            'Total' => $this->geral_model->TotalProdOS($id_os)->row(),
         );
         $this->load->view('contente', $dados);
     }

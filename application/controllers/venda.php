@@ -31,52 +31,18 @@ class Venda extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function Abrir($IdCliente) {
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->crud_model->pega("PESSOAS", array('PES_ID' => $IdCliente))->row() != NULL) {
-            $pedido = $this->crud_model->pega("PEDIDOS", array('PES_ID' => $IdCliente, 'PEDIDO_TIPO' => 'v', 'PEDIDO_ESTATUS' => '1'))->row();
-            if ($pedido == NULL) {
-                $dados = array(
-                    'PES_ID' => $IdCliente,
-                    'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
-                    'PEDIDO_DATA' => date("Y-m-d h:i:s"),
-                    'PEDIDO_ESTATUS' => '1',
-                    'PEDIDO_LOCAL' => 'l',
-                    'PEDIDO_TIPO' => 'v');
-                if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
-                    $pedido_id = $this->db->insert_id();
-                } else {
-                    $this->mensagem = "Erro ao grava pedido no banco de dados!";
-                }
-            } else {
-                $pedido_id = $pedido->PEDIDO_ID;
-                $this->mensagem = "Já existe um pedido em aberto para essse clientes!";
-            }
-        }
-        $dados = array(
-            'tela' => 'venda_abrir',
-            'pedido_id' => $pedido_id,
-            'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
-            'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),
-            'Total' => $this->geral_model->TotalPedido($pedido_id)->row(),
-            'pedido' => $pedido,
-            'mensagem' => $this->mensagem,
-        );
-        $this->load->view('contente', $dados);
-    }
-
-
     public function Pagamento($id_pedido) {
         $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-
-        $dados = array(
-            'tela' => "venda_pagar",
-            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
-            'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
-            'id_pedido' => $id_pedido,
-        );
-        $this->load->view('contente', $dados);
+        if ($pedido == NULL) {
+            
+        } else {
+            $dados = array(
+                'tela' => "venda_pagar",
+                'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+                'id_pedido' => $id_pedido,
+            );
+            $this->load->view('contente', $dados);
+        }
     }
 
     public function FechaPedido($id_pedido) {

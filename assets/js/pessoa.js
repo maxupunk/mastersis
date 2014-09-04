@@ -1,16 +1,17 @@
-// aplica as configuração do autocomplete
-var ListaUsuario = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
-});
+$(document).ready(function() {
+    var ListaUsuario = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
+    });
 // inicialisa o autocomplete
-ListaUsuario.initialize();
+    ListaUsuario.initialize();
 
 // inicialisa typeahead UI
-$('#pessoa').typeahead(null, {
-    source: ListaUsuario.ttAdapter()
-}).on('typeahead:selected', function(object, data) {
-    $("#PES_ID").val(data.id);
-    $("#pessoa-selec").text(data.id + " - " + data.value);
+    $('#pessoa').typeahead(null, {
+        source: ListaUsuario.ttAdapter()
+    }).on('typeahead:selected', function(object, data) {
+        $("#PES_ID").val(data.id);
+        $("#pessoa-selec").text(data.id + " - " + data.value);
+    });
 });

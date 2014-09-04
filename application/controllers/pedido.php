@@ -18,16 +18,53 @@ class Pedido extends CI_Controller {
         
     }
 
+    public function Novo($tipo = "v", $local = "l") {
+        $dados = array(
+            'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
+            'PEDIDO_DATA' => date("Y-m-d h:i:s"),
+            'PEDIDO_ESTATUS' => '1',
+            'PEDIDO_LOCAL' => $local,
+            'PEDIDO_TIPO' => $tipo);
+        if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
+            $id_pedido = $this->db->insert_id();
+        } else {
+            $this->mensagem = "Erro ao grava pedido no banco de dados!";
+        }
+        echo json_encode($id_pedido);
+    }
+
+    public function EmAberto() {
+        $EmAberto = $this->crud_model->pega("PEDIDOS", array('USUARIO_ID' => $this->session->userdata('USUARIO_ID'), 'PEDIDO_ESTATUS' => '1'))->result();
+        if (isset($EmAberto)) {
+            $this->load->view('json', array('query' => $EmAberto));
+        }
+    }
+
+    public function LimpLstEmAberto() {
+        if ($this->input->post()) {
+            $this->crud_model->excluir("PEDIDOS", array('USUARIO_ID' => $this->session->userdata('USUARIO_ID'), 'PEDIDO_ESTATUS' => '1'));
+            redirect(base_url('venda'), 'refresh');
+        }
+
+        $this->load->view('contente', array('tela' => "pedido_excluir"));
+    }
+
+    public function AddCliente($IdPed = NULL, $IdCliente = NULL) {
+        $atualizar = array('PES_ID' => $IdCliente);
+        $condicao = array('PEDIDO_ID' => $IdPed);
+        if ($this->crud_model->update("PEDIDOS", $atualizar, $condicao) == FALSE) {
+            return "Erro: Problema ao atualuzar item!";
+        }
+    }
+
     public function AddProd($tipo, $id_pedido, $id_produto) {
         //verifica se o produto existe e tem um estoque maior que zero
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
         if (($produto != NULL) and ( $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') or ( $tipo != "v")) {
             //verifica se existe realmente um pedido com o id passado
-            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row();
-            if ($pedido != NULL) {
+            if ($this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row() != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
-                $lista_pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row();
-                if ($lista_pedido == NULL) {
+                if ($this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row() == NULL) {
                     //inseri os dados abaixo no db
                     $dados = array(
                         'PEDIDO_ID' => $id_pedido,
@@ -41,20 +78,10 @@ class Pedido extends CI_Controller {
                     $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
                 }
             } else {
-                $dados = array(
-                    'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
-                    'PEDIDO_DATA' => date("Y-m-d h:i:s"),
-                    'PEDIDO_ESTATUS' => '1',
-                    'PEDIDO_LOCAL' => 'l',
-                    'PEDIDO_TIPO' => 'v');
-                if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
-                    $id_pedido = $this->db->insert_id();
-                } else {
-                    $this->mensagem = "Erro ao grava pedido no banco de dados!";
-                }
+                $this->mensagem = "Erro: O pedido não existe ou já foi fechado!";
             }
         } else {
-            $this->mensagem = "Erro: O produto está com o estoque zerado ou esta desativo.";
+            $this->mensagem = "Erro: O pedido não foi seleciona. Faça um novo pedido!";
         }
         $dados = array(
             'tela' => 'pedido_itens',
