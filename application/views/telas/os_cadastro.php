@@ -1,12 +1,14 @@
-<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" method="post" accept-charset="utf-8">
+<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" id="OrdemServicos" method="post" accept-charset="utf-8">
 
     <fieldset>
 
         <legend>Nova Ordem de Serviço<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
 
         <?php
-        if (isset($mensagem) and $mensagem != NULL)
+        if (isset($mensagem) and $mensagem != NULL){
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
+            exit();
+        }
         ?>
         
         

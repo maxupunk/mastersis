@@ -18,10 +18,6 @@ class Ordemservico extends CI_Controller {
 
         $dados = array(
             'tela' => "ordem_servico",
-            'emabertos' => $this->join_model->OsStatus('1', 'OS_DATA_ENT desc')->result(),
-            'pendentes' => $this->join_model->OsStatus('2', 'OS_DATA_ENT desc')->result(),
-            'concluidos' => $this->join_model->OsStatus('3', 'OS_DATA_ENT desc')->result(),
-            'entregues' => $this->join_model->OsStatus('4', 'OS_DATA_SAI desc', '15')->result(),
         );
         $this->load->view('home', $dados);
     }
@@ -48,7 +44,6 @@ class Ordemservico extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-
         if ($this->form_validation->run() == TRUE):
 
             $formulario = $this->input->post();
@@ -58,11 +53,10 @@ class Ordemservico extends CI_Controller {
 
             $dados = elements(array('PES_ID', 'OS_EQUIPAMENT', 'OS_DSC_DEFEITO', 'OS_ESTATUS', 'USUARIO_ID', 'OS_DATA_ENT', 'OS_ESTATUS'), $formulario);
             if ($this->crud_model->inserir("ORDEM_SERV", $dados) == TRUE) {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_cadastro_sucesso"));
+                $this->mensagem = "Cadastrado realizado com sucesso!";
             } else {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_cadastro_erro"));
+                $this->mensagem = "Erro ao grava no banco de dados!";
             }
-            redirect(base_url('ordemservico'));
         endif;
 
         $dados = array(
@@ -97,17 +91,17 @@ class Ordemservico extends CI_Controller {
             if ($this->form_validation->run() == TRUE) {
                 $dados = elements(array('OS_DSC_SOLUC', 'OS_DSC_PENDENT', 'OS_ESTATUS'), $this->input->post());
                 if ($this->crud_model->update("ORDEM_SERV", $dados, array('OS_ID' => $this->input->post('id_os'))) === TRUE) {
-                    $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_sucesso"));
+                    $this->mensagem = "Alteraçoes salvas com sucesso!";
                 } else {
-                    $this->session->set_flashdata('mensagem', $this->lang->line("msg_editar_erro"));
+                    $this->mensagem = "Erro ao gravano banco de dados!";
                 }
-                redirect(base_url('ordemservico'));
             }
             $dados = array(
                 'tela' => "os_editar",
                 'OsDados' => $this->join_model->OsDados($id)->row(),
                 'total' => $this->geral_model->TotalProdOs($id)->row(),
                 'Estatus' => $ordem->OS_ESTATUS,
+                'mensagem' => $this->mensagem,
             );
             $this->load->view('contente', $dados);
         } else {
@@ -119,16 +113,16 @@ class Ordemservico extends CI_Controller {
     public function excluir($id) {
         if ($this->input->post('id_os') > 0) {
             if ($this->geral_model->ExcluirOs($id) === TRUE) {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_sucesso"));
+                $this->mensagem = "exclusão realizada com sucesso!";
             } else {
-                $this->session->set_flashdata('mensagem', $this->lang->line("msg_excluir_erro"));
+                $this->mensagem = "Erro ao grava no banco de dados!";
             }
-            redirect(base_url('ordemservico'), 'refresh');
         }
 
         $dados = array(
             'tela' => "os_excluir",
             'OsDados' => $this->join_model->OsDados($id)->row(),
+            'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
@@ -158,13 +152,15 @@ class Ordemservico extends CI_Controller {
     }
 
     public function finaliza($id_os) {
+        
+        
 
         $OsDados = $this->join_model->OsDados($id_os)->row();
-
-        if ($this->geral_model->FechaOs($id_os, "4") > 0) {
+        
+        if ($this->geral_model->FechaOs($id_os) > 0) {
             $this->mensagem = 'Ordem entregue com sucesso!';
         } else {
-            $this->mensagem = 'Essa ordem já foi fechado anteriormente!';
+            $this->mensagem = 'Essa ordem já foi fechado anteriormente ou ouve outro problema!';
         }
 
         $dados = array(
@@ -181,22 +177,15 @@ class Ordemservico extends CI_Controller {
     }
 
     public function reabrir($id_os) {
-        $this->output->enable_profiler(TRUE);
-
+        
         if ($this->geral_model->ReabrirOs($id_os) > 0) {
-            $this->session->set_flashdata('mensagem', 'Pedido foi reaberto com sucesso!');
+            $this->mensagem = 'Pedido foi reaberto com sucesso!';
         } else {
-            $this->session->set_flashdata('mensagem', 'Esse pedido já foi aberto anteriormente!');
+            $this->mensagem = 'Esse pedido já esta aberto!';
         }
 
-        redirect(base_url('ordemservico'));
 
-        $dados = array(
-            'tela' => "os_reabrir",
-            'mensagem' => $this->mensagem
-        );
-
-        $this->load->view('contente', $dados);
+        $this->load->view('mensagem', array('mensagem' => $this->mensagem));
     }
 
 }

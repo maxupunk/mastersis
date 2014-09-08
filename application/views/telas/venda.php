@@ -5,7 +5,7 @@
             <div class="btn-group">
                 <button type="button" id="NovoPedido" class="btn btn-default btn-sm">Nova</button>
                 <button type="button" id="Finalizar" class="btn btn-default btn-sm" disabled>Finalizar</button>
-                <a href="pedido/LimpLstEmAberto" id="InModel" class="btn btn-danger btn-sm">Limpa</a>
+                <a href="pedido/LmpLstEmAberto" id="InModel" class="btn btn-danger btn-sm">Limpa</a>
                 <button type="button" id="EmAberto" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
@@ -29,52 +29,57 @@
 </div>
 <script>
     $(document).ready(function() {
-
+        // abri um novo pedido
         $(document).on("click", "#NovoPedido", function() {
             $.getJSON('pedido/novo', function(data) {
                 $('#IdPed').val(data);
                 $('#ProdutoDesc').prop('disabled', false);
-                $('#Cliente').prop('disabled', false);
                 $('#Finalizar').prop('disabled', false);
+                $('#EmAbList').empty();
             });
         });
-
+        // atualiza o pedido conforme digitado no compo Pedido
         $(document).on('change', '#IdPed', function() {
             $("#ListaPedido").load("pedido/UpdLstPedido/" + $('#IdPed').val());
             $('#ProdutoDesc').prop('disabled', false);
-            $('#Cliente').prop('disabled', false);
             $('#Finalizar').prop('disabled', false);
             return false;
         });
-
+        //Finaliza o pedido
         $(document).on('click', '#Finalizar', function() {
             $("#modal-content").load("venda/pagamento/" + $("#IdPed").val());
             $('#modal').modal('show');
             return false;
         });
-
+        //Lista o pedido em Aberto
         $(document).on('click', '#EmAberto', function() {
             $.getJSON('pedido/emaberto', function(data) {
                 $('#EmAbList').empty();
-                if (data == ""){
+                if (data == "") {
                     $('#EmAbList').append('Não ha compras em aberto');
                 }
                 $.each(data, function(key, value) {
-                    $('#EmAbList').append('<li><a href="' + value.PEDIDO_ID + '">' + value.PEDIDO_ID + ' - ' + value.PEDIDO_DATA + '</a></li>');
+                    descr = value.PEDIDO_ID + ' - ' + value.PEDIDO_DATA
+                    if (value.PEDIDO_ID === $('#IdPed').val()) {
+                        descr = '<u>' + descr + '</u>'
+                    }
+                    $('#EmAbList').append('<li><a href="' + value.PEDIDO_ID + '">' + descr + '</a></li>');
+
                 });
             });
         });
-
+        // Função do dropdown na lista em pedido em aberto. 
         $(document).on("click", "#EmAbList>li", function() {
             href = $(this).find("a").attr('href');
             $("#IdPed").val(href);
             $("#ListaPedido").load("pedido/UpdLstPedido/" + $('#IdPed').val());
             $('#ProdutoDesc').prop('disabled', false);
-            $('#Cliente').prop('disabled', false);
             $('#Finalizar').prop('disabled', false);
+            $('.in,.open').removeClass('in open');
             return false;
         });
-
+        
     });
+
 </script>
 <script src="<?php echo base_url('assets/js/pedidos.js'); ?>"></script>

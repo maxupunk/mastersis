@@ -52,47 +52,12 @@ class Compras extends CI_Controller {
             'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),
             'Total' => $this->geral_model->TotalPedido($pedido_id)->row(),
             'pedido' => $pedido,
+            'tipo' => "c",
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
-
-    public function excluir($id_pedido) {
-        if ($this->input->post('id_pedido') > 0) {
-            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-            if ($pedido->PEDIDO_ESTATUS <= 1) {
-                $this->geral_model->ExcluirPedido($id_pedido);
-                $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
-            } else {
-                $this->session->set_flashdata('mensagem', "Erro: Esse pedido já foi fechado e não pode ser excluido!");
-                $this->geral_model->ReabrirPedido($id_pedido);
-                $this->geral_model->ExcluirPedido($id_pedido);
-            }
-            redirect('compras', 'refresh');
-        }
-
-        $dados = array(
-            'tela' => "compras_excluir",
-            'PedidoDados' => $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function excluirpedido($id_pedido) {
-        $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-        if ($pedido->PEDIDO_ESTATUS <= 1) {
-            $this->geral_model->ExcluirPedido($id_pedido);
-            $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
-        } else {
-            if ($this->geral_model->ReabrirPedido($id_pedido) >= 1) {
-                if ($this->geral_model->ExcluirPedido($id_pedido) == TRUE) {
-                    $this->session->set_flashdata('mensagem', "Pedido reaberto e excluido!");
-                }
-            }
-        }
-        redirect(base_url() . 'compras');
-    }
-
+    
     public function listar() {
 
         $this->load->library('pagination');

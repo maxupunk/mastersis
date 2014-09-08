@@ -17,8 +17,7 @@
             <input type="hidden" id="tipo" value="c">
         </div>
         <div class="col-sm-3">
-            <?php echo anchor('produto', 'Add Pro', 'class="btn btn-success" id="InModel"'); ?>
-            <?php echo anchor('venda/itens/' . $IdPed, 'Atualiza', 'class="btn btn-warning" id="atualiza-pedido"'); ?>
+            <?php echo anchor('produto', 'Novo Produto', 'class="btn btn-success" id="InModel"'); ?>
         </div>
     </div>
 </div>

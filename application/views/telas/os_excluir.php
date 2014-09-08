@@ -1,5 +1,11 @@
+<?php
+if (isset($mensagem) and $mensagem != NULL) {
+    echo '<div class="alert alert-info">' . $mensagem . '</div>';
+    exit();
+}
+?>
 <div class="BordaOs">
-    <form action="<?php echo base_url('ordemservico'); ?>/excluir/<?php echo $OsDados->OS_ID ?>" method="post" accept-charset="utf-8">
+    <form action="<?php echo base_url('ordemservico'); ?>/excluir/<?php echo $OsDados->OS_ID ?>" id="OrdemServicos" method="post" accept-charset="utf-8">
         <fieldset>
 
             <legend>EXCLUIR ESSA ORDEM? <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>

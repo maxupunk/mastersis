@@ -3,6 +3,9 @@
 <?php } ?>
     
 <?php
+
+$readonly = (isset($tipo) AND $tipo== "c") ? NULL : "readonly";
+
 if ($LstProd <> NULL) {
 
     echo validation_errors();
@@ -13,7 +16,8 @@ if ($LstProd <> NULL) {
         $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
         $quantidade = '<input type="number" id="quantidade" min="1.00" step="1.00" ListPed="' . $linha->LIST_PED_ID . '" Estoque="' . $linha->ESTOQ_ID . '" value="' . $linha->LIST_PED_QNT . '">';
         $excluir = '<button type="button" class="close" id="excluir-item" ListPed="' . $linha->LIST_PED_ID . '">&times;</button>';
-        $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO." ( ".$linha->ESTOQ_ATUAL." )", $quantidade, $this->convert->em_real($linha->LIST_PED_PRECO), $this->convert->em_real($sub_total), $excluir);
+        $valor = '<input type="text" class="valor" value="'.$this->convert->em_real($linha->LIST_PED_PRECO).'" '.$readonly.'>';
+        $this->table->add_row($linha->PRO_ID, $linha->PRO_DESCRICAO." ( ".$linha->ESTOQ_ATUAL." )", $quantidade, $valor, $this->convert->em_real($sub_total), $excluir);
     }
 
     $tmpl = array('table_open' => '<table class="lista-produto">');

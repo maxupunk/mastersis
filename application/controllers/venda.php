@@ -34,7 +34,13 @@ class Venda extends CI_Controller {
     public function Pagamento($id_pedido) {
         $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
         if ($pedido == NULL) {
-            
+            $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
+            $dados = array(
+                'tela' => "venda_pagar",
+                'mensagem' => $this->mensagem,
+                'id_pedido' => $id_pedido,
+            );
+            $this->load->view('contente', $dados);
         } else {
             $dados = array(
                 'tela' => "venda_pagar",
@@ -45,11 +51,11 @@ class Venda extends CI_Controller {
         }
     }
 
-    public function FechaPedido($id_pedido) {
+    public function Fechar($id_pedido) {
 
         $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
 
-        if ($this->geral_model->FechaPedido($id_pedido) > 0) {
+        if ($this->geral_model->FechaVenda($id_pedido) > 0) {
             $this->mensagem = 'Venda concluida com sucesso!';
         } else {
             $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
@@ -62,7 +68,6 @@ class Venda extends CI_Controller {
             'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
             'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
             'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
-            'pessoa' => $this->join_model->EnderecoCompleto($pedido->PES_ID)->row(),
         );
 
         $this->load->view('contente', $dados);

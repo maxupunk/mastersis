@@ -40,13 +40,12 @@ class Pedido extends CI_Controller {
         }
     }
 
-    public function LimpLstEmAberto() {
+    public function LmpLstEmAberto() {
         if ($this->input->post()) {
             $this->crud_model->excluir("PEDIDOS", array('USUARIO_ID' => $this->session->userdata('USUARIO_ID'), 'PEDIDO_ESTATUS' => '1'));
-            redirect(base_url('venda'), 'refresh');
         }
 
-        $this->load->view('contente', array('tela' => "pedido_excluir"));
+        $this->load->view('contente', array('tela' => "pedido_lmplst"));
     }
 
     public function AddCliente($IdPed = NULL, $IdCliente = NULL) {
@@ -60,7 +59,7 @@ class Pedido extends CI_Controller {
     public function AddProd($tipo, $id_pedido, $id_produto) {
         //verifica se o produto existe e tem um estoque maior que zero
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
-        if (($produto != NULL) and ( $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') or ( $tipo != "v")) {
+        if (($produto != NULL) and ( $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') or ( $tipo != "v") or ( $produto->ESTOQ_ATUAL = -1)) {
             //verifica se existe realmente um pedido com o id passado
             if ($this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row() != NULL) {
                 //verififca se já existe o prodoto na lista de pedido
@@ -87,6 +86,7 @@ class Pedido extends CI_Controller {
             'tela' => 'pedido_itens',
             'mensagem' => $this->mensagem,
             'IdPed' => $id_pedido,
+            'tipo' => $tipo,
             'LstProd' => $this->join_model->ListaPedido($id_pedido)->result(),
             'Total' => $this->geral_model->TotalPedido($id_pedido)->row(),
         );
@@ -96,7 +96,7 @@ class Pedido extends CI_Controller {
     public function AddProdOs($id_os, $id_produto) {
         //verifica se o produto existe e tem um estoque maior que zero
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
-        if ($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
+        if (($produto != NULL and $produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') or ( $produto->ESTOQ_ATUAL = -1)) {
             //verifica se existe realmente um pedido com o id passado
             $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
             if ($os != NULL) {
@@ -292,19 +292,34 @@ class Pedido extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function DelPedido($id_pedido, $url = "venda") {
-        $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-        if ($pedido->PEDIDO_ESTATUS <= 1) {
-            $this->geral_model->ExcluirPedido($id_pedido);
-            $this->session->set_flashdata('mensagem', "Pedido excluido com sucesso!");
-        } else {
-            if ($this->geral_model->ReabrirPedido($id_pedido) >= 1) {
-                if ($this->geral_model->ExcluirPedido($id_pedido) == TRUE) {
-                    $this->session->set_flashdata('mensagem', "Pedido reaberto e excluido!");
+    public function DelPedido($id_pedido) {
+        if ($this->input->post('id_pedido') > 0) {
+            if ($id_pedido > 0) {
+                $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+                if ($pedido != null) {
+                    if ($pedido->PEDIDO_ESTATUS <= 1) {
+                        $this->geral_model->ExcluirPedido($id_pedido);
+                        $this->mensagem = "Pedido excluido com sucesso!";
+                    } else {
+                        if ($this->geral_model->ReabrirPedido($id_pedido) >= 1) {
+                            if ($this->geral_model->ExcluirPedido($id_pedido) == TRUE) {
+                                $this->mensagem = "Pedido reaberto e excluido!";
+                            }
+                        }
+                    }
+                } else {
+                    $this->mensagem = "O pedido que não existe!";
                 }
+            } else {
+                $this->mensagem = "Pedido não selecionado!";
             }
         }
-        redirect(base_url() . $url);
+        $dados = array(
+            'tela' => "pedido_excluir",
+            'id_pedido' => $id_pedido,
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
     }
 
 }

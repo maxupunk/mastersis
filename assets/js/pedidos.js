@@ -39,9 +39,5 @@ $(document).ready(function() {
     $(document).on('click', '#excluir-item', function() {
         $("#ListaPedido").load("pedido/DelItemPedido/" + $('#IdPed').val() + "/" + $(this).attr('ListPed'));
     });
-// Atualisa
-    $(document).on("click", "#atualiza-pedido", function() {
-        $("#ListaPedido").load("pedido/UpdLstPedido/" + $('#IdPed').val())
-        return false;
-    });
+
 });

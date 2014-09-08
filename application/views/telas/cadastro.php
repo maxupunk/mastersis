@@ -19,8 +19,38 @@
 
     <div class="col-sm-6">
         <div class="row BordaCad">
-                <input type="text" name="buscar" id="busca" itemref="#" placeholder="Busca">
-                <div id="resultado"><!--resultado da busca --></div>
+            <input type="text" name="buscar" id="busca" itemref="#" placeholder="Busca">
+            <div id="resultado"><!--resultado da busca --></div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#InContent ,#pagination a", function() {
+            $("#content-sub-menu").load($(this).attr('href'));
+            return false;
+        });
+        // Menu do cadastro de endereço
+        $(document).on("click", "#MenuEndereco", function() {
+            $("#endereco").load($(this).attr('href'));
+            return false;
+        });
+        $(document).on("keyup", "#busca", function() {
+            url = $(this).attr('itemref');
+            valor = $(this).val();
+            if (valor.length > 0 && url != "#") {
+                $("#resultado").load(url + encodeURI(valor));
+            }
+        });
+        $(document).on("click", ".submenu-cadastro>li", function() {
+            href = $(this).find("a").attr('href');
+            $(this).siblings('li.active').removeClass("active");
+            $(this).addClass("active");
+            $("#busca").attr("itemref", href + '/busca?buscar=');
+            $("#content-sub-menu").load(href);
+            $(".BordaCad").show();
+            $("#busca").val("");
+            return false;
+        });
+    });
+</script>

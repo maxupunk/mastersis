@@ -25,7 +25,7 @@ class Produto extends CI_Controller {
 
 
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE){
+        if ($this->form_validation->run() == TRUE) {
 
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             $this->db->trans_begin();
@@ -48,7 +48,6 @@ class Produto extends CI_Controller {
             } else {
                 $this->mensagem = "Erro ao gravar no banco de dados! <br>- porfavor tente novamente mais tarde.";
             }
-
         }
         $dados = array(
             'tela' => 'prod_cadastro',
@@ -59,7 +58,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function editar($id_produto) {
+    public function Editar($id_produto) {
 
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]');
 
@@ -71,7 +70,7 @@ class Produto extends CI_Controller {
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
                 if ($dados['PRO_TIPO'] == "s") {
-                    $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1 );
+                    $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1);
                 } else {
                     $estoque = array('ESTOQ_MIN' => NULL);
                 }
@@ -92,7 +91,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function imagem() {
+    public function Imagem() {
 
         // validar o formulario
         $this->load->library(array('image_lib', 'upload'));
@@ -138,7 +137,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function excluir($id_produto) {
+    public function Excluir($id_produto) {
 
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
@@ -156,7 +155,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function busca() {
+    public function Busca() {
         $busca = $_GET['buscar'];
         $dados = array(
             'tela' => "prod_busca",
@@ -165,7 +164,7 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function exibir() {
+    public function Exibir() {
 
         $id_produto = $this->uri->segment(3);
 
@@ -181,14 +180,35 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function avaria() {
+    public function Avaria() {
         $dados = array(
             'tela' => "prod_avaria",
         );
         $this->load->view('contente', $dados);
     }
 
-    public function pegaproduto() {
+    public function Preco() {
+        // validar o formulario
+        $this->form_validation->set_rules('id_produto', 'O id do pedido não passado!', 'required');
+        $this->form_validation->set_rules('id_estoque', 'O id da lista de pedido não passado!', 'required');
+        $this->form_validation->set_rules('valor', 'O tipo de transisão não passado!', 'required');
+
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->form_validation->run() == TRUE) {
+
+        }
+
+        $dados = array(
+            'tela' => 'pedido_itens',
+            'mensagem' => @$this->mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+
+    public function PegaProduto() {
 
         $this->load->model('join_model');
 

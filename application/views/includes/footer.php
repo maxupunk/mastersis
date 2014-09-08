@@ -31,7 +31,7 @@
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
 
 <!-- custom -->
-<script src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
+<script async defer src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
 
 
 </body>

@@ -7,13 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 $(document).ready(function() {
-// Aviso de alterações de dados
-    function ConfirmSair(on) {
-        var message = "As mudanças deste formulário não foram salvas. \nSaindo desta página, todas as mudanças serão perdidas.";
-        window.onbeforeunload = (on) ? function() {
-            return message;
-        } : null;
-    }
 
 // ocuta alertas
     $(document).on('click', '.alert', function() {
@@ -67,9 +60,7 @@ $(document).ready(function() {
     });
 
 
-////////////////////////////////////////////////////////////////////////////////
 // Ativador de mascaras
-////////////////////////////////////////////////////////////////////////////////
     $(document).on("focus", "input", function() {
         $('.fone').mask('(00)0000-0000');
         $('.valor').mask('0.000.000.000,00', {reverse: true});
@@ -77,38 +68,18 @@ $(document).ready(function() {
         $('.cnpj').mask('00.000.000.0000-00', {reverse: true});
     });
 
-////////////////////////////////////////////////////////////////////
-// MasterSis script do CRUD
-////////////////////////////////////////////////////////////////////
-    $(document).on("click", "#InContent ,#pagination a", function() {
-        $("#content-sub-menu").load($(this).attr('href'));
-        return false;
-    });
-// Menu do cadastro de endereço
-    $(document).on("click", "#MenuEndereco", function() {
-        $("#endereco").load($(this).attr('href'));
+// FUNÇÃO PARA IMPRESÃO IN DIV
+    $(document).on('click', '#imprimir', function() {
+        var extraCss = "assets/css/mastersis.css";
+        var keepAttr = ["id", "class", "style"];
+        var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
+        $('.impresao').printArea(options);
         return false;
     });
 
-    $(document).on("keyup", "#busca", function() {
-        url = $(this).attr('itemref');
-        valor = $(this).val();
-        if (valor.length > 0 && url != "#") {
-            $("#resultado").load(url + encodeURI(valor));
-        }
-    });
-
-    $(document).on("click", ".submenu-cadastro>li", function() {
-        href = $(this).find("a").attr('href');
-        $(this).siblings('li.active').removeClass("active");
-        $(this).addClass("active");
-        $("#busca").attr("itemref", href + '/busca?buscar=');
-        $("#content-sub-menu").load(href);
-        $(".BordaCad").show();
-        $("#busca").val("");
-        return false;
-    });
-
+////////////////////////////////////////////////////////////////////////////////
+// Scripts de cadastros
+////////////////////////////////////////////////////////////////////////////////
     $(document).on("submit", 'form[name="grava"]', function() {
         $.ajax({
             type: "POST",
@@ -127,7 +98,6 @@ $(document).ready(function() {
         });
         return false;
     });
-
     $(document).on("submit", 'form[name="form-data"]', function() {
         var formData = new FormData($(this)[0]);
         $.ajax({
@@ -142,7 +112,6 @@ $(document).ready(function() {
         });
         return false;
     });
-
     $(document).on('keypress', 'form[name="grava"]', function() {
         $(this).change(function() {
             $('button[type="submit"]').removeAttr("disabled");
@@ -150,12 +119,10 @@ $(document).ready(function() {
             ConfirmSair(true);
         });
     });
-
     $(document).on('change', 'select[name="ESTA_ID"]', function() {
         estado = $(this).val();
         if (estado == '')
             return false;
-
         $.getJSON('endereco/pegacidades/' + estado, function(data) {
             var option = new Array();
             $.each(data, function(i, obj) {
@@ -166,12 +133,10 @@ $(document).ready(function() {
             $('select[name="CIDA_ID"]').html(option);
         });
     });
-
     $(document).on('change', 'select[name="CIDA_ID"]', function() {
         bairro = $(this).val();
         if (bairro == '')
             return false;
-
         $.getJSON('endereco/pegabairros/' + bairro, function(data) {
             var option = new Array();
             $.each(data, function(i, obj) {
@@ -182,12 +147,10 @@ $(document).ready(function() {
             $('select[name="BAIRRO_ID"]').html(option);
         });
     });
-
     $(document).on('change', 'select[name="BAIRRO_ID"]', function() {
         rua = $(this).val();
         if (rua == '')
             return false;
-
         $.getJSON('endereco/pegaruas/' + rua, function(data) {
             var option = new Array();
             $.each(data, function(i, obj) {
@@ -198,7 +161,6 @@ $(document).ready(function() {
             $('select[name="RUA_ID"]').html(option);
         });
     });
-
     $(document).on('change', 'select[name="PES_TIPO"]', function() {
         if ($(this).val() == "f") {
             $('#cpf-cnpj').attr("class", "cpf");
@@ -217,49 +179,6 @@ $(document).ready(function() {
             $('input[name="PES_NOME_MAE"]').val('');
         }
         $(".cpf-cnpj").focus();
-    });
-////////////////////////////////////////////////////////////////////////////////
-// SCRIPTS DE VENDAS
-////////////////////////////////////////////////////////////////////////////////
-//AUTOCOMPLETAR
-// aplica as configuração do autocomplete
-    var NomeDoCliente = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
-    });
-// inicialisa o autocomplete
-    NomeDoCliente.initialize();
-
-// inicialisa typeahead UI
-    $('#nome_pes').typeahead(null, {
-        source: NomeDoCliente.ttAdapter()
-    }).on('typeahead:selected', function(object, data) {
-        $("#venda").load("venda/cliente/" + data.id);
-    });
-// NOVA VENDA
-    $(document).on("click", "#AbrirVenda", function() {
-        $("#venda").load($(this).attr('href'));
-        $("#ListaVenda").html('');
-        return false;
-    });
-// LISTAR VENDAS
-    $(document).on("click", "#MostraVendas", function() {
-        $("#venda").load($(this).attr('href'));
-        return false;
-    });
-// PAGINAÇÃO DA LISTA DE PEDIDO
-    $(document).on("click", "#PagPedidos a", function() {
-        $("#venda").load($(this).attr('href'));
-        return false;
-    });
-// FUNÇÃO PARA IMPRESÃO IN DIV
-    $(document).on('click', '#imprimir', function() {
-        var extraCss = "assets/css/mastersis.css";
-        var keepAttr = ["id", "class", "style"];
-        var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
-        $('.impresao').printArea(options);
-        return false;
     });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -304,59 +223,24 @@ $(document).ready(function() {
         }
     });
 
-////////////////////////////////////////////////////////////////////////////////
-// ORDEM DE SERVIÇO
-////////////////////////////////////////////////////////////////////////////////
-// GRAVA OS - FORMULARIO
-    $(document).on("submit", 'form[name="GravaOs"]', function() {
-        $.ajax({
-            type: "POST",
-            url: $(this).attr('action'),
-            dataType: "html",
-            data: $(this).serialize(),
-            // enviado com sucesso
-            success: function(response) {
-                $("#modal-content").html(response);
-                ConfirmSair(false);
-            }
-        });
-        return false;
-    });
-////////////////////////////////////////////////////////////////////////////////
-// COMPRAS
-////////////////////////////////////////////////////////////////////////////////
 
-// aplica as configuração do autocomplete
-    var NomeDoFornecedor = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
-    });
-// inicialisa o autocomplete
-    NomeDoFornecedor.initialize();
-
-// inicialisa typeahead UI
-    $('#NomeFornecedor').typeahead(null, {
-        source: NomeDoFornecedor.ttAdapter()
-    }).on('typeahead:selected', function(object, data) {
-        $("#ComprasConteiner").load("compras/abrir/" + data.id);
-    });
-// lista todas as compras
-    $(document).on('click', '#lista-compras', function() {
-        $("#ComprasConteiner").load($(this).attr('href'));
-        return false;
-    });
-// PAGINAÇÃO DA LISTA DE PEDIDO
-    $(document).on("click", "#PagPedidos a", function() {
-        $("#ComprasConteiner").load($(this).attr('href'));
-        return false;
-    });
 
 }); // Verifica se a pagina foi carregada.
 
-//
+///////////////////////////////////////////////////////////
+// Funcões
+///////////////////////////////////////////////////////////
+function comparaArray(a1, a2) {
+    return JSON.stringify(a1) == JSON.stringify(a2);
+}
+// Aviso de alterações de dados
+function ConfirmSair(on) {
+    var message = "As mudanças deste formulário não foram salvas. \nSaindo desta página, todas as mudanças serão perdidas.";
+    window.onbeforeunload = (on) ? function() {
+        return message;
+    } : null;
+}
 // Ferramenta de debuga objetos
-//
 function debug(o) {
     var out = '';
     for (var p in o) {

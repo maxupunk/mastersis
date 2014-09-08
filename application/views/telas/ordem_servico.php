@@ -1,198 +1,117 @@
 <div class="row">
-    <?php
-    if ($this->session->flashdata('mensagem'))
-        echo '<div class="alert alert-info">' . $this->session->flashdata('mensagem') . '</div>';
-    ?>
-    <div class="row">
-        <div class="col-md-6"><!-- coluna esquerda -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Ordem de Serviços em aberto.
-                    <span class="badge"><?php echo count($emabertos) ?></span>
-                    <a href="ordemservico/cadastrar" class="btn btn-success btn-xs pull-right" id="EmabertoUpd">Atualizar>
-                        <a href="ordemservico/cadastrar" class="btn btn-success btn-xs pull-right" id="InModel">Nova</a>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>COD</th><th>CLIENTE</th><th>OPÇÕES</th></tr>
-                        </thead>
-                        <tbody id="LstEmAberto">
-                            <tr>
-                                <td id="teste">
-                                    2
-                                </td>
-                                <td>
-                                    MAXUEL ALCANTARA AGUIAR
-                                </td>
-                                <td>
-                                    <a href="ordemservico/gerenciaitens/2" id="InModel" class="btn btn-primary btn-xs">Itens</a><a href="ordemservico/imprimir/2" id="InModel" class="btn btn-info btn-xs">Imprimir</a><a href="ordemservico/editar/2" id="InModel" class="btn btn-warning btn-xs">Editar</a><a href="ordemservico/excluir/2" id="InModel" class="btn btn-danger btn-xs">Apagar</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <?php /*
-                      if ($emabertos <> NULL) {
+    <div class="col-sm-12">
 
-                      $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
+        <ul class="nav nav-tabs nav-justified submenu-os" role="tablist" id="myTab">
+            <li><a href="1">Em Abertas</a></li>
+            <li><a href="2">Pendente</a></li>
+            <li><a href="3">Cocluida</a></li>
+            <li><a href="4">Entregue</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    Opções<span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="ordemservico/cadastrar" id="InModel">Nova Ordem</a></li>
+                    <li><a href="ordemservico/gerenciaitens" id="Op-Os">Gerenciar Itens/Serviços</a></li>
+                    <li><a href="ordemservico/imprimir" id="Op-Os">Imprimir</a></li>
+                    <li><a href="ordemservico/editar" id="Op-Os">Editar</a></li>
+                    <li><a href="ordemservico/excluir" id="Op-Os">Apagar</a></li>
+                    <li><a href="ordemservico/entregar" id="Op-Os">Entregar</a></li>
+                    <li><a href="ordemservico/reabrir" id="Op-Os">Reabrir Ordem</a></li>
+                </ul>
+            </li>
+        </ul>
 
-                      foreach ($emabertos as $linha) {
-                      $this->table->add_row($linha->OS_ID, $linha->PES_NOME, '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
-                      <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
-                      <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
-                      <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="InModel" class="btn btn-danger btn-xs">Apagar</a>');
-                      }
+        <input type="hidden" id="OsSelect" value="">
+        <input type="hidden" id="MenuSelect" value="1">
 
-                      $tmpl = array('table_open' => '<table class="table table-hover">');
-                      $this->table->set_template($tmpl);
-
-                      echo $this->table->generate();
-                      } else {
-                      echo "Não á serviço em aberto!";
-                      } */
-                    ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6"><!-- coluna direita -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Ordem de serviços pendentes.
-                    <span class="badge"><?php echo count($pendentes) ?></span>
-                </div>
-                <div class="panel-body">
-
-                    <?php
-                    if ($pendentes <> NULL) {
-
-                        $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
-
-                        foreach ($pendentes as $linha) {
-                            $this->table->add_row($linha->OS_ID, $linha->PES_NOME, '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
-                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/excluir/' . $linha->OS_ID . '" id="InModel" class="btn btn-danger btn-xs">Apagar</a>');
-                        }
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "Não á serviço pendente!";
-                    }
-                    ?>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Concluidos (Aguardando entrega).
-                    <span class="badge"><?php echo count($concluidos) ?></span>
-                </div>
-                <div class="panel-body">
-                    <?php
-                    if ($concluidos <> NULL) {
-
-                        $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
-
-                        foreach ($concluidos as $linha) {
-                            $this->table->add_row($linha->OS_ID, $linha->PES_NOME, '<a href="ordemservico/gerenciaitens/' . $linha->OS_ID . '" id="InModel" class="btn btn-primary btn-xs">Itens</a>
-                             <a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/editar/' . $linha->OS_ID . '" id="InModel" class="btn btn-warning btn-xs">Editar</a>
-                             <a href="ordemservico/entregar/' . $linha->OS_ID . '" id="InModel" class="btn btn-success btn-xs">Entregar</a>');
-                        }
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "Não á serviço concluido!";
-                    }
-                    ?>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Ultimas ordens entregues.
-                    <span class="badge"><?php echo count($entregues) ?></span>
-                </div>
-                <div class="panel-body">
-                    <?php
-                    if ($entregues <> NULL) {
-
-                        $this->table->set_heading('COD', 'CLIENTE', 'OPÇÕES');
-
-                        foreach ($entregues as $linha) {
-                            $this->table->add_row($linha->OS_ID, $linha->PES_NOME, '<a href="ordemservico/imprimir/' . $linha->OS_ID . '" id="InModel" class="btn btn-info btn-xs">Imprimir</a>
-                             <a href="ordemservico/reabrir/' . $linha->OS_ID . '" class="btn btn-warning btn-xs">Reabrir</a>');
-                        }
-
-                        $tmpl = array('table_open' => '<table class="table table-hover">');
-                        $this->table->set_template($tmpl);
-
-                        echo $this->table->generate();
-                    } else {
-                        echo "Não á serviço entregue!";
-                    }
-                    ?>
-
-                </div>
-            </div>
-        </div>
-
-
+        <table class="table table-hover">
+            <thead>
+            <th>COD</th><th>CLIENTE</th><th>EQUIPAMENTO</th><th>DATA DE ENTRADA</th>
+            </thead>
+            <tbody id="LstEmOrdens">
+            </tbody>
+        </table>
 
     </div>
-
-</div> <!-- coluna direita -->
-
+</div>
 <script>
     $(document).ready(function() {
+        setInterval(function() {
+            CarregaJsonOs($("#MenuSelect").val())
+        }, 30000);
 
-        $(document).on('click', '#EmabertoUpd2', function() {
-            $.getJSON('Ordemservico/ordens', function(data) {
-                $('#LstEmAberto').empty();
-                if (data == "") {
-                    $('#LstEmAberto').append('Não ha compras em aberto');
+        var json = {};
+
+        // comportamento do Model apos fechar
+        $('#modal').on('hidden.bs.modal', function() {
+                    CarregaJsonOs($("#MenuSelect").val());
+        });
+
+        // compoetamento do menu
+        $(document).on('click', '.submenu-os>li', function() {
+            href = $(this).find("a").attr('href');
+            $(this).siblings('li.active').removeClass("active");
+            $(this).addClass("active");
+            $("#MenuSelect").val(href);
+            CarregaJsonOs(href);
+            $('.in,.open').removeClass('in open');
+            return false;
+        });
+
+        // sistema de seleção das ordens
+        $(document).on('click', '#LstEmOrdens tr', function() {
+            $("tr").css('background-color', '');
+            $(this).css('background-color', '#cccccc');
+            $("#OsSelect").val($(this).find('[id="ID"]').text());
+        });
+
+        // comportamento do menu opções
+        $(document).on('click', '#Op-Os', function() {
+            if ($("#OsSelect").val() == "") {
+                $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
+            } else {
+                $("#modal-content").load($(this).attr('href') + "/" + $("#OsSelect").val());
+            }
+            $('#modal').modal('show');
+            $('.in,.open').removeClass('in open');
+            return false;
+        });
+
+        // comportamento dos formularios das ordems
+        $(document).on("submit", '#OrdemServicos', function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                dataType: "html",
+                data: $(this).serialize(),
+                // enviado com sucesso
+                success: function(response) {
+                    $("#modal-content").html(response);
+                    CarregaJsonOs($("#MenuSelect").val());
                 }
-                $.each(data, function(key, value) {
-                    link = '<a href="ordemservico/gerenciaitens/' + value.PES_ID + '" id="InModel" class="btn btn-primary btn-xs">Itens</a><a href="ordemservico/imprimir/' + value.PES_ID + '" id="InModel" class="btn btn-info btn-xs">Imprimir</a><a href="ordemservico/editar/' + value.PES_ID + '" id="InModel" class="btn btn-warning btn-xs">Editar</a><a href="ordemservico/excluir/' + value.PES_ID + '" id="InModel" class="btn btn-danger btn-xs">Apagar</a>';
-                    $('#LstEmAberto').append('<tr ><td>' + value.PES_ID + '</td><td>' + value.PES_NOME + '</td><td>' + link + '</td></tr>');
-                });
             });
             return false;
         });
-        
-        //$('#EmabertoUpd').mousedown(function(event) {
-        //debug(event);
-            /*switch (event.which) {
-                case 1:
-                    alert('Left Mouse button pressed.');
-                    break;
-                case 2:
-                    alert('Middle Mouse button pressed.');
-                    break;
-                case 3:
-                    alert('Right Mouse button pressed.');
-                    break;
-                default:
-                    alert('You have a strange Mouse!');
-            }*/
-        //});
+        // Carrega a lista de ordem das tabelas 
+        function CarregaJsonOs(href) {
+            $.getJSON("ordemservico/ordens/" + href, function(data) {
+                var items = [];
+                if (!comparaArray(json, data)) {
+                    $('#LstEmOrdens').empty();
+                    if (data == "") {
+                        $('#LstEmOrdens').append('Não ha compras em aberto');
+                    } else {
+                        $.each(data, function(key, value) {
+                            items.push('<tr><td id="ID">' + value.OS_ID + '</td><td>' + value.PES_NOME + '</td><td>' + value.OS_EQUIPAMENT + '</td><td>' + value.OS_DATA_ENT + '</td></tr>');
+                        });
+                        $('#LstEmOrdens').append(items);
+                    }
+                    json = data;
+                    $("#OsSelect").val("");
+                }
+            });
+        }
 
     });
 </script>

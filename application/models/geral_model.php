@@ -33,7 +33,7 @@ class Geral_model extends CI_Model {
         return $this->db->trans_status();
     }
 
-    public function FechaPedido($id_pedido, $estatus = 4) {
+    public function FechaVenda($id_pedido, $estatus = 4) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
@@ -55,11 +55,11 @@ class Geral_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function FechaOs($id_pedido, $estatus = 4) {
+    public function FechaOs($id_pedido) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, ORDEM_SERV, PEDIDOS
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
-            ORDEM_SERV.OS_ESTATUS = ' . $estatus . ', ORDEM_SERV.OS_DATA_SAI = NOW()
+            ORDEM_SERV.OS_ESTATUS = 4, ORDEM_SERV.OS_DATA_SAI = NOW()
             WHERE ORDEM_SERV.OS_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.OS_ID=' . $id_pedido . '
             AND ESTOQUES.ESTOQ_MIN!=-1 AND ORDEM_SERV.OS_ESTATUS<=3');
 

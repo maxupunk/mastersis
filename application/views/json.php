@@ -1,1 +1,1 @@
-<?php echo json_encode($query); ?>
+<?php echo json_encode($query, JSON_UNESCAPED_UNICODE); ?>

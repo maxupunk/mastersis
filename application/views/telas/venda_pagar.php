@@ -27,7 +27,7 @@ if ($total->total == NULL) {
     </div>
 </div>
 <div class="modal-footer">
-    <button href="venda/fechapedido/<?php echo $id_pedido ?>" class="btn btn-default" id="InModel">Finalizar</button>
+    <button href="venda/fechar/<?php echo $id_pedido ?>" class="btn btn-default" id="InModel">Finalizar</button>
 </div>
 <script>
     $(document).ready(function() {
