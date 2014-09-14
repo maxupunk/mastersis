@@ -38,13 +38,13 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function ProdutoBusca($busca) {
-        $this->db->cache_on();
-        $this->db->select('PRODUTOS.PRO_ID, PRODUTOS.PRO_DESCRICAO, ESTOQUES.ESTOQ_ATUAL, ESTOQUES.ESTOQ_PRECO');
+    public function ProdutoBusca($busca, $regra = "v") {
+        //$this->db->cache_on();
+        $this->db->select('PRODUTOS.PRO_ID, PRODUTOS.PRO_DESCRICAO, PRODUTOS.PRO_TIPO, ESTOQUES.ESTOQ_ATUAL, ESTOQUES.ESTOQ_PRECO');
         $this->db->from('PRODUTOS', 'ESTOQUES');
         $this->db->join('ESTOQUES', 'PRODUTOS.PRO_ID = ESTOQUES.PRO_ID');
-        $this->db->where('PRODUTOS.PRO_ESTATUS', 'a');
-//        $this->db->where('ESTOQUES.ESTOQ_ATUAL >=', 1);
+        if ($regra == "v" or $regra == "os")
+            $this->db->where('PRODUTOS.PRO_ESTATUS', 'a');
         $this->db->or_like('PRODUTOS.PRO_DESCRICAO', $busca);
         $this->db->or_like('PRODUTOS.PRO_CARAC_TEC', $busca);
         return $this->db->get();
@@ -70,7 +70,7 @@ class Join_model extends CI_Model {
         $this->db->where('LISTA_PRODUTOS.PEDIDO_ID = ', $id_pedido);
         return $this->db->get();
     }
-    
+
     // lista os produtos em venda
     public function ListaProdOs($id_os) {
         $this->db->select('*');

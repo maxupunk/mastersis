@@ -21,6 +21,29 @@ class Venda extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
+    public function Novo($local = "l") {
+        $dados = array(
+            'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
+            'PEDIDO_DATA' => date("Y-m-d h:i:s"),
+            'PEDIDO_ESTATUS' => '1',
+            'PEDIDO_LOCAL' => $local,
+            'PEDIDO_TIPO' => "v");
+        if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
+            $id_pedido = $this->db->insert_id();
+        } else {
+            $this->mensagem = "Erro ao grava pedido no banco de dados!";
+        }
+        echo json_encode($id_pedido);
+    }
+
+    public function AddCliente($IdPed = NULL, $IdCliente = NULL) {
+        $atualizar = array('PES_ID' => $IdCliente);
+        $condicao = array('PEDIDO_ID' => $IdPed);
+        if ($this->crud_model->update("PEDIDOS", $atualizar, $condicao) == FALSE) {
+            return "Erro: Problema ao adiciona cliente na compra!";
+        }
+    }
+
     public function Cliente($IdCliente) {
 
         $dados = array(

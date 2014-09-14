@@ -61,9 +61,9 @@
 
         // sistema de seleção das ordens
         $(document).on('click', '#LstEmOrdens tr', function() {
-            $("tr").css('background-color', '');
-            $(this).css('background-color', '#cccccc');
-            $("#OsSelect").val($(this).find('[id="ID"]').text());
+            $(this).siblings('tr.active').removeClass("active");
+            $(this).addClass("active");
+            $("#OsSelect").val($(this).children().first().text());
         });
 
         // comportamento do menu opções
@@ -73,8 +73,8 @@
             } else {
                 $("#modal-content").load($(this).attr('href') + "/" + $("#OsSelect").val());
             }
-            $('#modal').modal('show');
             $('.in,.open').removeClass('in open');
+            $('#modal').modal('show');
             return false;
         });
 

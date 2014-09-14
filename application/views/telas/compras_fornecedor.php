@@ -24,7 +24,71 @@
 
 <div class="row">
     <div class="col-sm-12" id="ListaPedido">
-        <?php $this->load->view("telas/pedido_itens"); ?>
+        <?php $this->load->view("telas/pedido_itenscompra"); ?> 
     </div>
 </div>
-<script src="<?php echo base_url('assets/js/pedidos.js'); ?>"></script>
+<script>
+    $(document).ready(function() {
+        // Auto completa produto
+        var Produto = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
+        });
+        // inicialisa o autocomplete
+        Produto.initialize();
+
+        // inicialisa typeahead UI
+        $('#ProdutoDesc').typeahead(null, {
+            source: Produto.ttAdapter()
+        }).on('typeahead:selected', function(object, data) {
+            $("#ListaPedido").load("pedido/AddProdCompra/" + $('#IdPed').val() + "/" + data.id);
+            $(this).val('');
+        });
+
+        $("#ProdutoDesc").click(function() {
+            $(this).val('');
+        });
+
+        // ALTERA QUATIDADE DE PRODUTOS
+        $(document).on('change', '#quantidade', function() {
+            ListPedido = $(this).parents('tr').attr('itemid');
+            Estoque_id = $(this).parents('tr').attr('itemref');
+            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: "v"};
+            $.ajax({
+                type: "POST",
+                url: "pedido/AtualizaQntItems",
+                dataType: "html",
+                data: dados,
+                // enviado com sucesso
+                success: function(response) {
+                    $("#ListaPedido").html(response);
+                }
+            });
+            return false;
+        });
+
+        $(document).on("keypress", ".valor", function(event) {
+            if (event.which === 13) {
+                ListPedido = $(this).parents('tr').attr('itemid');
+                Estoque_id = $(this).parents('tr').attr('itemref');
+                var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: $('#tipo').val()};
+                $.ajax({
+                    type: "POST",
+                    url: "pedido/PrecoCompra",
+                    dataType: "html",
+                    data: dados,
+                    success: function(response) {
+                        $("#ListaPedido").html(response);
+                    }
+                });
+            }
+        });
+
+        // EXCLUIR PRODUTOS
+        $(document).on('click', '#excluir-item', function() {
+            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + $(this).attr('ListPed'));
+        });
+
+    });
+</script>

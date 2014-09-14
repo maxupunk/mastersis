@@ -187,41 +187,27 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function Preco() {
-        // validar o formulario
-        $this->form_validation->set_rules('id_produto', 'O id do pedido não passado!', 'required');
-        $this->form_validation->set_rules('id_estoque', 'O id da lista de pedido não passado!', 'required');
-        $this->form_validation->set_rules('valor', 'O tipo de transisão não passado!', 'required');
-
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE) {
-
-        }
-
-        $dados = array(
-            'tela' => 'pedido_itens',
-            'mensagem' => @$this->mensagem,
-        );
-        $this->load->view('contente', $dados);
-    }
-
-
     public function PegaProduto() {
 
         $this->load->model('join_model');
 
         $busca = $_GET['buscar'];
         $this->db->cache_off();
-        $rows = $this->join_model->ProdutoBusca($busca)->result();
+
+        if ($this->uri->segment(3) == FALSE) {
+            $rows = $this->join_model->ProdutoBusca($busca)->result();
+        } else {
+            $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
+        }
 
         setlocale(LC_MONETARY, "pt_BR");
 
         $json_array = array();
-        foreach ($rows as $row)
-            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $row->ESTOQ_ATUAL . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
-
+        foreach ($rows as $row) {
+            $estoq_atual = ($row->PRO_TIPO == "s") ? "Serviço" : $row->ESTOQ_ATUAL;
+            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $estoq_atual . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
+        }
+        
         $dados = array('query' => $json_array);
         $this->load->view('json', $dados);
     }

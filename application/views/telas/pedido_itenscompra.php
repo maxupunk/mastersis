@@ -19,7 +19,7 @@
                     <td><?php echo $linha->PRO_ID ?></td>
                     <td><?php echo $linha->PRO_DESCRICAO ?> [ <?php echo $estoq_atual ?> ]</td>
                     <td><input type="number" id="quantidade" value="<?php echo $linha->LIST_PED_QNT ?>"></td>
-                    <td><?php echo $this->convert->em_real($linha->LIST_PED_PRECO) ?></td>
+                    <td><input type="text" class="valor" value="<?php echo $this->convert->em_real($linha->LIST_PED_PRECO) ?>"></td>
                     <td><?php echo $this->convert->em_real($sub_total) ?></td>
                     <td><button type="button" class="close" id="excluir-item" ListPed="<?php echo $linha->LIST_PED_ID ?>">&times;</button></td></tr>
                 <tr>

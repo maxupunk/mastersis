@@ -1,5 +1,4 @@
 </div>
-<hr>
 </div>
 <div id="footer">
     <div class="container">
@@ -29,6 +28,7 @@
 <!-- plug-ins -->
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/plugins/jquery.calculation.min.js'); ?>"></script>
 
 <!-- custom -->
 <script async defer src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>

@@ -24,6 +24,7 @@
         </div>
     </div>
     <div class="col-sm-12" id="ComprasConteiner"></div>
+    <input type="hidden" id="tipo" value="c">
 
 </div>
 <script>
@@ -59,11 +60,5 @@
             return false;
         });
 
-        $(document).on("keypress", ".valor", function(event) {
-            if (event.which == 13) {
-                console.log("foi");
-                //$("#ComprasConteiner").load("produto/preco" + $(this).val());
-            }
-        });
     });
 </script>

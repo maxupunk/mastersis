@@ -17,7 +17,7 @@
     var ListaProduto = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
+        remote: {url: 'produto/pegaproduto/os?buscar=%QUERY'}
     });
 
     // inicialisa o autocomplete
@@ -36,10 +36,12 @@
     });
     // ALTERA QUATIDADE DE PRODUTOS
     $(document).on('change', '#quantidade', function() {
-        var dados = {Os: $('#os_id').val(), ListPed: $(this).attr('ListPed'), Estoq: $(this).attr('Estoque'), qtd: $(this).val()};
+        ListPedido = $(this).parents('tr').attr('itemid');
+        Estoque_id = $(this).parents('tr').attr('itemref');
+        var dados = {Os: $('#os_id').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
         $.ajax({
             type: "POST",
-            url: "pedido/UpdQntOs",
+            url: "pedido/AtualizaQntItemOs",
             dataType: "html",
             data: dados,
             // enviado com sucesso
@@ -51,11 +53,6 @@
     });
     // EXCLUIR PRODUTOS
     $(document).on('click', '#excluir-item', function() {
-        $("#ListaPedido").load("pedido/DelItemOs/" + $('#os_id').val() + "/" + $(this).attr('ListPed'));
-    });
-    // Atualisa
-    $(document).on("click", "#atualiza-lista", function() {
-        $("#ListaPedido").load("pedido/UpdLstOs/" + $('#os_id').val())
-        return false;
+        $("#ListaPedido").load("pedido/removeitemos/" + $('#os_id').val() + "/" + $(this).attr('ListPed'));
     });
 </script>

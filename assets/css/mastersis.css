@@ -43,6 +43,7 @@ a:active {text-decoration: none;}
     width: 100%;
     text-align: left;
     font-size: 12px;
+    margin-bottom: 20px;
 }
 
 .lista-produto td{
@@ -129,8 +130,10 @@ input[type="password"] {
 
 input[type="number"] {
     font-size:14px;
+    height:32px;
     border: none;
     max-width: 80px;
+    outline: 0;
 }
 
 select {
