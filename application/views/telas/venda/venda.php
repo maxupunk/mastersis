@@ -24,13 +24,12 @@
 
 <div class="row">
     <div class="col-sm-12" id="ListaPedido">
-
+        <table id="table"></table>
     </div>
 </div>
 <script>
     $(document).ready(function() {
 
-        var json = {};
         // abri um novo pedido
         $(document).on("click", "#NovoPedido", function() {
             $.getJSON('venda/novo', function(data) {
@@ -90,6 +89,7 @@
         });
         // inicialisa o autocomplete
         Produto.initialize();
+        //Produto.clearPrefetchCache();
 
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
@@ -105,7 +105,7 @@
 
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function() {
-            ListPedido = $(this).parents('tr').attr('itemid');
+            ListPedido = $(this).parents('tr').attr('id');
             Estoque_id = $(this).parents('tr').attr('itemref');
             var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
             $.ajax({
@@ -122,7 +122,8 @@
         });
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function() {
-            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + $(this).attr('ListPed'));
+            ListPedido = $(this).parents('tr').attr('id');
+            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido);
         });
 
     });

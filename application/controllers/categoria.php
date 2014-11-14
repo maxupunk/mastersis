@@ -33,7 +33,7 @@ class Categoria extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "categ_cadastro",
+            'tela' => "categoria/cadastro",
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
@@ -42,7 +42,7 @@ class Categoria extends CI_Controller {
     public function busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "categ_busca",
+            'tela' => "categoria/busca",
             'query' => $query = $this->crud_model->buscar("CATEGORIAS", array('CATE_ID' => $busca, 'CATE_NOME' => $busca))->result(),
 
         );
@@ -69,7 +69,7 @@ class Categoria extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "categ_editar",
+            'tela' => "categoria/editar",
             'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("CATEGORIAS", array('CATE_ID' => $id_categoria))->row(),
         );
@@ -114,7 +114,7 @@ class Categoria extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "categ_imagem",
+            'tela' => "categoria/imagem",
             'upload' => @$this->upload->display_errors(),
             'thumb' => @$this->image_lib->display_errors(),
             'mensagem' => $this->mensagem,

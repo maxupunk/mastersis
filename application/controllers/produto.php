@@ -31,12 +31,12 @@ class Produto extends CI_Controller {
             $this->db->trans_begin();
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $produto_id = $this->db->insert_id();
-                $dados['PRO_TIPO'] == "s" ? $estoq_min = -1 AND $estoque_atual = 1 : $estoq_min = NULL AND $estoque_atual = NULL;
+                $estoq_min = ($dados['PRO_TIPO'] == "s") ? -1 : NULL;
                 $estoque = array(
                     'PRO_ID' => $produto_id,
                     'ESTOQ_PRECO' => "0",
                     'ESTOQ_MIN' => $estoq_min,
-                    'ESTOQ_ATUAL' => $estoq_min,
+                    'ESTOQ_ATUAL' => 0,
                     'ESTOQ_ENTRA' => date("Y-m-d h:i:s"));
                 if ($this->crud_model->inserir('ESTOQUES', $estoque) === TRUE) {
                     $this->db->trans_commit();
@@ -50,7 +50,7 @@ class Produto extends CI_Controller {
             }
         }
         $dados = array(
-            'tela' => 'prod_cadastro',
+            'tela' => 'produto/cadastro',
             'categorias' => $this->crud_model->pega_tudo("CATEGORIAS")->result(),
             'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
             'mensagem' => $this->mensagem,
@@ -82,7 +82,7 @@ class Produto extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => "prod_editar",
+            'tela' => "produto/editar",
             'mensagem' => $this->mensagem,
             'categorias' => $this->crud_model->pega_tudo("CATEGORIAS")->result(),
             'medidas' => $this->crud_model->pega_tudo("MEDIDAS")->result(),
@@ -129,7 +129,7 @@ class Produto extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "prod_imagem",
+            'tela' => "produto/imagem",
             'upload' => $this->upload->display_errors(),
             'thumb' => $this->image_lib->display_errors(),
             'mensagem' => $this->mensagem,
@@ -148,7 +148,7 @@ class Produto extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "prod_excluir",
+            'tela' => "produto/excluir",
             'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
         );
@@ -158,7 +158,7 @@ class Produto extends CI_Controller {
     public function Busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "prod_busca",
+            'tela' => "produto/busca",
             'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
@@ -173,7 +173,7 @@ class Produto extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "prod_exibir",
+            'tela' => "produto/exibir",
             'query' => $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $id_produto))->row(),
             'mensagem' => $this->mensagem,
         );
@@ -192,13 +192,14 @@ class Produto extends CI_Controller {
         $this->load->model('join_model');
 
         $busca = $_GET['buscar'];
-        $this->db->cache_off();
 
         if ($this->uri->segment(3) == FALSE) {
             $rows = $this->join_model->ProdutoBusca($busca)->result();
         } else {
             $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
         }
+        
+        $this->db->cache_off();
 
         setlocale(LC_MONETARY, "pt_BR");
 
@@ -207,7 +208,7 @@ class Produto extends CI_Controller {
             $estoq_atual = ($row->PRO_TIPO == "s") ? "Serviço" : $row->ESTOQ_ATUAL;
             array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $estoq_atual . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
         }
-        
+
         $dados = array('query' => $json_array);
         $this->load->view('json', $dados);
     }

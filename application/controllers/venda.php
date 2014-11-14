@@ -16,7 +16,7 @@ class Venda extends CI_Controller {
 
     public function index() {
         $dados = array(
-            'tela' => "venda",
+            'tela' => "venda/venda",
         );
         $this->load->view('home', $dados);
     }
@@ -47,7 +47,7 @@ class Venda extends CI_Controller {
     public function Cliente($IdCliente) {
 
         $dados = array(
-            'tela' => 'venda_cliente',
+            'tela' => 'venda/cliente',
             'mensagem' => $this->mensagem,
             'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
         );
@@ -59,14 +59,14 @@ class Venda extends CI_Controller {
         if ($pedido == NULL) {
             $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
             $dados = array(
-                'tela' => "venda_pagar",
+                'tela' => "venda/pagar",
                 'mensagem' => $this->mensagem,
                 'id_pedido' => $id_pedido,
             );
             $this->load->view('contente', $dados);
         } else {
             $dados = array(
-                'tela' => "venda_pagar",
+                'tela' => "venda/pagar",
                 'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
                 'id_pedido' => $id_pedido,
             );
@@ -85,7 +85,7 @@ class Venda extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => "venda_fecha",
+            'tela' => "venda/fecha",
             'mensagem' => $this->mensagem,
             'pedido' => $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row(),
             'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
@@ -129,7 +129,7 @@ class Venda extends CI_Controller {
 
         $dados = array(
             'pedidos_cliente' => $this->geral_model->PedidosCliente($IdCliente, $config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
-            'tela' => 'venda_listar',
+            'tela' => 'venda/listar',
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);

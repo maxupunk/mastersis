@@ -14,7 +14,7 @@ class Endereco extends CI_Controller {
 
     public function index(){
         $dados = array(
-            'tela' => "endereco",
+            'tela' => "endereco/endereco",
         );
         $this->load->view('contente', $dados);
     }
@@ -40,7 +40,7 @@ class Endereco extends CI_Controller {
 
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
-            'tela' => 'endereco_bairro',
+            'tela' => 'endereco/bairro',
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
@@ -68,7 +68,7 @@ class Endereco extends CI_Controller {
 
         $dados = array(
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
-            'tela' => 'endereco_rua',
+            'tela' => 'endereco/rua',
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
@@ -137,7 +137,7 @@ class Endereco extends CI_Controller {
     public function busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "endereco_busca",
+            'tela' => "endereco/busca",
             'busca_rua' => $this->crud_model->buscar("RUAS", array('RUA_NOME' => $busca, 'RUA_CEP' => $busca))->result(),
             'busca_bairro' => $this->crud_model->buscar("BAIRROS", array('BAIRRO_NOME' => $busca))->result(),
             'busca_cidade' => $this->crud_model->buscar("CIDADES", array('CIDA_NOME' => $busca))->result(),

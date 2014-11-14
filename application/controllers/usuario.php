@@ -44,7 +44,7 @@ class Usuario extends CI_Controller {
 
         endif;
         $dados = array(
-            'tela' => 'usuario_cadastro',
+            'tela' => 'usuario/cadastro',
             'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),
             'mensagem' => $this->mensagem,
         );
@@ -54,7 +54,7 @@ class Usuario extends CI_Controller {
     public function busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "usuario_busca",
+            'tela' => "usuario/busca",
             'query' => $this->crud_model->buscar("USUARIOS", array('USUARIO_APELIDO' => $busca, 'USUARIO_LOGIN' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
@@ -80,7 +80,7 @@ class Usuario extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => 'usuario_editar',
+            'tela' => 'usuario/editar',
             'id_usuario' => $id_usuario,
             'usuario' => $this->crud_model->pega("USUARIOS", array('USUARIO_ID' => $id_usuario))->row(),
             'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),

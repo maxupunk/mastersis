@@ -22,8 +22,7 @@
 
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/bootstrap/bloodhound.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/bootstrap/typeahead.jquery.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap/typeahead.bundle.min.js'); ?>"></script>
 
 <!-- plug-ins -->
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
@@ -32,7 +31,6 @@
 
 <!-- custom -->
 <script async defer src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
-
 
 </body>
 </html>

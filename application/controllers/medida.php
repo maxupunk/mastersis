@@ -33,7 +33,7 @@ class Medida extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "medi_cadastro",
+            'tela' => "medida/cadastro",
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
@@ -42,7 +42,7 @@ class Medida extends CI_Controller {
     public function busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "medi_busca",
+            'tela' => "medida/busca",
             'query' => $this->crud_model->buscar("MEDIDAS", array('MEDI_NOME' => $busca))->result(),
         );
         $this->load->view('contente', $dados);
@@ -69,7 +69,7 @@ class Medida extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "medi_editar",
+            'tela' => "medida/editar",
             'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );
@@ -87,7 +87,7 @@ class Medida extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "medi_excluir",
+            'tela' => "medida/excluir",
             'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("MEDIDAS", array('MEDI_ID' => $id_medida))->row(),
         );

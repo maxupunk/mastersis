@@ -21,7 +21,7 @@ class Pessoa extends CI_Controller {
 
         $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
-
+        $this->form_validation->set_rules('PES_EMAIL', 'E-MAIL', 'valid_email');
 
         if ($this->input->post('PES_TIPO') == 'f') {
             $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required');
@@ -57,7 +57,6 @@ class Pessoa extends CI_Controller {
                 $post_pessoa = array_replace($post_pessoa, $id_ende);
                 $post_pessoa = array_replace($post_pessoa, $data_atual);
 
-
                 $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA', 'PES_EMAIL'), $post_pessoa);
                 if ($this->crud_model->inserir('PESSOAS', $pessoa) === TRUE) {
                     $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
@@ -69,7 +68,7 @@ class Pessoa extends CI_Controller {
 
 
         $dados = array(
-            'tela' => 'pessoa_cadastro',
+            'tela' => 'pessoa/cadastro',
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
             'mensagem' => $this->mensagem,
         );
@@ -106,7 +105,7 @@ class Pessoa extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "pessoa_editar",
+            'tela' => "pessoa/editar",
             'mensagem' => $this->mensagem,
             'query' => $this->join_model->EnderecoCompleto($id_pessoa)->row(),
             'estados' => $this->crud_model->pega_tudo("ESTADOS")->result(),
@@ -130,7 +129,7 @@ class Pessoa extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "pessoa_excluir",
+            'tela' => "pessoa/excluir",
             'mensagem' => $this->mensagem,
             'query' => $this->crud_model->pega("PESSOAS", array('PES_ID' => $id_pessoa))->row(),
         );
@@ -140,7 +139,7 @@ class Pessoa extends CI_Controller {
     public function busca() {
         $busca = $_GET['buscar'];
         $dados = array(
-            'tela' => "pessoa_busca",
+            'tela' => "pessoa/busca",
             'query' => $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca, 'PES_EMAIL' => $busca))->result(),
         );
         $this->load->view('contente', $dados);

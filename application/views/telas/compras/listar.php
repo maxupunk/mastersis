@@ -17,11 +17,10 @@
                 <h4 class="panel-title">
 
                     <div class="pull-right">
-                        <a data-toggle="collapse" href="#<?php echo $linha->PEDIDO_ID ?>" data-parent="#accordion" class="btn-xs btn-primary">Ver</a>
-                        <a href="compras/receber/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-success">Receber</a>
+                        <a href="pedido/receber/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-success">Receber</a>
                         <a href="compras/abrir/<?php echo $linha->PES_ID ?>" id="EditaPedido" class="btn-xs btn-warning">Alterar</a>
-                        <a href="pedido/DelPedido/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-danger">Canselar</a>
-                    </div> 
+                        <a href="pedido/Delete/<?php echo $linha->PEDIDO_ID ?>" id="InModel" class="btn-xs btn-danger">Canselar</a>
+                    </div>
                     <a data-toggle="collapse" data-parent="#accordion" href="#<?php echo $linha->PEDIDO_ID ?>">
                         <?php echo $Fornecedor->PES_NOME ?> | PEDIDO: <?php echo $linha->PEDIDO_ID ?> - <?php echo date("d/m/Y - H:i:s", strtotime($linha->PEDIDO_DATA)); ?> | TOTAL: <?php echo $this->convert->em_real($total->total); ?> | <?php echo $this->convert->EstatusPedido($linha->PEDIDO_ESTATUS); ?>
                     </a>

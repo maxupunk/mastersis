@@ -17,7 +17,7 @@ class Ordemservico extends CI_Controller {
     public function index() {
 
         $dados = array(
-            'tela' => "ordem_servico",
+            'tela' => "ordemservico/ordemservico",
         );
         $this->load->view('home', $dados);
     }
@@ -60,7 +60,7 @@ class Ordemservico extends CI_Controller {
         endif;
 
         $dados = array(
-            'tela' => "os_cadastro",
+            'tela' => "ordemservico/cadastro",
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
@@ -69,7 +69,7 @@ class Ordemservico extends CI_Controller {
     public function imprimir($id) {
         $OsDados = $this->join_model->OsDados($id)->row();
         $dados = array(
-            'tela' => "os_imprimir",
+            'tela' => "ordemservico/imprimir",
             'ListaPedido' => $this->join_model->ListaProdOs($id)->result(),
             'total' => $this->geral_model->TotalProdOs($id)->row(),
             'Estatus' => $this->estatus($id),
@@ -97,7 +97,7 @@ class Ordemservico extends CI_Controller {
                 }
             }
             $dados = array(
-                'tela' => "os_editar",
+                'tela' => "ordemservico/editar",
                 'OsDados' => $this->join_model->OsDados($id)->row(),
                 'total' => $this->geral_model->TotalProdOs($id)->row(),
                 'Estatus' => $ordem->OS_ESTATUS,
@@ -120,7 +120,7 @@ class Ordemservico extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => "os_excluir",
+            'tela' => "ordemservico/excluir",
             'OsDados' => $this->join_model->OsDados($id)->row(),
             'mensagem' => $this->mensagem,
         );
@@ -129,7 +129,7 @@ class Ordemservico extends CI_Controller {
 
     public function gerenciaitens($id_os) {
         $dados = array(
-            'tela' => 'os_gerenciaitem',
+            'tela' => 'ordemservico/gerenciaitem',
             'mensagem' => $this->mensagem,
             'id_os' => $id_os,
             'LstProd' => $this->join_model->ListaProdOs($id_os)->result(),
@@ -143,7 +143,7 @@ class Ordemservico extends CI_Controller {
         $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
 
         $dados = array(
-            'tela' => "os_entregar",
+            'tela' => "ordemservico/entregar",
             'total' => $this->geral_model->TotalProdOS($id_os)->row(),
             'pessoa' => $this->join_model->EnderecoCompleto($os->PES_ID)->row(),
             'id_pedido' => $id_os,
@@ -164,7 +164,7 @@ class Ordemservico extends CI_Controller {
         }
 
         $dados = array(
-            'tela' => "os_finaliza",
+            'tela' => "ordemservico/finaliza",
             'mensagem' => $this->mensagem,
             'ListaPedido' => $this->join_model->ListaProdOs($id_os)->result(),
             'total' => $this->geral_model->TotalProdOs($id_os)->row(),

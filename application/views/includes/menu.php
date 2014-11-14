@@ -12,24 +12,15 @@
         </div>
         <div class="collapse navbar-collapse navbar-cel centraliza-menu">
             <ul class="nav navbar-nav side-nav"><!-- MENU DROPDOWN -->
-                <li><? echo anchor('cadastros', 'Cadastros'); ?></li>
+                <li><?php echo anchor('cadastros', 'Cadastros'); ?></li>
 
-                <li><? echo anchor('venda', 'Vendas'); ?></li>
+                <li><?php echo anchor('venda', 'Vendas'); ?></li>
 
-                <li><? echo anchor('ordemservico', 'O.S'); ?></li>
+                <li><?php echo anchor('ordemservico', 'O.S'); ?></li>
 
-                <li><? echo anchor('compras', 'Compras'); ?></li>
+                <li><?php echo anchor('compras', 'Compras'); ?></li>
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiros</a>
-                    <ul class="dropdown-menu">
-                        <li class="titulo-menu"></li>
-                        <li><a href="#">Contas a receber</a></li>
-                        <li><a href="#">Contas a pagar</a></li>
-                        <li><a href="#">Receita/Despesa avulsa</a></li>
-                        <li><a href="#">Baixa pagamento</a></li>
-                    </ul>
-                </li>
+                <li><?php echo anchor('financeiro', 'Financeiro'); ?></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Relatorios</a>

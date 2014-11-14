@@ -17,7 +17,7 @@ class Compras extends CI_Controller {
     public function index() {
 
         $dados = array(
-            'tela' => "compras",
+            'tela' => "compras/compras",
         );
         $this->load->view('home', $dados);
     }
@@ -46,7 +46,7 @@ class Compras extends CI_Controller {
             }
         }
         $dados = array(
-            'tela' => 'compras_fornecedor',
+            'tela' => 'compras/fornecedor',
             'IdPed' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdFornecedor)->row(),
             'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),
@@ -91,7 +91,7 @@ class Compras extends CI_Controller {
 
         $dados = array(
             'pedidos_cliente' => $this->geral_model->PedidosFornecedor($config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
-            'tela' => 'compras_listar',
+            'tela' => 'compras/listar',
             'paginacao' => $this->pagination->create_links(),
         );
         $this->load->view('contente', $dados);

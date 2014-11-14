@@ -44,6 +44,18 @@ class Geral_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
+    public function AddEstoqCompra($id_pedido, $estatus = 4) {
+
+        $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
+            SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL + LISTA_PRODUTOS.LIST_PED_QNT,
+            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', ESTOQUES.ESTOQ_CUSTO = LISTA_PRODUTOS.LIST_PED_PRECO,
+            PEDIDOS.PEDIDO_DATA = NOW()
+            WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
+            AND PEDIDOS.PEDIDO_ESTATUS<=3');
+
+        return $this->db->affected_rows();
+    }
+
     public function ReabrirPedido($id_pedido, $estatus = 1) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS

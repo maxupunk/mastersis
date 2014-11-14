@@ -6,7 +6,7 @@
                                                         value="<?php echo isset($pedido->PEDIDO_DATA) ? date("d/m/Y - H:i:s", strtotime($pedido->PEDIDO_DATA)) : date("d/m/Y - h:i:s") ?>" disabled /></div>
         <div class="col-sm-2"><label>PEDIDO N.</label><input type="text" name="PEDIDO_ID" id="IdPed" value="<?php echo $IdPed ?>" disabled /></div>
         <div class="col-sm-2"><br>
-            <?php echo anchor('pedido/DelPedido/' . $IdPed . '/compras', 'Excluir', 'class="btn btn-warning"'); ?>
+            <?php echo anchor('pedido/Delete/' . $IdPed . '/compras', 'Excluir', 'class="btn btn-warning"'); ?>
             <?php echo anchor('compras/fecha/' . $IdPed, 'Fechar', 'class="btn btn-primary" id="InModel"'); ?></div>
     </div>
 </div>
@@ -14,7 +14,6 @@
     <div class="row">
         <div class="col-sm-9">
             <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off"/>
-            <input type="hidden" id="tipo" value="c">
         </div>
         <div class="col-sm-3">
             <?php echo anchor('produto', 'Novo Produto', 'class="btn btn-success" id="InModel"'); ?>
@@ -24,7 +23,7 @@
 
 <div class="row">
     <div class="col-sm-12" id="ListaPedido">
-        <?php $this->load->view("telas/pedido_itenscompra"); ?> 
+        <?php $this->load->view("telas/pedido/itenscompra"); ?> 
     </div>
 </div>
 <script>
@@ -52,9 +51,9 @@
 
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function() {
-            ListPedido = $(this).parents('tr').attr('itemid');
+            ListPedido = $(this).parents('tr').attr('id');
             Estoque_id = $(this).parents('tr').attr('itemref');
-            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: "v"};
+            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: "c"};
             $.ajax({
                 type: "POST",
                 url: "pedido/AtualizaQntItems",
@@ -70,12 +69,12 @@
 
         $(document).on("keypress", ".valor", function(event) {
             if (event.which === 13) {
-                ListPedido = $(this).parents('tr').attr('itemid');
+                ListPedido = $(this).parents('tr').attr('id');
                 Estoque_id = $(this).parents('tr').attr('itemref');
-                var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: $('#tipo').val()};
+                var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Valor: $(this).val()};
                 $.ajax({
                     type: "POST",
-                    url: "pedido/PrecoCompra",
+                    url: "pedido/Preco",
                     dataType: "html",
                     data: dados,
                     success: function(response) {
@@ -87,8 +86,9 @@
 
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function() {
-            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + $(this).attr('ListPed'));
+            ListPedido = $(this).parents('tr').attr('id');
+            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido);
         });
-
+        
     });
 </script>
