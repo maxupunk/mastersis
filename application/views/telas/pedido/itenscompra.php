@@ -4,12 +4,12 @@
 
 <span><?php echo validation_errors(); ?></span>
 <?php if ($LstProd <> NULL) { ?>
-<table class="lista-produto">
-    <thead>
-        <tr class="bg-primary"><th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th></th></tr>
-    </thead>
-    <tbody>
-        <?php
+    <table class="lista-produto">
+        <thead>
+            <tr class="bg-primary"><th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th></th></tr>
+        </thead>
+        <tbody>
+            <?php
             foreach ($LstProd as $linha) {
                 $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
                 $estoq_atual = ($linha->PRO_TIPO == "s") ? "Serviço" : $linha->ESTOQ_ATUAL;

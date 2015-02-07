@@ -322,6 +322,22 @@ class Pedido extends CI_Controller {
         );
         $this->load->view('contente', $dados);
     }
+    
+        public function RemoverItemComp($id_pedido, $lista_ped_id) {
+
+        if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) != TRUE) {
+            $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+        }
+
+        $dados = array(
+            'tela' => 'pedido/itenscompra',
+            'mensagem' => $this->mensagem,
+            'IdPed' => $id_pedido,
+            'LstProd' => $this->join_model->ListaPedido($id_pedido)->result(),
+            'Total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
 
     public function RemoveItemOs($id_os, $lista_ped_id) {
 

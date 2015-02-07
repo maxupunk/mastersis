@@ -7,20 +7,15 @@ if ($total->total == NULL) {
     exit;
 }
 ?>
+<div class="row">
+    <div class="col-sm-9"><label>CLIENTE</label><input type="text" name="PES_NOME" value="<?php echo $pessoa->PES_NOME ?>" disabled /></div>
+    <div class="col-sm-3"><label>PEDIDO</label><input type="text" id="id_pedido" value="<?php echo $id_pedido ?>" disabled /></div>
+</div>
+<div class="row">
+    <div class="col-sm-4"><label>TOTAL</label><input type="text" name="valor-total" id="valor-total" value="<?php echo $total->total ?>" class="valor" disabled /></div>
+</div>
 
-<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4 class="modal-title">Finalizando venda avista</h4>
+<div class="botoes">
+    <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default Model-Submit" id="InModel">Finalizar</button>
 </div>
-<div class="modal-body">
-    <div class="row">
-        <div class="col-sm-9"><label>CLIENTE</label><input type="text" name="PES_NOME" value="<?php echo $pessoa->PES_NOME ?>" disabled /></div>
-        <div class="col-sm-3"><label>PEDIDO</label><input type="text" id="id_pedido" value="<?php echo $id_pedido ?>" disabled /></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4"><label>TOTAL</label><input type="text" name="valor-total" id="valor-total" value="<?php echo $total->total ?>" class="valor" disabled /></div>
-    </div>
-</div>
-<div class="modal-footer">
-    <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default" id="InModel">Finalizar</button>
-</div>
+<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

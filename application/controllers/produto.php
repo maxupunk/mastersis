@@ -9,7 +9,7 @@ class Produto extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('crud_model');
+        $this->load->model(array('crud_model', 'join_model'));
         $this->load->library(array('form_validation', 'table'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
@@ -189,8 +189,6 @@ class Produto extends CI_Controller {
 
     public function PegaProduto() {
 
-        $this->load->model('join_model');
-
         $busca = $_GET['buscar'];
 
         if ($this->uri->segment(3) == FALSE) {
@@ -210,6 +208,22 @@ class Produto extends CI_Controller {
         }
 
         $dados = array('query' => $json_array);
+        $this->load->view('json', $dados);
+    }
+    
+    public function AjustePreco() {
+        $busca = $_GET['buscar'];
+        if ($this->uri->segment(3) == FALSE) {
+            $rows = $this->join_model->ProdutoBusca($busca)->result();
+        } else {
+            $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
+        }
+        
+        $this->db->cache_off();
+
+        setlocale(LC_MONETARY, "pt_BR");
+
+        $dados = array('query' => $rows);
         $this->load->view('json', $dados);
     }
 

@@ -52,10 +52,13 @@
         <div class="col-sm-6 pull-left">
             <?php echo form_dropdown('OS_ESTATUS', array('1' => 'ABERTO', '2' => 'PENDENTE', '3' => 'CONCLUIDO'), set_value('OS_ESTATUS', $Estatus)); ?>
         </div>
-        <div class="col-sm-6 pull-right">
-            <input type="hidden" value="<?php echo $OsDados->OS_ID; ?>" name="id_os" />
-            <button type="submit" class="btn btn-primary pull-right">Salvar</button>
-        </div>
     </div>
 
+    <div class="botoes">
+        <button type="submit"  class="btn btn-primary Model-Submit">Salvar</button>
+    </div>
+
+    <input type="hidden" value="<?php echo $OsDados->OS_ID; ?>" name="id_os" />
+
 </form>
+<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

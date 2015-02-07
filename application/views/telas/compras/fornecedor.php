@@ -87,7 +87,7 @@
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function() {
             ListPedido = $(this).parents('tr').attr('id');
-            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido);
+            $("#ListaPedido").load("pedido/RemoverItemComp/" + $('#IdPed').val() + "/" + ListPedido);
         });
         
     });

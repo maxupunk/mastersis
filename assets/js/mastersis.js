@@ -25,7 +25,7 @@ $(document).ready(function() {
         xhrFields: {
             onprogress: function(e) {
                 if (e.lengthComputable) {
-                    console.log(e.loaded / e.total * 100 + '%')
+                    console.log(e.loaded / e.total * 100 + '%');
                 }
             }
         },
@@ -41,6 +41,8 @@ $(document).ready(function() {
 // In model
     $(document).on('click', '#InModel', function() {
         $("#modal-content").load($(this).attr('href'));
+        $('.modal-title').text($(this).text());
+        $('.in,.open').removeClass('in open');
         $('#modal').modal('show');
         return false;
     });
@@ -51,7 +53,6 @@ $(document).ready(function() {
             url: $(this).attr('action'),
             dataType: "html",
             data: $(this).serialize(),
-            // enviado com sucesso
             success: function(response) {
                 $('#modal').modal('hide');
             }

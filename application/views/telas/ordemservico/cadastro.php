@@ -1,17 +1,15 @@
-<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" id="OrdemServicos" method="post" accept-charset="utf-8">
+<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" id="OrdemServicos" data-titulo="Gerenciando Itens" method="post" accept-charset="utf-8">
 
     <fieldset>
 
-        <legend>Nova Ordem de Serviço<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
-
         <?php
-        if (isset($mensagem) and $mensagem != NULL){
+        if (isset($mensagem) and $mensagem != NULL) {
             echo '<div class="alert alert-info">' . $mensagem . '</div>';
             exit();
         }
         ?>
-        
-        
+
+
         <label>NOME DA PESSOA</label> | <span id="pessoa-selec"><?php echo set_value('PES_ID'); ?> - <?php echo set_value('PES_NOME'); ?></span>
         <?php echo form_error('PES_ID'); ?>
         <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" required />
@@ -19,7 +17,7 @@
         <label>DESCRIÇÃO EQUIPAMENTO</label>
         <?php echo form_error('OS_EQUIPAMENT'); ?>
         <textarea name="OS_EQUIPAMENT" rows="3" required /><?php echo set_value('OS_EQUIPAMENT'); ?></textarea>
-        
+
         <label>DEFEITO</label>
         <?php echo form_error('OS_DSC_DEFEITO'); ?>
         <textarea name="OS_DSC_DEFEITO" rows="3" required /><?php echo set_value('OS_DSC_DEFEITO'); ?></textarea>
@@ -30,12 +28,13 @@
 
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
-        
-        <hr>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
+        <div class="botoes">
+            <button type="submit" class="btn btn-primary Model-Submit">Salvar</button>
+        </div>
 
     </fieldset>
 
 </form>
 <script src="<?php echo base_url('assets/js/pessoa.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

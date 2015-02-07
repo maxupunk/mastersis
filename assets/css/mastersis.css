@@ -43,7 +43,7 @@ a:active {text-decoration: none;}
     width: 100%;
     text-align: left;
     font-size: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 20px;    
 }
 
 .lista-produto td{
@@ -99,11 +99,6 @@ a:active {text-decoration: none;}
 }
 
 /* FORMULARIO */
-form{
-    background-color: #f5f5f5;
-    border-radius:10px;
-    padding:8px 12px;
-}
 
 input[type="text"] {
     display:block;

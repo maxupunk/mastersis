@@ -11,7 +11,7 @@
         <?php echo validation_errors(); ?>
 
 
-        <div class="well">
+        <div class="well-sm">
             <div class="row">
                 <div class="col-sm-2">
                     <label>Tipo *:</label>
@@ -37,7 +37,7 @@
             <input type="text" name="PES_NOME_MAE" value="<?php echo set_value('PES_NOME_MAE'); ?>" />
         </div>
 
-        <div class="well">
+        <div class="well-sm">
             <div class="row">
                 <div class="col-sm-4">
                     <label>Telefone:</label>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div class="well">
+        <div class="well-sm">
             <div class="row">
                 <div class="col-sm-6">
                     <?php

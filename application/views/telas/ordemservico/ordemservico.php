@@ -14,45 +14,40 @@
                     <li><a href="ordemservico/cadastrar" id="InModel">Nova Ordem</a></li>
                     <li><a href="ordemservico/gerenciaitens" id="Op-Os">Gerenciar Itens/Serviços</a></li>
                     <li><a href="ordemservico/imprimir" id="Op-Os">Imprimir</a></li>
-                    <li><a href="ordemservico/editar" id="Op-Os">Editar</a></li>
-                    <li><a href="ordemservico/excluir" id="Op-Os">Apagar</a></li>
+                    <li><a href="ordemservico/editar" data-titulo="Editar" id="Op-Os">Editar</a></li>
+                    <li><a href="ordemservico/excluir" id="Op-Os">Excluir ?</a></li>
                     <li><a href="ordemservico/entregar" id="Op-Os">Entregar</a></li>
                     <li><a href="ordemservico/reabrir" id="Op-Os">Reabrir Ordem</a></li>
                 </ul>
             </li>
         </ul>
+        <div class="well-sm"><input type="text" id="buscar" placeholder="Filtrar"></div>
 
-        <input type="hidden" id="MenuSelect" value="1">
-
-        <table class="table table-hover">
-            <thead>
-            <th>COD</th><th>CLIENTE</th><th>EQUIPAMENTO</th><th>DATA DE ENTRADA</th>
-            </thead>
-            <tbody id="LstEmOrdens">
-            </tbody>
-        </table>
+        <table class="table table-hover" id="LstEmOrdens"></table>
 
     </div>
 </div>
 <script>
     $(document).ready(function() {
         setInterval(function() {
-            CarregaJsonOs($("#MenuSelect").val())
-        }, 30000);
+            CarregaJsonOs(MenuSelect)
+        }, 3000);
 
         var json = {};
+        var OsMenu = null;
+        var MenuSelect = 1;
 
         // comportamento do Model apos fechar
-        $('#modal').on('hidden.bs.modal', function() {
-            CarregaJsonOs($("#MenuSelect").val());
+        $(document).on('hidden.bs.modal', function() {
+            CarregaJsonOs(MenuSelect);
         });
 
-        // comportamento do menu
+        // compoetamento do menu
         $(document).on('click', '.submenu-os>li', function() {
             href = $(this).find("a").attr('href');
             $(this).siblings('li.active').removeClass("active");
             $(this).addClass("active");
-            $("#MenuSelect").val(href);
+            MenuSelect = href;
             CarregaJsonOs(href);
             $('.in,.open').removeClass('in open');
             return false;
@@ -62,26 +57,28 @@
         $(document).on('click', '#LstEmOrdens tr', function() {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
+            OsMenu = $(this).children().first().text();
         });
 
         // comportamento do menu opções
         $(document).on('click', '#Op-Os', function() {
-            var Atual = $("#LstEmOrdens tr").siblings('tr.active').children().first().text();
-            if (Atual == "") {
+            if (OsMenu == null) {
                 $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
             } else {
-                //$("#modal-content").load($(this).attr('href') + "/" + $("#OsSelect").val());
-                $("#modal-content").load($(this).attr('href') + "/" + Atual);
+                $("#modal-content").load($(this).attr('href') + "/" + OsMenu);
             }
-            
+            $('.modal-title').text($(this).text());
             $('.in,.open').removeClass('in open');
             $('#modal').modal('show');
             return false;
         });
 
+        $(document).on('click', '.Model-Submit', function() {
+            $('#modal-content > form').submit();
+        });
+
         // comportamento dos formularios das ordems
         $(document).on("submit", '#OrdemServicos', function() {
-            var Atual = $("#LstEmOrdens tr").siblings('tr.active').children().first().text()
             $.ajax({
                 type: "POST",
                 url: $(this).attr('action'),
@@ -90,35 +87,48 @@
                 // enviado com sucesso
                 success: function(response) {
                     $("#modal-content").html(response);
-                    CarregaJsonOs(Atual);
+                    CarregaJsonOs(MenuSelect);
                 }
             });
             return false;
         });
-
         // Carrega a lista de ordem das tabelas 
         function CarregaJsonOs(href) {
             $.getJSON("ordemservico/ordens/" + href, function(data) {
-                var items = [];
                 if (!comparaArray(json, data)) {
                     $('#LstEmOrdens').empty();
-                    if (data == "") {
-                        $('#LstEmOrdens').append('Não á ordens');
-                    } else {
+                    if (data != "") {
                         $.each(data, function(key, value) {
-                            items += '<tr>';
-                            items += '<td id="ID">' + value.OS_ID + '</td>';
-                            items += '<td> ' + value.PES_NOME + '</td>';
-                            items += '<td>' + value.OS_EQUIPAMENT + '</td>';
-                            items += '<td>' + value.OS_DATA_ENT + '</td>';
-                            items += '</tr>';
+                            $('#LstEmOrdens').append(
+                                    $('<tr>').append(
+                                    $('<td>').text(value.OS_ID),
+                                    $('<td>').text(value.PES_NOME),
+                                    $('<td>').text(value.OS_EQUIPAMENT),
+                                    $('<td>').text(value.OS_DATA_ENT)
+                                    ));
                         });
-                        $('#LstEmOrdens').append(items);
                     }
                     json = data;
+                    OsMenu = null;
                 }
             });
         }
+
+        $("#buscar").keyup(function() {
+            input = this;
+            // Show only matching TR, hide rest of them
+            $.each($("#LstEmOrdens").find("tr"), function() {
+                if ($(this).text().toLowerCase().indexOf($(input).val().toLowerCase()) === -1) {
+                    $(this).hide();
+                    if ($(this).children().first().text() === OsMenu) {
+                        $(this).siblings('tr.active').removeClass("active");
+                        OsMenu = null;
+                    }
+                } else {
+                    $(this).show();
+                }
+            });
+        });
 
     });
 </script>

@@ -24,7 +24,6 @@
         </div>
     </div>
     <div class="col-sm-12" id="ComprasConteiner"></div>
-    <input type="hidden" id="tipo" value="c">
 
 </div>
 <script>
