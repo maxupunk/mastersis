@@ -13,7 +13,15 @@ class Geral_model extends CI_Model {
 
     // Soma toda lista de pedidos
     public function TotalPedido($id_pedido) {
-        $this->db->select('SQL_CACHE format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
+        $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
+        $this->db->from('LISTA_PRODUTOS');
+        $this->db->where('LISTA_PRODUTOS.PEDIDO_ID', $id_pedido);
+        return $this->db->get();
+    }
+
+    // Soma toda lista de pedidos
+    public function TotalPedComp($id_pedido) {
+        $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_COMP), 2) as total', FALSE);
         $this->db->from('LISTA_PRODUTOS');
         $this->db->where('LISTA_PRODUTOS.PEDIDO_ID', $id_pedido);
         return $this->db->get();
@@ -21,7 +29,7 @@ class Geral_model extends CI_Model {
 
     // soma toda a lista de produto na Ordem de Seviço
     public function TotalProdOs($id) {
-        $this->db->select('SQL_CACHE format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
+        $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
         $this->db->from('LISTA_PRODUTOS');
         $this->db->where('LISTA_PRODUTOS.OS_ID', $id);
         return $this->db->get();
@@ -44,15 +52,19 @@ class Geral_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function AddEstoqCompra($id_pedido, $estatus = 4) {
+    public function AddCompraEstoq($id_pedido, $estatus = 4) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
-            SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL + LISTA_PRODUTOS.LIST_PED_QNT,
-            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', ESTOQUES.ESTOQ_CUSTO = LISTA_PRODUTOS.LIST_PED_PRECO,
-            PEDIDOS.PEDIDO_DATA = NOW()
-            WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
-            AND PEDIDOS.PEDIDO_ESTATUS<=3');
-
+            SET 
+            ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL + LISTA_PRODUTOS.LIST_PED_QNT,
+            ESTOQUES.ESTOQ_CUSTO = LISTA_PRODUTOS.LIST_PED_COMP,
+            ESTOQUES.ESTOQ_PRECO = LISTA_PRODUTOS.LIST_PED_PRECO,
+            PEDIDOS.PEDIDO_DATA = NOW(),
+            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . '
+            WHERE
+            PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
+            AND PEDIDOS.PEDIDO_ESTATUS<=3 AND ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
+        
         return $this->db->affected_rows();
     }
 

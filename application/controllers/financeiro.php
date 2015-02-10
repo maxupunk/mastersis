@@ -22,4 +22,12 @@ class Financeiro extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
+    public function AjustePreco() {
+
+        $dados = array(
+            'tela' => "financeiro/ajuste_preco",
+        );
+        $this->load->view('contente', $dados);
+    }
+
 }

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <ul class="nav nav-tabs nav-justified submenu-financeiro" role="tablist" id="myTab">
+        <ul class="nav nav-tabs nav-justified submenu-financeiro" role="tablist">
             <li><a href="1">Receitas</a></li>
             <li><a href="2">Despeza</a></li>
             <li class="dropdown">

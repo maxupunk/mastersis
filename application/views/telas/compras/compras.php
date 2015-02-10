@@ -8,7 +8,6 @@
 </div>
 <div class="row">
 
-
     <div class="well">
         <div class="row">
             <div class="col-sm-8">
@@ -18,7 +17,6 @@
                 <div class="btn-group">
                     <?php echo anchor('pessoa', 'Novo', 'class="btn btn-success" id="InModel"'); ?>
                     <?php echo anchor('compras/listar', 'Pendentes', 'class="btn btn-default" id="lista-compras"'); ?>
-                    <?php echo anchor('produto/preco', 'Ajuste de Preços', 'class="btn btn-default" id="lista-compras"'); ?>
                 </div>
             </div>
         </div>

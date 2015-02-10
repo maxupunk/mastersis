@@ -50,7 +50,7 @@ class Compras extends CI_Controller {
             'IdPed' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdFornecedor)->row(),
             'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),
-            'Total' => $this->geral_model->TotalPedido($pedido_id)->row(),
+            'Total' => $this->geral_model->TotalPedComp($pedido_id)->row(),
             'pedido' => $pedido,
             'tipo' => "c",
             'mensagem' => $this->mensagem,
@@ -84,7 +84,7 @@ class Compras extends CI_Controller {
         $config['first_link'] = 'Primeira';
         $config['last_link'] = 'Ultima';
 
-        $this->uri->segment(3) != '' ? $inicial = $this->uri->segment(3) : $inicial = 0;
+        $inicial = $this->uri->segment(3) != '' ? $this->uri->segment(3) : 0;
 
         $this->pagination->initialize($config);
 

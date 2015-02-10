@@ -6,19 +6,19 @@
 <?php if ($LstProd <> NULL) { ?>
     <table class="lista-produto">
         <thead>
-            <tr class="bg-primary"><th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th></th></tr>
+            <tr class="bg-primary"><th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">PREÇO</th><th width="5%">SUBTOTAL</th><th></th></tr>
         </thead>
         <tbody>
             <?php
             foreach ($LstProd as $linha) {
-                $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_PRECO);
+                $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_COMP);
                 $estoq_atual = ($linha->PRO_TIPO == "s") ? "Serviço" : $linha->ESTOQ_ATUAL;
                 ?>
                 <tr id="<?php echo $linha->LIST_PED_ID ?>" itemref="<?php echo $linha->ESTOQ_ID ?>">
                     <td><?php echo $linha->PRO_ID ?></td>
                     <td><?php echo $linha->PRO_DESCRICAO ?> [ <?php echo $estoq_atual ?> ]</td>
                     <td><input type="number" id="quantidade" value="<?php echo $linha->LIST_PED_QNT ?>"></td>
-                    <td><input type="text" class="valor" value="<?php echo $this->convert->em_real($linha->LIST_PED_PRECO) ?>"></td>
+                    <td><input type="text" class="valor ValorCompra" value="<?php echo $this->convert->em_real($linha->LIST_PED_COMP) ?>"></td>
                     <td><?php echo $this->convert->em_real($sub_total) ?></td>
                     <td><button type="button" class="close" id="excluir-item">&times;</button></td></tr>
                 <tr>

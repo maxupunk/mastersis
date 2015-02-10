@@ -5,10 +5,10 @@ if (!defined('BASEPATH'))
 
 class Auth {
 
-    private $ci;
+    private $CI;
 
     public function __construct() {
-        $this->ci = &get_instance();
+        $this->CI = & get_instance();
     }
 
     function check_logged($classe, $metodo) {
@@ -16,8 +16,8 @@ class Auth {
          * Criando uma instância do CodeIgniter para poder acessar
          * banco de dados, sessionns, models, etc...
          */
-        $this->CI = & get_instance();
-
+        
+        inicio:
         /**
          * Buscando a classe e metodo da tabela sys_metodos
          */
@@ -25,6 +25,7 @@ class Auth {
         $this->CI->db->where($array);
         $query = $this->CI->db->get('METODOS');
         $result = $query->result();
+
 
         // Se este metodo ainda não existir na tabela sera cadastrado
         if (count($result) == 0) {
@@ -35,19 +36,20 @@ class Auth {
                 'METOD_PRIVADO' => 0
             );
             $this->CI->db->insert('METODOS', $data);
-            redirect(base_url() . $classe . '/' . $metodo);
-        }
-        //Se ja existir tras as informacoes de publico ou privado
-        else {
+            // volta para o inicio da funçao
+            goto inicio;
+            
+        } else {
+            //Se ja existir tras as informacoes de publico ou privado
             if ($result[0]->METOD_PRIVADO == 0) {
                 // Escapa da validacao e mostra o metodo.
                 return false;
             } else {
                 // Se for privado, verifica o login
-                $nome = $this->ci->session->userdata('USUARIO_APELIDO');
-                $logged_in = $this->ci->session->userdata('LOGGET_IN');
-                $id_usuario = $this->ci->session->userdata('USUARIO_ID');
-                                
+                $nome = $this->CI->session->userdata('USUARIO_APELIDO');
+                $logged_in = $this->CI->session->userdata('LOGGET_IN');
+                $id_usuario = $this->CI->session->userdata('USUARIO_ID');
+
                 $id_sys_metodos = $result[0]->METOD_ID;
 
                 // Se o usuario estiver logado vai verificar se tem permissao na tabela.
@@ -61,11 +63,11 @@ class Auth {
                     // Se não vier nenhum resultado da consulta, manda para página de
                     // usuario sem permissão.
                     if (count($result2) == 0) {
-                        redirect(base_url('home/sempermissao'));
+                        show_error("VOCÊ NÃO TEM PERMICÃO DE ACESSAR ESSA PAGINA!", 401, "AREA RESTRITA");
                     } else {
                         return true;
                     }
-                // Se não estiver logado, sera redirecionado para o login.
+                    // Se não estiver logado, sera redirecionado para o login.
                 } else {
                     redirect(base_url('home/login'), 'refresh');
                 }
@@ -85,7 +87,7 @@ class Auth {
                 PERMISSOES
                 INNER JOIN METODOS
                 ON METODOS.METOD_ID = PERMISSOES.METOD_ID
-                WHERE USUARIO_ID = '" . $this->ci->session->userdata('id_usuario') . "'
+                WHERE USUARIO_ID = '" . $this->CI->session->userdata('id_usuario') . "'
                 AND METOD_CLASS = '" . $classe . "'
                 AND METOD_METODO = '" . $metodo . "'";
         $query = $this->CI->db->query($sql);

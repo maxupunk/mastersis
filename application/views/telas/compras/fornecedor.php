@@ -23,7 +23,7 @@
 
 <div class="row">
     <div class="col-sm-12" id="ListaPedido">
-        <?php $this->load->view("telas/pedido/itenscompra"); ?> 
+        <?php $this->load->view("telas/compras/lstitens"); ?> 
     </div>
 </div>
 <script>
@@ -67,14 +67,15 @@
             return false;
         });
 
-        $(document).on("keypress", ".valor", function(event) {
+        // Altera o valor
+        $(document).on("keypress", ".ValorCompra", function(event) {
             if (event.which === 13) {
                 ListPedido = $(this).parents('tr').attr('id');
                 Estoque_id = $(this).parents('tr').attr('itemref');
                 var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Valor: $(this).val()};
                 $.ajax({
                     type: "POST",
-                    url: "pedido/Preco",
+                    url: "pedido/ValorCompra",
                     dataType: "html",
                     data: dados,
                     success: function(response) {

@@ -4,11 +4,10 @@ if (isset($mensagem) and $mensagem != NULL) {
     exit();
 }
 ?>
-<div class="BordaOs">
     <form action="<?php echo base_url('pedido'); ?>/Delete/<?php echo $id_pedido ?>" name="grava" method="post" accept-charset="utf-8">
         <fieldset>
 
-            <legend>Excluir o pedido <?php echo $id_pedido ?>? <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button></legend>
+            <div>Excluir o pedido <?php echo $id_pedido ?>?</div><br>
 
             <input type="hidden" name="id_pedido" value="<?php echo $id_pedido ?>" />
 
@@ -17,4 +16,3 @@ if (isset($mensagem) and $mensagem != NULL) {
 
         </fieldset>
     </form>
-</div>
