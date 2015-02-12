@@ -39,18 +39,6 @@ a:active {text-decoration: none;}
     border-bottom: 1px solid #f5f5f5;
 }
 
-.lista-produto{
-    width: 100%;
-    text-align: left;
-    font-size: 12px;
-    margin-bottom: 20px;    
-}
-
-.lista-produto td{
-    border-top: 1px solid #f5f5f5;
-    padding: 2px;
-}
-
 .miniletras{
     padding: 3px;
     font-size: 10px;

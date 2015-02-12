@@ -71,6 +71,16 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
+    public function PedidoProduto($id_lista) {
+        $this->db->select('*');
+        $this->db->from('PRODUTOS', 'ESTOQUES', 'LISTA_PRODUTOS', 'MEDIDAS');
+        $this->db->join('ESTOQUES', 'PRODUTOS.PRO_ID = ESTOQUES.PRO_ID');
+        $this->db->join('LISTA_PRODUTOS', 'ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
+        $this->db->join('MEDIDAS', 'PRODUTOS.MEDI_ID = MEDIDAS.MEDI_ID');
+        $this->db->where('LISTA_PRODUTOS.LIST_PED_ID = ', $id_lista);
+        return $this->db->get();
+    }
+
     // lista os produtos em venda
     public function ListaProdOs($id_os) {
         $this->db->select('*');

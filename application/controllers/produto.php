@@ -32,11 +32,12 @@ class Produto extends CI_Controller {
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $produto_id = $this->db->insert_id();
                 $estoq_min = ($dados['PRO_TIPO'] == "s") ? -1 : NULL;
+                $estoq_atual = ($dados['PRO_TIPO'] == "s") ? -1 : NULL;
                 $estoque = array(
                     'PRO_ID' => $produto_id,
                     'ESTOQ_PRECO' => "0",
                     'ESTOQ_MIN' => $estoq_min,
-                    'ESTOQ_ATUAL' => 0,
+                    'ESTOQ_ATUAL' => $estoq_atual,
                     'ESTOQ_ENTRA' => date("Y-m-d h:i:s"));
                 if ($this->crud_model->inserir('ESTOQUES', $estoque) === TRUE) {
                     $this->db->trans_commit();

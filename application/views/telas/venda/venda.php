@@ -22,11 +22,20 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-sm-12" id="ListaPedido">
-        <table id="table"></table>
-    </div>
-</div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th width="1%"></th>
+        </tr>
+    </thead>
+    <tbody class="lista-produto"></tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3"></td><td><b>TOTAL :</b></td><td colspan="2"><b id="total"></b></td>
+        </tr>
+    </tfoot>
+</table>
+
 <script>
     $(document).ready(function() {
 
@@ -37,11 +46,15 @@
                 $('#ProdutoDesc').prop('disabled', false);
                 $('#Finalizar').prop('disabled', false);
                 $('#EmAbList').empty();
+                $('.lista-produto').empty();
             });
         });
         // atualiza o pedido conforme digitado no compo Pedido
         $(document).on('change', '#IdPed', function() {
-            $("#ListaPedido").load("pedido/abrir/" + $('#IdPed').val());
+            $.getJSON("pedido/abrir/" + $('#IdPed').val(), function(data) {
+                $('.lista-produto').empty();
+                drawTable(data);
+            });
             $('#ProdutoDesc').prop('disabled', false);
             $('#Finalizar').prop('disabled', false);
             return false;
@@ -57,23 +70,27 @@
             $.getJSON('pedido/emaberto', function(data) {
                 $('#EmAbList').empty();
                 if (data == "") {
-                    $('#EmAbList').append('Não ha compras em aberto');
-                }
-                $.each(data, function(key, value) {
-                    descr = value.PEDIDO_ID + ' - ' + value.PEDIDO_DATA
-                    if (value.PEDIDO_ID === $('#IdPed').val()) {
-                        descr = '<u>' + descr + '</u>';
-                    }
-                    $('#EmAbList').append('<li><a href="' + value.PEDIDO_ID + '">' + descr + '</a></li>');
+                    $('#EmAbList').append(' Não ha pedido em aberto ');
+                } else {
+                    $.each(data, function(key, value) {
+                        descr = value.PEDIDO_ID + ' - ' + value.PEDIDO_DATA
+                        if (value.PEDIDO_ID === $('#IdPed').val()) {
+                            descr = '<u>' + descr + '</u>';
+                        }
+                        $('#EmAbList').append('<li><a href="' + value.PEDIDO_ID + '">' + descr + '</a></li>');
 
-                });
+                    });
+                }
             });
         });
         // Função do dropdown na lista em pedido em aberto. 
         $(document).on("click", "#EmAbList>li", function() {
             href = $(this).find("a").attr('href');
             $("#IdPed").val(href);
-            $("#ListaPedido").load("pedido/abrir/" + $('#IdPed').val());
+            $.getJSON("pedido/abrir/" + $('#IdPed').val(), function(data) {
+                $('.lista-produto').empty();
+                drawTable(data);
+            });
             $('#ProdutoDesc').prop('disabled', false);
             $('#Finalizar').prop('disabled', false);
             $('.in,.open').removeClass('in open');
@@ -95,7 +112,9 @@
         $('#ProdutoDesc').typeahead(null, {
             source: Produto.ttAdapter()
         }).on('typeahead:selected', function(object, data) {
-            $("#ListaPedido").load("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id);
+            $.getJSON("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id, function(data) {
+                drawTable(data);
+            });
             $(this).val('');
         });
 
@@ -111,11 +130,10 @@
             $.ajax({
                 type: "POST",
                 url: "pedido/AtualizaQntItems",
-                dataType: "html",
+                dataType: "json",
                 data: dados,
-                // enviado com sucesso
                 success: function(response) {
-                    $("#ListaPedido").html(response);
+                    drawTable(response);
                 }
             });
             return false;
@@ -123,8 +141,45 @@
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function() {
             ListPedido = $(this).parents('tr').attr('id');
-            $("#ListaPedido").load("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido);
+            $.getJSON("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido, function(data) {
+                if (data.msn === undefined) {
+                    $('#' + ListPedido).remove();
+                } else {
+                    alert(data.msg);
+                }
+            });
         });
+
+
+        function drawTable(data) {
+            if (data.msg !== undefined) {
+                alert(data.msg);
+            } else {
+                Tamanho = (data.length - 1);
+                for (var i = 0; i < Tamanho; i++) {
+                    drawRow(data[i]);
+                }
+                $("#total").text(data[data.length - 1].Total);
+            }
+        }
+
+        function drawRow(rowData) {
+            lstPedId = rowData.LIST_PED_ID;
+            if (document.getElementById(lstPedId)) {
+                RowId = $('#' + lstPedId).find("td");
+                RowId.eq(4).text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO));
+            } else {
+                $('.lista-produto').append(
+                        $('<tr id=' + lstPedId + ' itemref=' + rowData.ESTOQ_ID + '>').append(
+                        $('<td>').text(rowData.PRO_ID),
+                        $('<td>').html(rowData.PRO_DESCRICAO),
+                        $('<td>').html('<input type=number id=quantidade value=' + rowData.LIST_PED_QNT + '>'),
+                        $('<td>').text(FloatReal(rowData.LIST_PED_PRECO)),
+                        $('<td>').text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO)),
+                        $('<td class="close" id="excluir-item">').html('&times;')
+                        ));
+            }
+        }
 
     });
 

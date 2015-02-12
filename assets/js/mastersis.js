@@ -175,9 +175,9 @@ $(document).ready(function() {
             $('input[name="PES_NASC_DATA"]').prop('disabled', true);
             $('input[name="PES_NOME_PAI"]').prop('disabled', true);
             $('input[name="PES_NOME_MAE"]').prop('disabled', true);
-            $('input[name="PES_NASC_DATA"]').val('');
-            $('input[name="PES_NOME_PAI"]').val('');
-            $('input[name="PES_NOME_MAE"]').val('');
+            $('input[name="PES_NASC_DATA"]').empty();
+            $('input[name="PES_NOME_PAI"]').empty();
+            $('input[name="PES_NOME_MAE"]').empty();
         }
         $(".cpf-cnpj").focus();
     });
@@ -231,8 +231,37 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////
 // Funcões
 ///////////////////////////////////////////////////////////
+function MoedaFloat(valor) {
+
+    if (valor === "") {
+        valor = 0;
+    } else {
+        valor = valor.replace(".", "");
+        valor = valor.replace(",", ".");
+        valor = parseFloat(valor);
+    }
+    return valor;
+}
+
+function FloatMoeda(valor) {
+
+    if (valor === "") {
+        valor = 0;
+    } else {
+        valor = valor.replace(".", ",");
+        valor = valor.replace(",", "");
+        valor = parseFloat(valor);
+    }
+    return valor;
+}
+
 function comparaArray(a1, a2) {
     return JSON.stringify(a1) == JSON.stringify(a2);
+}
+// Converte Float em Moeda real
+function FloatReal(num) {
+    valor = parseFloat(num);
+    return valor.toFixed(2).replace(".", ",").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
 }
 // Aviso de alterações de dados
 function ConfirmSair(on) {
