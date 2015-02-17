@@ -47,7 +47,7 @@ class Geral_model extends CI_Model {
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
             PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', PEDIDOS.PEDIDO_DATA = NOW()
             WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
-            AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS=1');
+            AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS=1 AND ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
 
         return $this->db->affected_rows();
     }

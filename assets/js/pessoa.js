@@ -4,10 +4,10 @@ $(document).ready(function() {
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {url: 'pessoa/pegapessoa?buscar=%QUERY'}
     });
-// inicialisa o autocomplete
+    // inicialisa o autocomplete
     ListaUsuario.initialize();
 
-// inicialisa typeahead UI
+    // inicialisa typeahead UI
     $('#pessoa').typeahead(null, {
         source: ListaUsuario.ttAdapter()
     }).on('typeahead:selected', function(object, data) {

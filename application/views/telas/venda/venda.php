@@ -25,7 +25,7 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="5%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th width="1%"></th>
+            <th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="6%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th width="1%"></th>
         </tr>
     </thead>
     <tbody class="lista-produto"></tbody>
@@ -165,7 +165,7 @@
 
         function drawRow(rowData) {
             lstPedId = rowData.LIST_PED_ID;
-            if (document.getElementById(lstPedId)) {
+            if ($('#' + lstPedId).length) {
                 RowId = $('#' + lstPedId).find("td");
                 RowId.eq(4).text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO));
             } else {

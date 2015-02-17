@@ -98,11 +98,13 @@ class Join_model extends CI_Model {
         $this->db->from('PESSOAS', 'ORDEM_SERV');
         $this->db->join('ORDEM_SERV', 'PESSOAS.PES_ID = ORDEM_SERV.PES_ID');
 
-        if ($ordeby != NULL)
+        if ($ordeby != NULL) {
             $this->db->order_by($ordeby);
+        }
 
-        if ($limit != NULL)
+        if ($limit != NULL) {
             $this->db->limit($limit);
+        }
 
         $this->db->where('ORDEM_SERV.OS_ESTATUS =' . $status);
         return $this->db->get();
@@ -113,6 +115,25 @@ class Join_model extends CI_Model {
         $this->db->from('PESSOAS', 'ORDEM_SERV');
         $this->db->join('ORDEM_SERV', 'PESSOAS.PES_ID = ORDEM_SERV.PES_ID');
         $this->db->where('ORDEM_SERV.OS_ID =' . $id);
+        return $this->db->get();
+    }
+
+    public function ReceitaDespesa($natureza, $ordeby = NULL, $limit = NULL) {
+        $this->db->cache_on();
+        $this->db->select('*');
+        $this->db->from('PESSOAS', 'PEDIDOS', 'DESPESA-RECEITA');
+        $this->db->join('PEDIDOS', 'PESSOAS.PES_ID = PEDIDOS.PES_ID');
+        $this->db->join('DESPESA-RECEITA', 'PEDIDOS.PEDIDO_ID = DESPESA-RECEITA.PEDIDO_ID');
+
+        if ($ordeby != NULL) {
+            $this->db->order_by($ordeby);
+        }
+
+        if ($limit != NULL) {
+            $this->db->limit($limit);
+        }
+
+        $this->db->where('DESPESA-RECEITA.DESREC_NATUREZA =' . $natureza);
         return $this->db->get();
     }
 

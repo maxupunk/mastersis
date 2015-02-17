@@ -52,5 +52,11 @@
             $("#busca").val("");
             return false;
         });
+        // PAGINAÇÃO DA LISTA DE PEDIDO
+        $(document).on("click", "#PagPedidos a", function() {
+            $("#content-sub-menu").load($(this).attr('href'));
+            return false;
+        });
+
     });
 </script>

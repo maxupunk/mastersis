@@ -21,12 +21,12 @@ class Venda extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function Novo($local = "l") {
+    public function Novo() {
         $dados = array(
             'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
             'PEDIDO_DATA' => date("Y-m-d h:i:s"),
             'PEDIDO_ESTATUS' => '1',
-            'PEDIDO_LOCAL' => $local,
+            'PEDIDO_LOCAL' => "l",
             'PEDIDO_TIPO' => "v");
         if ($this->crud_model->inserir('PEDIDOS', $dados) == TRUE) {
             $id_pedido = $this->db->insert_id();
@@ -44,56 +44,99 @@ class Venda extends CI_Controller {
         }
     }
 
-    public function Cliente($IdCliente) {
-
-        $dados = array(
-            'tela' => 'venda/cliente',
-            'mensagem' => $this->mensagem,
-            'cliente' => $this->join_model->EnderecoCompleto($IdCliente)->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
     public function Pagamento($id_pedido) {
-        $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-        if ($pedido == NULL) {
-            $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
+
+        $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
+
+        $post = $this->input->post();
+        
+        if ($post['NPARCELA'] >= 2) {
+            $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
+            $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
+        }
+        
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+
+        if ($this->form_validation->run() == TRUE) {
+
+            $this->db->trans_begin();
+
+            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+            $total = $this->geral_model->TotalPedido($id_pedido)->row();
+
+            if ($this->geral_model->FechaVenda($id_pedido) > 0) {
+
+                if ($pedido->PEDIDO_NPARC > 1) {
+                    $Nparcela = $pedido->PEDIDO_NPARC;
+                    $valor_parcela = floatval($total->total / $Nparcela);
+                    $dias = 0;
+                    for ($i = 1; $i <= $Nparcela; $i++) {
+                        $dados = array(
+                            'PEDIDO_ID' => $id_pedido,
+                            'DESREC_NATUREZA' => '1',
+                            'DESREC_VALOR' => $valor_parcela,
+                            'DESREC_VECIMENTO' => date('Y-m-d', strtotime($dias . " days", strtotime("now"))),
+                            'DESCRE_ESTATUS' => 'AB'
+                        );
+                        if ($this->crud_model->inserir('DESPESA-RECEITA', $dados) !== TRUE) {
+                            log_message('error', 'Erro ao grava parcela no banco de dados!');
+                        }
+                        $dias = ($dias + 30);
+                    }
+                }
+
+                $atualizar = array(
+                    'PEDIDO_OBS' => $post['PEDIDO_OBS'],
+                    'PES_ID' => @$post['PES_ID']
+                );
+                $condicao = array('PEDIDO_ID' => $id_pedido);
+                if ($this->crud_model->update("PEDIDOS", $atualizar, $condicao) == FALSE) {
+                    log_message('error', 'Erro ao grava parcela no banco de dados!');
+                }
+            } else {
+                $this->mensagem .= 'Esse pedido já foi fchado anteriormente!';
+            }
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $this->mensagem .= 'Ouve algum problema na transação com o banco de dados!';
+            } else {
+                $this->db->trans_commit();
+            }
+
             $dados = array(
-                'tela' => "venda/pagar",
+                'tela' => "venda/recibo",
                 'mensagem' => $this->mensagem,
-                'id_pedido' => $id_pedido,
+                'pedido' => $pedido,
+                'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
+                'total' => $total,
+                'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
             );
+
             $this->load->view('contente', $dados);
+            
         } else {
-            $dados = array(
-                'tela' => "venda/pagar",
-                'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
-                'id_pedido' => $id_pedido,
-            );
-            $this->load->view('contente', $dados);
+
+            $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
+            if ($pedido == NULL) {
+                $this->mensagem = 'Esse pedido já foi fechado anteriormente!';
+                $dados = array(
+                    'tela' => "venda/pagar",
+                    'mensagem' => $this->mensagem,
+                    'id_pedido' => $id_pedido,
+                );
+                $this->load->view('contente', $dados);
+            } else {
+                $dados = array(
+                    'tela' => "venda/pagar",
+                    'forma_pgs' => $this->crud_model->pega_tudo("FORMA_PG")->result(),
+                    'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+                    'id_pedido' => $id_pedido,
+                );
+                $this->load->view('contente', $dados);
+            }
+            
         }
-    }
-
-    public function Fechar($id_pedido) {
-
-        $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
-
-        if ($this->geral_model->FechaVenda($id_pedido) > 0) {
-            $this->mensagem = 'Venda concluida com sucesso!';
-        } else {
-            $this->mensagem = 'Esse pedido já foi fchado anteriormente!';
-        }
-
-        $dados = array(
-            'tela' => "venda/fecha",
-            'mensagem' => $this->mensagem,
-            'pedido' => $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row(),
-            'lista_pedido' => $this->join_model->ListaPedido($id_pedido)->result(),
-            'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
-            'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
-        );
-
-        $this->load->view('contente', $dados);
     }
 
     public function Listar($IdCliente) {

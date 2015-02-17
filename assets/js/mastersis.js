@@ -40,9 +40,9 @@ $(document).ready(function() {
 
 // In model
     $(document).on('click', '#InModel', function() {
-        $("#modal-content").load($(this).attr('href'));
         $('.modal-title').text($(this).text());
-        $('.in,.open').removeClass('in open');
+//        $('.in,.open').removeClass('in open');
+        $("#modal-content").load($(this).attr('href'));
         $('#modal').modal('show');
         return false;
     });
@@ -231,29 +231,6 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////
 // Funcões
 ///////////////////////////////////////////////////////////
-function MoedaFloat(valor) {
-
-    if (valor === "") {
-        valor = 0;
-    } else {
-        valor = valor.replace(".", "");
-        valor = valor.replace(",", ".");
-        valor = parseFloat(valor);
-    }
-    return valor;
-}
-
-function FloatMoeda(valor) {
-
-    if (valor === "") {
-        valor = 0;
-    } else {
-        valor = valor.replace(".", ",");
-        valor = valor.replace(",", "");
-        valor = parseFloat(valor);
-    }
-    return valor;
-}
 
 function comparaArray(a1, a2) {
     return JSON.stringify(a1) == JSON.stringify(a2);

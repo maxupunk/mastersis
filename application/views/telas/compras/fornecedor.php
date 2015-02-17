@@ -75,7 +75,7 @@
                 var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Valor: $(this).val()};
                 $.ajax({
                     type: "POST",
-                    url: "pedido/ValorCompra",
+                    url: "financeiro/ValorCompra",
                     dataType: "html",
                     data: dados,
                     success: function(response) {

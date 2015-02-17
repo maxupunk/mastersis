@@ -28,7 +28,7 @@
                     <?php
                     $pedido = $this->join_model->ListaPedido($linha->PEDIDO_ID)->result();
 
-                    $this->table->set_heading('ID', 'QUANTIDADE', 'MEDIDA', 'DESCRIÇÃO', 'PESO(Kg)', 'PREÇO(UN)', 'SUB. TOTAL');
+                    $this->table->set_heading('ID', 'QNT', 'MED', 'DESCRIÇÃO', 'PESO(Kg)', 'PREÇO', 'SUB. TOTAL');
 
                     foreach ($pedido as $linha) {
 

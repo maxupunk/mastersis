@@ -14,7 +14,7 @@
         <link href="<?php echo base_url('assets/css/mastersis.css'); ?>" rel="stylesheet" media="screen">
 
         <!-- jquery -->
-        <script src="<?php echo base_url('assets/js/jquery/jquery-2.1.1.min.js'); ?>"></script>
+        <script src="<?php echo base_url('assets/js/jquery/jquery.min.js'); ?>"></script>
 
 
     </head>

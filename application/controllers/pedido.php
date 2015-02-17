@@ -10,7 +10,7 @@ class Pedido extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model', 'geral_model'));
-        $this->load->library(array('form_validation', 'table', 'convert'));
+        $this->load->library(array('form_validation', 'convert'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
@@ -155,14 +155,20 @@ class Pedido extends CI_Controller {
         } else {
             $this->mensagem = "Erro: O produto ou serviço não existe no banco de dados.";
         }
+
+        if ($this->mensagem == NULL) {
+            $ProdutoInfo = $this->join_model->ListaProdOs($id_os)->result();
+            $Total = $this->geral_model->TotalProdOS($id_os)->row();
+            array_push($ProdutoInfo, array('Total' => $this->convert->em_real($Total->total)));
+        } else {
+            $ProdutoInfo = array('msg' => $this->mensagem);
+        }
+
         $dados = array(
-            'tela' => 'pedido/itens',
-            'mensagem' => $this->mensagem,
-            'IdPed' => $id_os,
-            'LstProd' => $this->join_model->ListaProdOs($id_os)->result(),
-            'Total' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'query' => $ProdutoInfo,
         );
-        $this->load->view('contente', $dados);
+
+        $this->load->view('json', $dados);
     }
 
     public function AtualizaQntItems() {
@@ -186,7 +192,7 @@ class Pedido extends CI_Controller {
                     $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $post['Estoq_id']))->row();
                     // Verifica de tem estoque suficiente ou se é serviço "-1
                     if ($produto->ESTOQ_ATUAL < $post['qtd'] AND $produto->ESTOQ_MIN != -1 AND ! isset($post['tipo'])) {
-                        $this->mensagem = "Não existe estoque suficiente! Estoque Atual é de " . $produto->ESTOQ_ATUAL;
+                        $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
                     }
                     $atualizar = array('LIST_PED_QNT' => $post['qtd']);
                     $condicao = array('LIST_PED_ID' => $post['ListPed']);
@@ -206,13 +212,13 @@ class Pedido extends CI_Controller {
         if ($this->mensagem == NULL) {
             $Retorno_array = array();
             $Dados_Array = array();
-            
+
             $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
-            
+
             $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
             $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
             $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_PRECO;
-            
+
             $Total = $this->geral_model->$total($post['Pedido'])->row();
             array_push($Retorno_array, $Dados_Array);
             array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
@@ -248,8 +254,7 @@ class Pedido extends CI_Controller {
                     $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $post['Estoq_id']))->row();
                     // Verifica de tem estoque suficiente ou se é serviço "-1
                     if ($produto->ESTOQ_ATUAL < $post['qtd'] AND $produto->ESTOQ_MIN != -1) {
-                        $this->mensagem = "Não existe estoque suficiente! O estoque maximo foi digitado para você!";
-                        $post['qtd'] = $produto->ESTOQ_ATUAL;
+                        $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
                     }
                     $atualizar = array('LIST_PED_QNT' => $post['qtd']);
                     $condicao = array('LIST_PED_ID' => $post['ListPed']);
@@ -257,92 +262,64 @@ class Pedido extends CI_Controller {
                         $this->mensagem = "Erro: Problema ao atualuzar item!";
                     }
                 } else {
-                    $this->mensagem = "Erro: Esse item no pedido";
+                    $this->mensagem = "Erro: Nã existe esse item no pedido";
                 }
             } else {
                 $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01";
             }
         }
 
-        $dados = array(
-            'tela' => 'pedido/itens',
-            'mensagem' => @$this->mensagem,
-            'LstProd' => $this->join_model->ListaProdOs($post['Os'])->result(),
-            'Total' => $this->geral_model->TotalProdOS($post['Os'])->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
+        if ($this->mensagem == NULL) {
+            $Retorno_array = array();
+            $Dados_Array = array();
 
-    public function ValorCompra() {
-        $this->output->enable_profiler(TRUE);
-        // validar o formulario
-        $this->form_validation->set_rules('Pedido', 'O id do pedido não passado!', 'required');
-        $this->form_validation->set_rules('ListPed', 'O id da lista de pedido não passado!', 'required');
-        $this->form_validation->set_rules('Valor', 'A quantidade não foi repassada', 'required');
+            $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
+            
+            
+            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_PRECO;
 
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE) {
-
-            $post = $this->input->post();
-            // pega o item dentro da lista de produto
-            $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $post['ListPed']))->result();
-            if ($pedido != NULL) {
-                $atualizar = array('LIST_PED_COMP' => $this->convert->EmDecimal($post['Valor']));
-                $condicao = array('LIST_PED_ID' => $post['ListPed']);
-                if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) == FALSE) {
-                    $this->mensagem = "Erro: Problema ao atualuzar item!";
-                }
-            } else {
-                $this->mensagem = "Erro: Não existe esse item no pedido";
-            }
-        }
-
-        $dados = array(
-            'tela' => 'compras/lstitens',
-            'mensagem' => @$this->mensagem,
-            'LstProd' => $this->join_model->ListaPedido($post['Pedido'])->result(),
-            'Total' => $this->geral_model->TotalPedComp($post['Pedido'])->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function ValorVenda() {
-        // validar o formulario
-        $this->form_validation->set_rules('Pedido', 'O id do pedido não passado!', 'required');
-        $this->form_validation->set_rules('ListPed', 'O id da lista de pedido não passado!', 'required');
-        $this->form_validation->set_rules('Valor', 'A quantidade não foi repassada', 'required');
-
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE) {
-            $post = $this->input->post();
-            // pega o item dentro da lista de produto
-            $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $post['ListPed']))->result();
-            if ($pedido != NULL) {
-                $atualizar = array('LIST_PED_PRECO' => $this->convert->EmDecimal($post['Valor']));
-                $condicao = array('LIST_PED_ID' => $post['ListPed']);
-                if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) == FALSE) {
-                    log_message('error', 'Problema ao atualuzar item!');
-                    show_error(500);
-                }
-            } else {
-                log_message('error', 'Erro: Não existe esse item no pedido');
-                show_error(500);
-            }
+            $Total = $this->geral_model->TotalProdOS($post['Os'])->row();
+            array_push($Retorno_array, $Dados_Array);
+            array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
         } else {
-            log_message('error', validation_errors());
-            show_error(500);
+            $Retorno_array = array('msg' => $this->mensagem);
         }
+
+        $dados = array(
+            'query' => $Retorno_array,
+        );
+
+        $this->load->view('json', $dados);
     }
 
-    public function Abrir($id_pedido, $tipo = "v") {
+    public function Abrir($id_pedido) {
 
         // verifica se existe o pedido
         $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->result();
         if ($pedido != NULL) {
             $ProdutoInfo = $this->join_model->ListaPedido($id_pedido)->result();
             $Total = $this->geral_model->TotalPedido($id_pedido)->row();
+            array_push($ProdutoInfo, array('Total' => $this->convert->em_real($Total->total)));
+        } else {
+            $ProdutoInfo = array('msg' => "O pedido não existe ou foi apagado!");
+        }
+
+        $dados = array(
+            'query' => $ProdutoInfo,
+        );
+
+        $this->load->view('json', $dados);
+    }
+
+    public function AbrirLstProdutoOS($id_os) {
+
+        // verifica se existe o pedido
+        $pedido = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->result();
+        if ($pedido != NULL) {
+            $ProdutoInfo = $this->join_model->ListaProdOs($id_os)->result();
+            $Total = $this->geral_model->TotalProdOS($id_os)->row();
             array_push($ProdutoInfo, array('Total' => $this->convert->em_real($Total->total)));
         } else {
             $ProdutoInfo = array('msg' => "O pedido não existe ou foi apagado!");
@@ -363,9 +340,7 @@ class Pedido extends CI_Controller {
             $resposta = "";
         }
 
-        $dados = array(
-            'query' => $resposta
-        );
+        $dados = array('query' => $resposta);
 
         $this->load->view('json', $dados);
     }

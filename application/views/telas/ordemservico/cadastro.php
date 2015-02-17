@@ -9,7 +9,6 @@
         }
         ?>
 
-
         <label>NOME DA PESSOA</label> | <span id="pessoa-selec"><?php echo set_value('PES_ID'); ?> - <?php echo set_value('PES_NOME'); ?></span>
         <?php echo form_error('PES_ID'); ?>
         <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" required />

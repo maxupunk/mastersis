@@ -46,11 +46,6 @@
             $("#ComprasConteiner").load($(this).attr('href'));
             return false;
         });
-        // PAGINAÇÃO DA LISTA DE PEDIDO
-        $(document).on("click", "#PagPedidos a", function() {
-            $("#ComprasConteiner").load($(this).attr('href'));
-            return false;
-        });
 
         $(document).on("click", "#EditaPedido", function() {
             $("#ComprasConteiner").load($(this).attr('href'));

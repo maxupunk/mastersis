@@ -23,7 +23,7 @@
 
     $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($total->total));
 
-    $tmpl = array('table_open' => '<table class="lista-produto">');
+    $tmpl = array('table_open' => '<table class="tabela_recibo">');
     $this->table->set_template($tmpl);
 
     echo $this->table->generate();
@@ -46,8 +46,8 @@
             <th>DATA:</th>
         </tr>
         <tr>
-            <td>______________________________</td>
-            <td>______________________________</td>
+            <td>__________________________</td>
+            <td>__________________________</td>
             <td><b><?php echo date("d/m/Y - H:i:s", strtotime($pedido->PEDIDO_DATA)) ?></b></td>
         </tr>
     </table>
