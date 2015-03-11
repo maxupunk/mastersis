@@ -5,10 +5,10 @@
     </div>
 </div>
 
-<table class="table table-hover">
+<table class="table table-hover" data-sortable>
     <thead>
         <tr>
-            <th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="11%">QNT</th><th width="10%">VALOR</th><th width="5%">SUBTOTAL</th><th width="1%"></th>
+            <th width="5%">#</th><th>DESCRIÇÃO (Disponibilidade)</th><th width="11%">QNT</th><th width="10%">VALOR</th><th width="8%">SUBTOTAL</th><th width="1%"></th>
         </tr>
     </thead>
     <tbody class="lista-produto"></tbody>
@@ -69,7 +69,7 @@
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function() {
             ListPedido = $(this).parents('tr').attr('id');
-            $.getJSON("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido, function(data) {
+            $.getJSON("pedido/RemoverItemOs/" + $('#os_id').val() + "/" + ListPedido, function(data) {
                 if (data.msn === undefined) {
                     $('#' + ListPedido).remove();
                 } else {
@@ -95,7 +95,6 @@
             if ($('#' + lstPedId).length) {
                 RowId = $('#' + lstPedId).find("td");
                 RowId.eq(4).text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO));
-                //$('#' + lstPedId).parents("tr").find('input').val(rowData.LIST_PED_QNT);
             } else {
                 $('.lista-produto').append(
                         $('<tr id=' + lstPedId + ' itemref=' + rowData.ESTOQ_ID + '>').append(

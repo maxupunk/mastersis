@@ -1,5 +1,5 @@
 <?php
 
-if ($tela!="") $this->load->view('telas/'.$tela);
+if ($tela!="") $this->load->view($tela);
 
 ?>

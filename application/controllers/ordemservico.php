@@ -23,7 +23,7 @@ class Ordemservico extends CI_Controller {
     }
 
     public function Ordens($id = 1) {
-        $Lista = $this->join_model->OsStatus($id, 'OS_DATA_ENT desc')->result();
+        $Lista = $this->join_model->OsStatus($id, 'OS_DATA_ENT asc')->result();
         if (isset($Lista)) {
             $this->load->view('json', array('query' => $Lista));
         }

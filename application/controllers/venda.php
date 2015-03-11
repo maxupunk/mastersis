@@ -49,12 +49,14 @@ class Venda extends CI_Controller {
         $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
 
         $post = $this->input->post();
-        
-        if ($post['NPARCELA'] >= 2) {
+
+        if ($post['NPARCELA'] > 1) {
             $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
             $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
         }
         
+        $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
+
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE) {
@@ -66,28 +68,43 @@ class Venda extends CI_Controller {
 
             if ($this->geral_model->FechaVenda($id_pedido) > 0) {
 
-                if ($pedido->PEDIDO_NPARC > 1) {
-                    $Nparcela = $pedido->PEDIDO_NPARC;
-                    $valor_parcela = floatval($total->total / $Nparcela);
-                    $dias = 0;
-                    for ($i = 1; $i <= $Nparcela; $i++) {
-                        $dados = array(
-                            'PEDIDO_ID' => $id_pedido,
-                            'DESREC_NATUREZA' => '1',
-                            'DESREC_VALOR' => $valor_parcela,
-                            'DESREC_VECIMENTO' => date('Y-m-d', strtotime($dias . " days", strtotime("now"))),
-                            'DESCRE_ESTATUS' => 'AB'
-                        );
-                        if ($this->crud_model->inserir('DESPESA-RECEITA', $dados) !== TRUE) {
-                            log_message('error', 'Erro ao grava parcela no banco de dados!');
-                        }
-                        $dias = ($dias + 30);
+                $Nparcela = $pedido->PEDIDO_NPARC;
+                
+                $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $post['FPG']))->row();
+                $Jurus = (((($FPG->FPG_AJUSTE / 100) * $total->total) * $Nparcela) - $pedido->PEDIDO_DESCONTO);
+                $TotalJurus = $Jurus + $total->total;
+
+                if ($Nparcela >= 2) {
+                    $valor_parcela = floatval($TotalJurus / $Nparcela);
+                } else {
+                    $valor_parcela = $total->total;
+                }
+                
+                if ($post['PES_ID'] != null){
+                    $pes_id = $post['PES_ID'];
+                } else {
+                    $pes_id = null;
+                }
+
+                $dias = 0;
+                for ($i = 0; $i < $Nparcela; $i++) {
+                    $dados = array(
+                        'PEDIDO_ID' => $id_pedido,
+                        'PES_ID' => $pes_id,
+                        'DESREC_NATUREZA' => '1',
+                        'DESREC_VALOR' => $valor_parcela,
+                        'DESREC_VECIMENTO' => date('Y-m-d', strtotime($dias . " days", strtotime("now"))),
+                        'DESCRE_ESTATUS' => 'AB'
+                    );
+                    if ($this->crud_model->inserir('DESPESA_RECEITA', $dados) !== TRUE) {
+                        log_message('error', 'Erro ao grava parcela no banco de dados!');
                     }
+                    $dias = ($dias + 30);
                 }
 
                 $atualizar = array(
                     'PEDIDO_OBS' => $post['PEDIDO_OBS'],
-                    'PES_ID' => @$post['PES_ID']
+                    'PES_ID' => $pes_id
                 );
                 $condicao = array('PEDIDO_ID' => $id_pedido);
                 if ($this->crud_model->update("PEDIDOS", $atualizar, $condicao) == FALSE) {
@@ -114,7 +131,6 @@ class Venda extends CI_Controller {
             );
 
             $this->load->view('contente', $dados);
-            
         } else {
 
             $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
@@ -135,7 +151,6 @@ class Venda extends CI_Controller {
                 );
                 $this->load->view('contente', $dados);
             }
-            
         }
     }
 

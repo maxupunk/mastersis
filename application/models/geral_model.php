@@ -11,7 +11,7 @@ class Geral_model extends CI_Model {
         return $this->db->trans_status();
     }
 
-    // Soma toda lista de pedidos
+    // Soma toda lista de pedidos com o valor de venda
     public function TotalPedido($id_pedido) {
         $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
         $this->db->from('LISTA_PRODUTOS');
@@ -19,7 +19,7 @@ class Geral_model extends CI_Model {
         return $this->db->get();
     }
 
-    // Soma toda lista de pedidos
+    // Soma toda lista de pedidos com o valor de compra
     public function TotalPedComp($id_pedido) {
         $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_COMP), 2) as total', FALSE);
         $this->db->from('LISTA_PRODUTOS');
@@ -27,7 +27,7 @@ class Geral_model extends CI_Model {
         return $this->db->get();
     }
 
-    // soma toda a lista de produto na Ordem de Seviço
+    //soma toda a lista de produto na ordem de seviço
     public function TotalProdOs($id) {
         $this->db->select('format(SUM(LIST_PED_QNT * LIST_PED_PRECO), 2) as total', FALSE);
         $this->db->from('LISTA_PRODUTOS');
@@ -64,7 +64,7 @@ class Geral_model extends CI_Model {
             WHERE
             PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
             AND PEDIDOS.PEDIDO_ESTATUS<=3 AND ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
-        
+
         return $this->db->affected_rows();
     }
 

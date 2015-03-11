@@ -34,4 +34,3 @@ if (isset($mensagem) and $mensagem != NULL) {
         <button type="button" class="btn btn-success" data-dismiss="modal" aria-hidden="true">NÃO</button>
     </div>
 </form>
-<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

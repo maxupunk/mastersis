@@ -38,30 +38,34 @@ class Pedido extends CI_Controller {
         $produto = $this->join_model->ProdutoEstoque($id_produto)->row();
         //verifica se o produto existe
         if ($produto != NULL) {
-            if ($produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
-                //verifica se existe realmente um pedido com o id passado
-                if ($this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row() != NULL) {
-                    //verififca se já existe o prodoto na lista de pedido
-                    if (!$this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row()) {
-                        //inseri os dados abaixo no db
-                        $dados = array(
-                            'PEDIDO_ID' => $id_pedido,
-                            'ESTOQ_ID' => $produto->ESTOQ_ID,
-                            'LIST_PED_QNT' => '1',
-                            'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
-                        if ($this->crud_model->inserir('LISTA_PRODUTOS', $dados) != TRUE) {
-                            $this->mensagem = "Erro: problema ao adicionar item no pedido!";
+            if ($produto->PRO_TIPO === 'p') {
+                if ($produto->ESTOQ_ATUAL >= 1 and $produto->PRO_ESTATUS === 'a') {
+                    //verifica se existe realmente um pedido com o id passado
+                    if ($this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido, 'PEDIDO_ESTATUS' => '1'))->row() != NULL) {
+                        //verififca se já existe o prodoto na lista de pedido
+                        if (!$this->crud_model->pega("LISTA_PRODUTOS", array('ESTOQ_ID' => $produto->ESTOQ_ID, 'PEDIDO_ID' => $id_pedido))->row()) {
+                            //inseri os dados abaixo no db
+                            $dados = array(
+                                'PEDIDO_ID' => $id_pedido,
+                                'ESTOQ_ID' => $produto->ESTOQ_ID,
+                                'LIST_PED_QNT' => '1',
+                                'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
+                            if ($this->crud_model->inserir('LISTA_PRODUTOS', $dados) != TRUE) {
+                                $this->mensagem = "Erro: problema ao adicionar item no pedido!";
+                            } else {
+                                $idLstProd = $this->db->insert_id();
+                            }
                         } else {
-                            $idLstProd = $this->db->insert_id();
+                            $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
                         }
                     } else {
-                        $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
+                        $this->mensagem = "O pedido não existe ou já foi fechado!";
                     }
                 } else {
-                    $this->mensagem = "O pedido não existe ou já foi fechado!";
+                    $this->mensagem = "O produto está com o estoque zerado, desativado ou é um serviço.";
                 }
             } else {
-                $this->mensagem = "O produto está com o estoque zerado, desativado ou é um serviço.";
+                $this->mensagem = "Erro: Você selecionou um serviço";
             }
         } else {
             $this->mensagem = "Esse produto não existe no banco de dados!";
@@ -100,6 +104,8 @@ class Pedido extends CI_Controller {
                             'LIST_PED_PRECO' => $produto->ESTOQ_PRECO);
                         if ($this->crud_model->inserir('LISTA_PRODUTOS', $dados) != TRUE) {
                             $this->mensagem = "Erro: problema ao adicionar item no pedido!";
+                        } else {
+                            $idLstProd = $this->db->insert_id();
                         }
                     } else {
                         $this->mensagem = "O item já existe, se deseja altera quantidades, click em uma das setas em QUANTIDADE.";
@@ -113,14 +119,20 @@ class Pedido extends CI_Controller {
         } else {
             $this->mensagem = "Erro: O produto não existe no banco de dados";
         }
+
+        if ($this->mensagem == NULL) {
+            $ProdutoInfo = $this->join_model->PedidoProduto($idLstProd)->result();
+            $Total = $this->geral_model->TotalPedComp($id_pedido)->row();
+            array_push($ProdutoInfo, array('Total' => $this->convert->em_real($Total->total)));
+        } else {
+            $ProdutoInfo = array('msg' => $this->mensagem);
+        }
+
         $dados = array(
-            'tela' => 'compras/lstitens',
-            'mensagem' => $this->mensagem,
-            'IdPed' => $id_pedido,
-            'LstProd' => $this->join_model->ListaPedido($id_pedido)->result(),
-            'Total' => $this->geral_model->TotalPedido($id_pedido)->row(),
+            'query' => $ProdutoInfo,
         );
-        $this->load->view('contente', $dados);
+
+        $this->load->view('json', $dados);
     }
 
     public function AddProdOs($id_os, $id_produto) {
@@ -173,64 +185,44 @@ class Pedido extends CI_Controller {
 
     public function AtualizaQntItems() {
         // validar o formulario
-        $this->form_validation->set_rules('Pedido', 'O id do pedido não passado!', 'required');
-        $this->form_validation->set_rules('ListPed', 'O id da lista de pedido não passado!', 'required');
-        $this->form_validation->set_rules('Estoq_id', 'O id do estoque é obrigado', 'required');
-        $this->form_validation->set_rules('qtd', 'A quantidade não foi repassada', 'required');
+        $this->form_validation->set_rules('Pedido', '', 'required');
+        $this->form_validation->set_rules('ListPed', '', 'required');
+        $this->form_validation->set_rules('Estoq_id', '', 'required');
+        $this->form_validation->set_rules('qtd', '', 'required');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE) {
+        if ($this->form_validation->run()) {
 
             $post = $this->input->post();
-            // Verifica se a quantidade digitada é maior que 0
-            if ($post['qtd'] > 0) {
-                // pega o item dentro da lista de produto
-                $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $post['ListPed']))->result();
-                if ($pedido != NULL) {
-                    $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $post['Estoq_id']))->row();
-                    // Verifica de tem estoque suficiente ou se é serviço "-1
-                    if ($produto->ESTOQ_ATUAL < $post['qtd'] AND $produto->ESTOQ_MIN != -1 AND ! isset($post['tipo'])) {
-                        $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
-                    }
-                    $atualizar = array('LIST_PED_QNT' => $post['qtd']);
-                    $condicao = array('LIST_PED_ID' => $post['ListPed']);
-                    if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) == FALSE) {
-                        $this->mensagem = "Erro: Problema ao atualuzar item!";
-                    }
-                } else {
-                    $this->mensagem = "Erro: Não existe esse item no pedido";
-                }
+
+            if ($this->mensagem == NULL AND $this->UpdtQntItem($post['ListPed'], $post['Estoq_id'], $post['qtd'])) {
+                $FuncaoTotal = (isset($post['tipo']) AND $post['tipo'] == "c") ? 'TotalPedComp' : 'TotalPedido';
+                $Retorno_array = array();
+                $Dados_Array = array();
+
+                $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
+
+                $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+                $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+                $Dados_Array['LIST_PED_PRECO'] = (isset($post['tipo']) AND $post['tipo'] == "c") ? $ProdutoInfo->LIST_PED_COMP : $ProdutoInfo->LIST_PED_PRECO;
+
+                $Total = $this->geral_model->$FuncaoTotal($post['Pedido'])->row();
+                array_push($Retorno_array, $Dados_Array);
+                array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
             } else {
-                $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01";
+                $Retorno_array = array('msg' => $this->mensagem);
             }
+
+//            $Retorno_array = array('msg' => $this->mensagem);
+
+            $dados = array(
+                'query' => $Retorno_array,
+            );
+
+            $this->load->view('json', $dados);
         }
-
-        $total = (isset($post['tipo']) AND $post['tipo'] == "c") ? 'TotalPedComp' : 'TotalPedido';
-
-        if ($this->mensagem == NULL) {
-            $Retorno_array = array();
-            $Dados_Array = array();
-
-            $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
-
-            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
-            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
-            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_PRECO;
-
-            $Total = $this->geral_model->$total($post['Pedido'])->row();
-            array_push($Retorno_array, $Dados_Array);
-            array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
-        } else {
-            $Retorno_array = array('msg' => $this->mensagem);
-        }
-
-        $dados = array(
-            'query' => $Retorno_array,
-        );
-
-        $this->load->view('json', $dados);
     }
 
     public function AtualizaQntItemOs() {
@@ -246,52 +238,30 @@ class Pedido extends CI_Controller {
         if ($this->form_validation->run() == TRUE) {
 
             $post = $this->input->post();
-            // Verifica se a quantidade digitada é maior que 0
-            if ($post['qtd'] > 0) {
-                // pega o item dentro da lista de produto
-                $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $post['ListPed']))->result();
-                if ($pedido != NULL) {
-                    $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $post['Estoq_id']))->row();
-                    // Verifica de tem estoque suficiente ou se é serviço "-1
-                    if ($produto->ESTOQ_ATUAL < $post['qtd'] AND $produto->ESTOQ_MIN != -1) {
-                        $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
-                    }
-                    $atualizar = array('LIST_PED_QNT' => $post['qtd']);
-                    $condicao = array('LIST_PED_ID' => $post['ListPed']);
-                    if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) == FALSE) {
-                        $this->mensagem = "Erro: Problema ao atualuzar item!";
-                    }
-                } else {
-                    $this->mensagem = "Erro: Nã existe esse item no pedido";
-                }
+
+            if ($this->mensagem == NULL AND $this->UpdtQntItem($post['ListPed'], $post['Estoq_id'], $post['qtd'])) {
+                $Retorno_array = array();
+                $Dados_Array = array();
+
+                $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
+
+                $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+                $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+                $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_PRECO;
+
+                $Total = $this->geral_model->TotalProdOS($post['Os'])->row();
+                array_push($Retorno_array, $Dados_Array);
+                array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
             } else {
-                $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01";
+                $Retorno_array = array('msg' => $this->mensagem);
             }
+
+            $dados = array(
+                'query' => $Retorno_array,
+            );
+
+            $this->load->view('json', $dados);
         }
-
-        if ($this->mensagem == NULL) {
-            $Retorno_array = array();
-            $Dados_Array = array();
-
-            $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
-            
-            
-            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
-            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
-            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_PRECO;
-
-            $Total = $this->geral_model->TotalProdOS($post['Os'])->row();
-            array_push($Retorno_array, $Dados_Array);
-            array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
-        } else {
-            $Retorno_array = array('msg' => $this->mensagem);
-        }
-
-        $dados = array(
-            'query' => $Retorno_array,
-        );
-
-        $this->load->view('json', $dados);
     }
 
     public function Abrir($id_pedido) {
@@ -332,12 +302,15 @@ class Pedido extends CI_Controller {
         $this->load->view('json', $dados);
     }
 
-    public function RemoverItem($id_pedido, $lista_ped_id) {
+    public function RemoverItem($tipo, $id_pedido, $lista_ped_id) {
 
         if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) !== TRUE) {
             $resposta = array('msg' => "Erro: problema com a exclusão do item");
         } else {
-            $resposta = "";
+            $FuncaoTotal = ($tipo == "c") ? 'TotalPedComp' : 'TotalPedido';
+            $Total = $this->geral_model->$FuncaoTotal($id_pedido)->row();
+            $resposta = array();
+            array_push($resposta, array('Total' => $this->convert->em_real($Total->total)));
         }
 
         $dados = array('query' => $resposta);
@@ -345,36 +318,19 @@ class Pedido extends CI_Controller {
         $this->load->view('json', $dados);
     }
 
-    public function RemoverItemComp($id_pedido, $lista_ped_id) {
+    public function RemoverItemOs($id_os, $lista_ped_id) {
 
-        if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) != TRUE) {
-            $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+        if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) !== TRUE) {
+            $resposta = array('msg' => "Erro: problema com a exclusão do item");
+        } else {
+            $Total = $this->geral_model->TotalProdOS($id_os)->row();
+            $resposta = array();
+            array_push($resposta, array('Total' => $this->convert->em_real($Total->total)));
         }
 
-        $dados = array(
-            'tela' => 'compras/lstitens',
-            'mensagem' => $this->mensagem,
-            'IdPed' => $id_pedido,
-            'LstProd' => $this->join_model->ListaPedido($id_pedido)->result(),
-            'Total' => $this->geral_model->TotalPedComp($id_pedido)->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
+        $dados = array('query' => $resposta);
 
-    public function RemoveItemOs($id_os, $lista_ped_id) {
-
-        if ($this->crud_model->excluir("LISTA_PRODUTOS", array('LIST_PED_ID' => $lista_ped_id)) != TRUE) {
-            $this->mensagem = $this->lang->line("msg_excluir_sucesso");
-        }
-
-        $dados = array(
-            'tela' => 'pedido/itens',
-            'mensagem' => $this->mensagem,
-            'IdPed' => $id_os,
-            'LstProd' => $this->join_model->ListaProdOs($id_os)->result(),
-            'Total' => $this->geral_model->TotalProdOS($id_os)->row(),
-        );
-        $this->load->view('contente', $dados);
+        $this->load->view('json', $dados);
     }
 
     public function Delete($id_pedido) {
@@ -432,6 +388,35 @@ class Pedido extends CI_Controller {
             'LstPedido' => $this->join_model->ListaPedido($id_pedido)->result(),
         );
         $this->load->view('contente', $dados);
+    }
+
+    /////////////////////////////////////////////////////
+    // Funções privadas
+    /////////////////////////////////////////////////////
+    private function UpdtQntItem($ListPed, $Estoq_id, $qtd) {
+        // Verifica se a quantidade digitada é maior que 0
+        if ($qtd > 0) {
+            // pega o item dentro da lista de produto
+            $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $ListPed))->result();
+            if ($pedido != NULL) {
+                $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $Estoq_id))->row();
+                // Verifica de tem estoque suficiente ou se é serviço "-1
+                if ($produto->ESTOQ_ATUAL < $qtd AND $produto->ESTOQ_MIN != -1) {
+                    $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
+                }
+                $atualizar = array('LIST_PED_QNT' => $qtd);
+                $condicao = array('LIST_PED_ID' => $ListPed);
+                if ($this->crud_model->update("LISTA_PRODUTOS", $atualizar, $condicao) == FALSE) {
+                    $this->mensagem = "Erro: Problema ao atualuzar item!";
+                }
+            } else {
+                $this->mensagem = "Erro: Nã existe esse item no pedido";
+            }
+        } else {
+            $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01";
+        }
+        if ($this->mensagem == NULL)
+            return true;
     }
 
 }

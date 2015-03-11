@@ -119,11 +119,9 @@ class Join_model extends CI_Model {
     }
 
     public function ReceitaDespesa($natureza, $ordeby = NULL, $limit = NULL) {
-        $this->db->cache_on();
         $this->db->select('*');
-        $this->db->from('PESSOAS', 'PEDIDOS', 'DESPESA-RECEITA');
-        $this->db->join('PEDIDOS', 'PESSOAS.PES_ID = PEDIDOS.PES_ID');
-        $this->db->join('DESPESA-RECEITA', 'PEDIDOS.PEDIDO_ID = DESPESA-RECEITA.PEDIDO_ID');
+        $this->db->from('DESPESA_RECEITA', 'PESSOAS');
+        $this->db->join('PESSOAS', 'DESPESA_RECEITA.PES_ID = PESSOAS.PES_ID', 'left');
 
         if ($ordeby != NULL) {
             $this->db->order_by($ordeby);
@@ -133,7 +131,7 @@ class Join_model extends CI_Model {
             $this->db->limit($limit);
         }
 
-        $this->db->where('DESPESA-RECEITA.DESREC_NATUREZA =' . $natureza);
+        $this->db->where('DESPESA_RECEITA.DESREC_NATUREZA', $natureza);
         return $this->db->get();
     }
 

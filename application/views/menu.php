@@ -16,7 +16,7 @@
 
                 <li><?php echo anchor('venda', 'Vendas'); ?></li>
 
-                <li><?php echo anchor('ordemservico', 'O.S'); ?></li>
+                <li><?php echo anchor('ordemservico', 'Serviços'); ?></li>
 
                 <li><?php echo anchor('compras', 'Compras'); ?></li>
 

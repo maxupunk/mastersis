@@ -43,8 +43,10 @@ if ($total->total == NULL) {
             <textarea name="PEDIDO_OBS" rows="3"></textarea>
         </div>
     </div>
-    
+
+    <br>
     <button class="btn btn-default">Finalizar</button>
+
 </form>
 
 <script>

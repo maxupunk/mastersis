@@ -1,25 +1,28 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <ul class="nav nav-tabs nav-justified submenu-financeiro" role="tablist">
-            <li><a href="1">Receitas</a></li>
-            <li><a href="2">Despeza</a></li>
+        <ul class="nav nav-tabs nav-justified submenu-os" role="tablist" id="myTab">
+            <li><a href="1">Em Abertas</a></li>
+            <li><a href="2">Pendente</a></li>
+            <li><a href="3">Cocluida</a></li>
+            <li><a href="4">Entregue</a></li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     Opções<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="ordemservico/cadastrar" id="InModel">Nova Receita/Despesa</a></li>
-                    <li><a href="ordemservico/gerenciaitens" id="Op-Os">Baixa</a></li>
+                    <li><a href="ordemservico/cadastrar" id="InModel">Nova Ordem</a></li>
+                    <li><a href="ordemservico/gerenciaitens" id="Op-Os">Gerenciar Itens/Serviços</a></li>
                     <li><a href="ordemservico/imprimir" id="Op-Os">Imprimir</a></li>
                     <li><a href="ordemservico/editar" data-titulo="Editar" id="Op-Os">Editar</a></li>
                     <li><a href="ordemservico/excluir" id="Op-Os">Excluir ?</a></li>
+                    <li><a href="ordemservico/entregar" id="Op-Os">Entregar</a></li>
+                    <li><a href="ordemservico/reabrir" id="Op-Os">Reabrir Ordem</a></li>
                 </ul>
             </li>
         </ul>
-
         <div class="well-sm"><input type="text" id="buscar" placeholder="Filtrar"></div>
-        
+
         <table class="table table-hover" id="LstEmOrdens"></table>
 
     </div>
@@ -40,7 +43,7 @@
         });
 
         // compoetamento do menu
-        $(document).on('click', '.submenu-financeiro>li', function() {
+        $(document).on('click', '.submenu-os>li', function() {
             href = $(this).find("a").attr('href');
             $(this).siblings('li.active').removeClass("active");
             $(this).addClass("active");
@@ -64,7 +67,6 @@
             } else {
                 $("#modal-content").load($(this).attr('href') + "/" + OsMenu);
             }
-            $('.modal-title').text($(this).text());
             $('.in,.open').removeClass('in open');
             $('#modal').modal('show');
             return false;

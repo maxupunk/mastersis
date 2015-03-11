@@ -22,10 +22,10 @@ class Financeiro extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function oOrdens($id = 1) {
-        $Lista = $this->join_model->OsStatus($id, 'OS_DATA_ENT desc')->result();
-        if (isset($Lista)) {
-            $this->load->view('json', array('query' => $Lista));
+    public function ReceitaDespesaLst($natureza = 1) {        
+        $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc')->result();
+        if (isset($ReceitaDespesas)) {
+            $this->load->view('json', array('query' => $ReceitaDespesas));
         }
     }
 
@@ -53,14 +53,29 @@ class Financeiro extends CI_Controller {
                 $this->mensagem = "Erro: Não existe esse item no pedido";
             }
         }
+        
+        if ($this->mensagem == NULL) {
+            $Retorno_array = array();
+            $Dados_Array = array();
+
+            $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
+
+            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_COMP;
+
+            $Total = $this->geral_model->TotalPedComp($post['Pedido'])->row();
+            array_push($Retorno_array, $Dados_Array);
+            array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
+        } else {
+            $Retorno_array = array('msg' => $this->mensagem);
+        }
 
         $dados = array(
-            'tela' => 'compras/lstitens',
-            'mensagem' => @$this->mensagem,
-            'LstProd' => $this->join_model->ListaPedido($post['Pedido'])->result(),
-            'Total' => $this->geral_model->TotalPedComp($post['Pedido'])->row(),
+            'query' => $Retorno_array,
         );
-        $this->load->view('contente', $dados);
+
+        $this->load->view('json', $dados);
     }
 
     public function ValorVenda() {
@@ -132,11 +147,43 @@ class Financeiro extends CI_Controller {
 
         $this->load->view('json', $dados);
     }
-    
-    public function teste($teste){
-        echo "<pre>";
-        print_r($this->join_model->ReceitaDespesa($teste, 'DESREC_VECIMENTO desc'));
-        echo "</pre>";
+
+        public function novo() {
+        // validar o formulario
+        $this->form_validation->set_rules('PES_NOME', 'CLIENTE', 'required|strtoupper');
+        $this->form_validation->set_rules('PES_ID', 'NOME DA PESSOA', 'required|is_unique[USUARIOS.PES_ID]');
+        $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required');
+        $this->form_validation->set_rules('USUARIO_LOGIN', 'LOGIN', 'required|is_unique[USUARIOS.USUARIO_LOGIN]');
+        $this->form_validation->set_rules('USUARIO_SENHA', 'SENHA', 'required');
+        $this->form_validation->set_rules('USUARIO_SENHA_RE', 'REPITA A SENHA', 'required|matches[USUARIO_SENHA]');
+        $this->form_validation->set_rules('CARG_ID', 'CARGO', 'required');
+        $this->form_validation->set_message('is_unique', 'Já existe um usuario com esse %s cadastrado!');
+
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->form_validation->run() == TRUE):
+
+            $formulario = $this->input->post();
+            $senha = array('USUARIO_SENHA' => hash("sha512", $formulario['USUARIO_SENHA']));
+            $novo_form = array_replace($formulario, $senha);
+
+            $dados = elements(array('PES_ID', 'USUARIO_APELIDO', 'USUARIO_LOGIN', 'USUARIO_SENHA', 'CARG_ID'), $novo_form);
+            if ($this->crud_model->inserir('USUARIOS', $dados) === TRUE) {
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
+            } else {
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
+            }
+
+        endif;
+        $dados = array(
+            'tela' => 'financeiro/novo',
+            'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
     }
+
 
 }

@@ -198,8 +198,6 @@ class Produto extends CI_Controller {
             $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
         }
         
-        $this->db->cache_off();
-
         setlocale(LC_MONETARY, "pt_BR");
 
         $json_array = array();
@@ -220,8 +218,6 @@ class Produto extends CI_Controller {
             $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
         }
         
-        $this->db->cache_off();
-
         setlocale(LC_MONETARY, "pt_BR");
 
         $dados = array('query' => $rows);

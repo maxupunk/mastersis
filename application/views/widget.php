@@ -1,10 +1,10 @@
 <?php
 
-$this->load->view('includes/header');
-$this->load->view('includes/menu');
+$this->load->view('header');
+$this->load->view('menu');
 
 #if ($tela!="") $this->load->view('telas/'.$tela);
 
-$this->load->view('includes/footer');
+$this->load->view('footer');
 
 ?>

@@ -1,36 +1,39 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <ul class="nav nav-tabs nav-justified submenu-os" role="tablist" id="myTab">
-            <li><a href="1">Em Abertas</a></li>
-            <li><a href="2">Pendente</a></li>
-            <li><a href="3">Cocluida</a></li>
-            <li><a href="4">Entregue</a></li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown">
-                    Opções<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="ordemservico/cadastrar" id="InModel">Nova Ordem</a></li>
-                    <li><a href="ordemservico/gerenciaitens" id="Op-Os">Gerenciar Itens/Serviços</a></li>
-                    <li><a href="ordemservico/imprimir" id="Op-Os">Imprimir</a></li>
-                    <li><a href="ordemservico/editar" data-titulo="Editar" id="Op-Os">Editar</a></li>
-                    <li><a href="ordemservico/excluir" id="Op-Os">Excluir ?</a></li>
-                    <li><a href="ordemservico/entregar" id="Op-Os">Entregar</a></li>
-                    <li><a href="ordemservico/reabrir" id="Op-Os">Reabrir Ordem</a></li>
-                </ul>
-            </li>
+        <ul class="nav nav-tabs nav-justified submenu-financeiro" role="tablist">
+            <li><a href="1">Receitas</a></li>
+            <li><a href="2">Despeza</a></li>
         </ul>
-        <div class="well-sm"><input type="text" id="buscar" placeholder="Filtrar"></div>
 
-        <table class="table table-hover" id="LstEmOrdens"></table>
+        <div class="row espacamento">
+            <div class="col-sm-7">
+                <input type="text" id="buscar" placeholder="Buscar no servidor">
+            </div>
+            <div class="col-sm-5">
+                <div class="btn-group-sm SubMenuBotao" role="group">
+                    <a href="financeiro/novo" class="btn btn-default" id="InModel">Nova</a>
+                    <button type="button" class="btn btn-default">Baixar</button>
+                    <button type="button" class="btn btn-default">Detales</button>
+                    <button type="button" class="btn btn-default">Imprimir</button>
+                    <button type="button" class="btn btn-default">Editar</button>
+                    <button type="button" class="btn btn-default">Excluir</button>
+                </div>
+            </div>
+        </div>
+
+
+        <table class="table table-hover">
+            <tbody id="LstEmOrdens"></tbody>
+        </table>
+
 
     </div>
 </div>
 <script>
     $(document).ready(function() {
         setInterval(function() {
-            CarregaJsonOs(MenuSelect)
+            CarregaJson(MenuSelect)
         }, 3000);
 
         var json = {};
@@ -39,16 +42,16 @@
 
         // comportamento do Model apos fechar
         $(document).on('hidden.bs.modal', function() {
-            CarregaJsonOs(MenuSelect);
+            CarregaJson(MenuSelect);
         });
 
         // compoetamento do menu
-        $(document).on('click', '.submenu-os>li', function() {
+        $(document).on('click', '.submenu-financeiro>li', function() {
             href = $(this).find("a").attr('href');
             $(this).siblings('li.active').removeClass("active");
             $(this).addClass("active");
             MenuSelect = href;
-            CarregaJsonOs(href);
+            CarregaJson(href);
             $('.in,.open').removeClass('in open');
             return false;
         });
@@ -72,11 +75,7 @@
             $('#modal').modal('show');
             return false;
         });
-
-        $(document).on('click', '.Model-Submit', function() {
-            $('#modal-content > form').submit();
-        });
-
+        
         // comportamento dos formularios das ordems
         $(document).on("submit", '#OrdemServicos', function() {
             $.ajax({
@@ -87,24 +86,29 @@
                 // enviado com sucesso
                 success: function(response) {
                     $("#modal-content").html(response);
-                    CarregaJsonOs(MenuSelect);
+                    CarregaJson(MenuSelect);
                 }
             });
             return false;
         });
         // Carrega a lista de ordem das tabelas 
-        function CarregaJsonOs(href) {
-            $.getJSON("ordemservico/ordens/" + href, function(data) {
+        function CarregaJson(href) {
+            $.getJSON("financeiro/ReceitaDespesaLst/" + href, function(data) {
                 if (!comparaArray(json, data)) {
                     $('#LstEmOrdens').empty();
                     if (data != "") {
                         $.each(data, function(key, value) {
+                            if (value.PES_NOME != null) {
+                                Descricao = value.PES_NOME;
+                            } else {
+                                Descricao = value.DESREC_DESCR;
+                            }
                             $('#LstEmOrdens').append(
                                     $('<tr>').append(
-                                    $('<td>').text(value.OS_ID),
-                                    $('<td>').text(value.PES_NOME),
-                                    $('<td>').text(value.OS_EQUIPAMENT),
-                                    $('<td>').text(value.OS_DATA_ENT)
+                                    $('<td>').text(value.DESREC_ID),
+                                    $('<td>').text(Descricao),
+                                    $('<td>').text(value.DESREC_VECIMENTO),
+                                    $('<td>').text(FloatReal(value.DESREC_VALOR))
                                     ));
                         });
                     }
@@ -114,7 +118,7 @@
             });
         }
 
-        $("#buscar").keyup(function() {
+        $("#Filtro").keyup(function() {
             input = this;
             // Show only matching TR, hide rest of them
             $.each($("#LstEmOrdens").find("tr"), function() {

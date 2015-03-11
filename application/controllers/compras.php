@@ -46,7 +46,7 @@ class Compras extends CI_Controller {
             }
         }
         $dados = array(
-            'tela' => 'compras/fornecedor',
+            'tela' => 'compras/pedido',
             'IdPed' => $pedido_id,
             'cliente' => $this->join_model->EnderecoCompleto($IdFornecedor)->row(),
             'LstProd' => $this->join_model->ListaPedido($pedido_id)->result(),

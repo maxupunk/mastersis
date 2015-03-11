@@ -61,4 +61,3 @@
     <input type="hidden" value="<?php echo $OsDados->OS_ID; ?>" name="id_os" />
 
 </form>
-<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

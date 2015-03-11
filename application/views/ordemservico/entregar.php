@@ -18,4 +18,3 @@ if ($total->total == NULL) {
 <div class="botoes">
     <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default Model-Submit" id="InModel">Finalizar</button>
 </div>
-<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>

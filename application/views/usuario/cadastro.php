@@ -45,9 +45,10 @@
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
 
-        <hr>
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <input type="reset" class="btn btn-warning" value="Limpar"/>
+        <div class="botoes">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <input type="reset" class="btn btn-warning" value="Limpar"/>
+        </div>
 
     </fieldset>
 

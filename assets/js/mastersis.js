@@ -41,7 +41,7 @@ $(document).ready(function() {
 // In model
     $(document).on('click', '#InModel', function() {
         $('.modal-title').text($(this).text());
-//        $('.in,.open').removeClass('in open');
+        $('.in,.open').removeClass('in open');
         $("#modal-content").load($(this).attr('href'));
         $('#modal').modal('show');
         return false;

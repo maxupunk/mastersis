@@ -66,4 +66,3 @@
 <div class="botoes">
     <button class="btn btn-primary" id="imprimir">Imprimir</button>
 </div>
-<script src="<?php echo base_url('assets/js/Os.js'); ?>"></script>
