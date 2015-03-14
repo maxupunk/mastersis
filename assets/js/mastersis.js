@@ -67,6 +67,13 @@ $(document).ready(function() {
         $('.valor').mask('0.000.000.000,00', {reverse: true});
         $('.cpf').mask('000.000.000-00', {reverse: true});
         $('.cnpj').mask('00.000.000.0000-00', {reverse: true});
+        $('.data').datepicker({
+            format: "dd/mm/yyyy",
+            orientation: "top auto",
+            language: 'pt-BR',
+            autoclose: true
+        });
+
     });
 
 // FUNÇÃO PARA IMPRESÃO IN DIV
@@ -169,6 +176,7 @@ $(document).ready(function() {
             $('input[name="PES_NASC_DATA"]').prop('disabled', false);
             $('input[name="PES_NOME_PAI"]').prop('disabled', false);
             $('input[name="PES_NOME_MAE"]').prop('disabled', false);
+            $('input[name="PES_NASC_DATA"]').prop('required', true);
         } else {
             $('#cpf-cnpj').attr("class", "cnpj");
             $('.cpf-cnpj-label').html('CNPJ *:');
@@ -178,6 +186,7 @@ $(document).ready(function() {
             $('input[name="PES_NASC_DATA"]').empty();
             $('input[name="PES_NOME_PAI"]').empty();
             $('input[name="PES_NOME_MAE"]').empty();
+            $('input[name="PES_NASC_DATA"]').prop('required', false);
         }
         $(".cpf-cnpj").focus();
     });
@@ -223,9 +232,6 @@ $(document).ready(function() {
             });
         }
     });
-
-
-
 }); // Verifica se a pagina foi carregada.
 
 ///////////////////////////////////////////////////////////

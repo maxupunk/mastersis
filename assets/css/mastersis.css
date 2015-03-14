@@ -181,7 +181,7 @@ input[type="file"] {
     cursor: pointer;
 }
 
-input[type="date"], input[type="email"] {
+input[type="email"] {
     display:block;
     width:100%;
     padding:6px 12px;

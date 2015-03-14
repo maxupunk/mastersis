@@ -1,15 +1,10 @@
-<form action="<?php echo base_url('usuario'); ?>" method="post" name="grava" accept-charset="utf-8">
+<form action="<?php echo base_url('financeiro'); ?>/novo" method="post" id="finanSubmit" accept-charset="utf-8">
 
     <fieldset>
-
-        <?php
-        if (isset($mensagem) and $mensagem != NULL)
-            echo '<div class="alert alert-info">' . $mensagem . '</div>';
-        ?>
+        <?php echo validation_errors(); ?>
 
         <label>NOME DA CLIENTE/FORNECEDOR</label>  | <span id="pessoa-selec"></span>
-        <?php echo form_error('PES_ID'); ?>
-        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>"/>
+        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" required/>
 
         <div class="row">
             <div class="col-sm-4">
@@ -21,28 +16,26 @@
             </div>
             <div class="col-sm-4">
                 <label>VALOR</label>
-                <?php echo form_error('DESREC_VALOR'); ?>
-                <input type="text" name="DESREC_VALOR" value="<?php echo set_value('DESREC_VALOR'); ?>" class="valor" />                
+                <input type="text" name="DESREC_VALOR" value="<?php echo set_value('DESREC_VALOR'); ?>" class="valor" required />                
             </div>
             <div class="col-sm-4">
                 <label>VENCIMENTO</label>
-                <input type="date" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>"/>
+                <input type="text" class="data" name="DESREC_VECIMENTO" value="<?php echo set_value('DESREC_VECIMENTO'); ?>" required />
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-3">
                 <label>ADICIONA EM</label>
-                <select name="adiciona">
+                <select name="ADICIONA">
                     <option value="1">Avulso</option>
                     <option value="2">Ordem</option>
                     <option value="3">Comp/Vend</option>
                 </select>
             </div>
             <div class="col-sm-2">
-                <label>ID</label>
-                <?php echo form_error('PED_OS_ID'); ?>
-                <input type="text" name="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>" />
+                <label class="PedOsId">ID</label>
+                <input type="text" name="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>" disabled />
             </div>
             <div class="col-sm-3">
                 <label>ESTATUS</label>
@@ -52,13 +45,12 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <label>DATA PG</label>
-                <input type="date" name="DESCRE_DATA_PG" value="<?php echo set_value('DESCRE_DATA_PG'); ?>"/>
+                <label>PAGO EM</label>
+                <input type="text" class="data" name="DESCRE_DATA_PG" value="<?php echo set_value('DESCRE_DATA_PG'); ?>" disabled/>
             </div>
         </div>
 
-        <label>DESCRIÇÃO/OBS</label>
-        <?php echo form_error('DESREC_DESCR'); ?>
+        <label>DESCRIÇÃO</label>
         <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR'); ?>" />
 
 

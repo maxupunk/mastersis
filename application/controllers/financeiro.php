@@ -22,7 +22,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('home', $dados);
     }
 
-    public function ReceitaDespesaLst($natureza = 1) {        
+    public function ReceitaDespesaLst($natureza = 1) {
         $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc')->result();
         if (isset($ReceitaDespesas)) {
             $this->load->view('json', array('query' => $ReceitaDespesas));
@@ -53,7 +53,7 @@ class Financeiro extends CI_Controller {
                 $this->mensagem = "Erro: Não existe esse item no pedido";
             }
         }
-        
+
         if ($this->mensagem == NULL) {
             $Retorno_array = array();
             $Dados_Array = array();
@@ -148,24 +148,32 @@ class Financeiro extends CI_Controller {
         $this->load->view('json', $dados);
     }
 
-        public function novo() {
-        // validar o formulario
-        $this->form_validation->set_rules('PES_NOME', 'CLIENTE', 'required|strtoupper');
-        $this->form_validation->set_rules('PES_ID', 'NOME DA PESSOA', 'required|is_unique[USUARIOS.PES_ID]');
-        $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required');
-        $this->form_validation->set_rules('USUARIO_LOGIN', 'LOGIN', 'required|is_unique[USUARIOS.USUARIO_LOGIN]');
-        $this->form_validation->set_rules('USUARIO_SENHA', 'SENHA', 'required');
-        $this->form_validation->set_rules('USUARIO_SENHA_RE', 'REPITA A SENHA', 'required|matches[USUARIO_SENHA]');
-        $this->form_validation->set_rules('CARG_ID', 'CARGO', 'required');
-        $this->form_validation->set_message('is_unique', 'Já existe um usuario com esse %s cadastrado!');
+    public function novo() {
 
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+        $formulario = $this->input->post();
+
+        // validar o formulario
+        $this->form_validation->set_rules('PES_NOME', 'NOME DA CLIENTE/FORNECEDOR', 'required|strtoupper');
+        $this->form_validation->set_rules('PES_ID', 'NOME DA CLIENTE/FORNECEDOR', 'required');
+        $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
+        $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
+
+        if ($formulario['ADICIONA'] > 1) {
+            $this->form_validation->set_rules('PED_OS_ID', 'ID', 'required');
+        }
+
+        if ($formulario['DESCRE_ESTATUS'] == "pg") {
+            $this->form_validation->set_rules('DESCRE_DATA_PG', 'DATA DO PAGAMENTO', 'required');
+        }
+
+        $this->form_validation->set_rules('DESREC_DESCR', 'DESCRIÇÃO', 'required');
+
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
 
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
-            $formulario = $this->input->post();
             $senha = array('USUARIO_SENHA' => hash("sha512", $formulario['USUARIO_SENHA']));
             $novo_form = array_replace($formulario, $senha);
 
@@ -179,11 +187,9 @@ class Financeiro extends CI_Controller {
         endif;
         $dados = array(
             'tela' => 'financeiro/novo',
-            'cargos' => $this->crud_model->pega_tudo("CARGOS")->result(),
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
-
 
 }

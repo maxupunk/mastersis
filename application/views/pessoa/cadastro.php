@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-sm-5">
                     <label>Dt.Nasc.:</label>
-                    <input type="date" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>"/>
+                    <input type="text" class="data" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>"/>
                 </div>
             </div>
 

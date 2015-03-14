@@ -29,6 +29,8 @@
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery/plugins/sortable.min.js'); ?>"></script>
 
+<script src="<?php echo base_url('assets/js/bootstrap/bootstrap-datepicker.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/bootstrap/bootstrap-datepicker.pt-BR.min.js'); ?>"></script>
 <!-- custom -->
 <script async defer src="<?php echo base_url('assets/js/mastersis.js'); ?>"></script>
 

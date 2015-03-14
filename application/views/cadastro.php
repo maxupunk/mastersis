@@ -44,8 +44,7 @@
         });
         $(document).on("click", ".submenu-cadastro>li", function() {
             href = $(this).find("a").attr('href');
-            $(this).siblings('li.active').removeClass("active");
-            $(this).addClass("active");
+            $(this).tab('show');
             $("#busca").attr("itemref", href + '/busca?buscar=');
             $("#content-sub-menu").load(href);
             $(".BordaCad").show();

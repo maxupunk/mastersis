@@ -32,12 +32,14 @@
 </div>
 <script>
     $(document).ready(function() {
+
         setInterval(function() {
+            $('.nav-tabs a[href="' + MenuSelect + '"]').parents('li').addClass('active');
             CarregaJson(MenuSelect)
         }, 3000);
 
         var json = {};
-        var OsMenu = null;
+        var Menu = null;
         var MenuSelect = 1;
 
         // comportamento do Model apos fechar
@@ -48,8 +50,7 @@
         // compoetamento do menu
         $(document).on('click', '.submenu-financeiro>li', function() {
             href = $(this).find("a").attr('href');
-            $(this).siblings('li.active').removeClass("active");
-            $(this).addClass("active");
+            $(this).tab('show');
             MenuSelect = href;
             CarregaJson(href);
             $('.in,.open').removeClass('in open');
@@ -60,24 +61,24 @@
         $(document).on('click', '#LstEmOrdens tr', function() {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
-            OsMenu = $(this).children().first().text();
+            Menu = $(this).children().first().text();
         });
 
         // comportamento do menu opções
         $(document).on('click', '#Op-Os', function() {
-            if (OsMenu == null) {
+            if (Menu == null) {
                 $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
             } else {
-                $("#modal-content").load($(this).attr('href') + "/" + OsMenu);
+                $("#modal-content").load($(this).attr('href') + "/" + Menu);
             }
             $('.modal-title').text($(this).text());
             $('.in,.open').removeClass('in open');
             $('#modal').modal('show');
             return false;
         });
-        
+
         // comportamento dos formularios das ordems
-        $(document).on("submit", '#OrdemServicos', function() {
+        $(document).on("submit", '#finanSubmit', function() {
             $.ajax({
                 type: "POST",
                 url: $(this).attr('action'),
@@ -113,26 +114,38 @@
                         });
                     }
                     json = data;
-                    OsMenu = null;
+                    Menu = null;
                 }
             });
         }
 
-        $("#Filtro").keyup(function() {
-            input = this;
-            // Show only matching TR, hide rest of them
-            $.each($("#LstEmOrdens").find("tr"), function() {
-                if ($(this).text().toLowerCase().indexOf($(input).val().toLowerCase()) === -1) {
-                    $(this).hide();
-                    if ($(this).children().first().text() === OsMenu) {
-                        $(this).siblings('tr.active').removeClass("active");
-                        OsMenu = null;
-                    }
-                } else {
-                    $(this).show();
-                }
-            });
+        // Menu Novo
+        $(document).on('change', 'select[name="ADICIONA"]', function() {
+        $this = $('input[name="PED_OS_ID"]');
+            if ($(this).val() > "1") {
+                $this.prop('disabled', false);
+                $this.prop('required', true);
+                $this.focus();
+            } else {
+                $this.prop('disabled', true);
+                $this.prop('required', false);
+                $this.val(null);
+            }
         });
+        
+        $(document).on('change', 'select[name="DESCRE_ESTATUS"]', function() {
+            $this = $('input[name="DESCRE_DATA_PG"]');
+            if ($(this).val() === "pg") {
+                $this.prop('disabled', false);
+                $this.prop('required', true);
+                $this.focus();
+            } else {
+                $this.prop('disabled', true);
+                $this.prop('required', false);
+                $this.val(null);
+            }
+        });
+
 
     });
 </script>

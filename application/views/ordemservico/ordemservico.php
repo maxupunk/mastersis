@@ -29,12 +29,14 @@
 </div>
 <script>
     $(document).ready(function() {
+
         setInterval(function() {
-            CarregaJsonOs(MenuSelect)
+            $('.nav-tabs a[href="' + MenuSelect + '"]').parents('li').addClass('active');
+            CarregaJsonOs(MenuSelect);
         }, 3000);
 
         var json = {};
-        var OsMenu = null;
+        var Menu = null;
         var MenuSelect = 1;
 
         // comportamento do Model apos fechar
@@ -45,8 +47,7 @@
         // compoetamento do menu
         $(document).on('click', '.submenu-os>li', function() {
             href = $(this).find("a").attr('href');
-            $(this).siblings('li.active').removeClass("active");
-            $(this).addClass("active");
+            $(this).tab('show');
             MenuSelect = href;
             CarregaJsonOs(href);
             $('.in,.open').removeClass('in open');
@@ -57,15 +58,15 @@
         $(document).on('click', '#LstEmOrdens tr', function() {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
-            OsMenu = $(this).children().first().text();
+            Menu = $(this).children().first().text();
         });
 
         // comportamento do menu opções
         $(document).on('click', '#Op-Os', function() {
-            if (OsMenu == null) {
+            if (Menu == null) {
                 $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
             } else {
-                $("#modal-content").load($(this).attr('href') + "/" + OsMenu);
+                $("#modal-content").load($(this).attr('href') + "/" + Menu);
             }
             $('.in,.open').removeClass('in open');
             $('#modal').modal('show');
@@ -108,7 +109,7 @@
                         });
                     }
                     json = data;
-                    OsMenu = null;
+                    Menu = null;
                 }
             });
         }
@@ -119,9 +120,9 @@
             $.each($("#LstEmOrdens").find("tr"), function() {
                 if ($(this).text().toLowerCase().indexOf($(input).val().toLowerCase()) === -1) {
                     $(this).hide();
-                    if ($(this).children().first().text() === OsMenu) {
+                    if ($(this).children().first().text() === Menu) {
                         $(this).siblings('tr.active').removeClass("active");
-                        OsMenu = null;
+                        Menu = null;
                     }
                 } else {
                     $(this).show();
