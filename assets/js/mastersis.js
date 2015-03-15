@@ -78,10 +78,7 @@ $(document).ready(function() {
 
 // FUNÇÃO PARA IMPRESÃO IN DIV
     $(document).on('click', '#imprimir', function() {
-        var extraCss = "assets/css/mastersis.css";
-        var keepAttr = ["id", "class", "style"];
-        var options = {mode: 'iframe', extraCss: extraCss, retainAttr: keepAttr};
-        $('.impresao').printArea(options);
+        $('.impresao').printDiv();
         return false;
     });
 

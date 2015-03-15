@@ -26,6 +26,12 @@ class Convert {
         return $valor;
     }
 
+    function DataParaDB($campo = NULL) {
+        if ($campo != NULL) {
+        return implode("-", array_reverse(explode("/", $campo)));
+        }
+    }
+
     function EstatusPedido($estatus) {
         switch ($estatus) {
             case '1':

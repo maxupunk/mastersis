@@ -28,7 +28,7 @@
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
-        <div class="botoes">
+        <div class="botoes-modal">
             <button type="submit" class="btn btn-primary Model-Submit">Salvar</button>
         </div>
 

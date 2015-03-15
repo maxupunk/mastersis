@@ -6,19 +6,30 @@
             <li><a href="2">Despeza</a></li>
         </ul>
 
-        <div class="row espacamento">
-            <div class="col-sm-7">
-                <input type="text" id="buscar" placeholder="Buscar no servidor">
-            </div>
-            <div class="col-sm-5">
-                <div class="btn-group-sm SubMenuBotao" role="group">
-                    <a href="financeiro/novo" class="btn btn-default" id="InModel">Nova</a>
-                    <button type="button" class="btn btn-default">Baixar</button>
-                    <button type="button" class="btn btn-default">Detales</button>
-                    <button type="button" class="btn btn-default">Imprimir</button>
-                    <button type="button" class="btn btn-default">Editar</button>
-                    <button type="button" class="btn btn-default">Excluir</button>
+        <div class="row">
+            <div class="col-sm-8 espacamento">
+                <div class="btn-group btn-group-justified" role="group">
+                    <a href="financeiro/novo" class="btn btn-link" id="InModel">
+                        <span class="glyphicon glyphicon-plus"></span> Nova</a>
+
+                    <a type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-piggy-bank"></span> Baixar</a>
+
+                    <a type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-sunglasses"></span> Detales</a>
+
+                    <a type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-print"></span> Imprimir</a>
+
+                    <a type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-edit"></span> Editar</a>
+
+                    <a type="button" class="btn btn-link">
+                        <span class="glyphicon glyphicon-trash"></span> Excluir</a>
                 </div>
+            </div>
+            <div class="col-sm-4 espacamento">
+                <input type="text" id="buscar" placeholder="Buscar no servidor">
             </div>
         </div>
 
@@ -99,7 +110,7 @@
                     $('#LstEmOrdens').empty();
                     if (data != "") {
                         $.each(data, function(key, value) {
-                            if (value.PES_NOME != null) {
+                            if (value.DESREC_DESCR === null) {
                                 Descricao = value.PES_NOME;
                             } else {
                                 Descricao = value.DESREC_DESCR;
@@ -108,7 +119,7 @@
                                     $('<tr>').append(
                                     $('<td>').text(value.DESREC_ID),
                                     $('<td>').text(Descricao),
-                                    $('<td>').text(value.DESREC_VECIMENTO),
+                                    $('<td>').text(Data(value.DESREC_VECIMENTO)),
                                     $('<td>').text(FloatReal(value.DESREC_VALOR))
                                     ));
                         });
@@ -119,20 +130,23 @@
             });
         }
 
+        function Data(data) {
+            d = new Date(data);
+            return d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()
+        }
+
         // Menu Novo
         $(document).on('change', 'select[name="ADICIONA"]', function() {
-        $this = $('input[name="PED_OS_ID"]');
+            $this = $('input[name="PED_OS_ID"]');
             if ($(this).val() > "1") {
-                $this.prop('disabled', false);
                 $this.prop('required', true);
                 $this.focus();
             } else {
-                $this.prop('disabled', true);
                 $this.prop('required', false);
                 $this.val(null);
             }
         });
-        
+
         $(document).on('change', 'select[name="DESCRE_ESTATUS"]', function() {
             $this = $('input[name="DESCRE_DATA_PG"]');
             if ($(this).val() === "pg") {

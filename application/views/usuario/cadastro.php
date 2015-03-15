@@ -45,7 +45,7 @@
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
 
-        <div class="botoes">
+        <div class="botoes-modal">
             <button type="submit" class="btn btn-primary">Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
         </div>

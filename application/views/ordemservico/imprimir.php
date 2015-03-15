@@ -42,7 +42,7 @@
 
         $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($total->total));
 
-        $tmpl = array('table_open' => '<table class="lista-produto">');
+        $tmpl = array('table_open' => '<table class="table">');
         $this->table->set_template($tmpl);
 
         echo $this->table->generate();
@@ -63,6 +63,6 @@
     </div>
 
 </div>
-<div class="botoes">
+<div class="botoes-modal">
     <button class="btn btn-primary" id="imprimir">Imprimir</button>
 </div>

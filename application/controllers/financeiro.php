@@ -21,6 +21,35 @@ class Financeiro extends CI_Controller {
         );
         $this->load->view('home', $dados);
     }
+    
+    ///// Funções para validação /////////////
+    public function id_check($str) {
+        $pedido = $this->crud_model->pega("DESPESA_RECEITA", array('PEDIDO_ID' => $str))->row();
+        $os = $this->crud_model->pega("DESPESA_RECEITA", array('OS_ID' => $str))->row();
+        if ($pedido or $os) {
+            return TRUE;
+        } else {
+            $this->form_validation->set_message('id_check', 'O ID do pedido não existe');
+            return FALSE;
+        }
+    }
+
+    public function parcela_check($id) {
+
+        $valor = $_POST['DESREC_VALOR'];
+        $data = $_POST['DESREC_VECIMENTO'];
+        $natureza = $_POST['DESREC_NATUREZA'];
+
+        $condicao = array('PES_ID' => $id,'DESREC_VECIMENTO' => $natureza, 'DESREC_VECIMENTO' => $this->convert->DataParaDB($data));
+        $parcela = $this->crud_model->pega("DESPESA_RECEITA", $condicao)->row();
+        if ($parcela != null) {
+            $this->form_validation->set_message('parcela_check', 'Já existe uma parcela nessa vecimento para esse cliente');
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    /////////////////////////////////////////////////
 
     public function ReceitaDespesaLst($natureza = 1) {
         $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc')->result();
@@ -151,40 +180,57 @@ class Financeiro extends CI_Controller {
     public function novo() {
 
         $formulario = $this->input->post();
+        $campos = array('USUARIO_ID', 'PES_ID', 'DESREC_NATUREZA', 'DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO', 'DESCRE_ESTATUS');
 
         // validar o formulario
         $this->form_validation->set_rules('PES_NOME', 'NOME DA CLIENTE/FORNECEDOR', 'required|strtoupper');
-        $this->form_validation->set_rules('PES_ID', 'NOME DA CLIENTE/FORNECEDOR', 'required');
+        $this->form_validation->set_rules('PES_ID', 'NOME DA CLIENTE/FORNECEDOR', 'required|callback_parcela_check');
         $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
         $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
+        $this->form_validation->set_rules('ADICIONA', '', 'required');
+        $this->form_validation->set_rules('DESREC_NATUREZA', '', 'required');
+        $this->form_validation->set_rules('ADICIONA', '', 'required');
 
         if ($formulario['ADICIONA'] > 1) {
-            $this->form_validation->set_rules('PED_OS_ID', 'ID', 'required');
+            $this->form_validation->set_rules('PED_OS_ID', 'ID', 'required|is_natural_no_zero|callback_id_check');
+            switch ($formulario['ADICIONA']) {
+                case 2:
+                    array_push($campos, 'OS_ID');
+                    $formulario['OS_ID'] = $formulario['PED_OS_ID'];
+                    break;
+                case 3:
+                    array_push($campos, 'PEDIDO_ID');
+                    $formulario['PEDIDO_ID'] = $formulario['PED_OS_ID'];
+                    break;
+            }
+        } else {
+            $this->form_validation->set_rules('DESREC_DESCR', 'Descrição', 'required');
         }
 
         if ($formulario['DESCRE_ESTATUS'] == "pg") {
             $this->form_validation->set_rules('DESCRE_DATA_PG', 'DATA DO PAGAMENTO', 'required');
+            $data_pg = array('DESCRE_DATA_PG' => $this->convert->DataParaDB($formulario['DESCRE_DATA_PG']));
+            $formulario = array_replace($formulario, $data_pg);
         }
-
-        $this->form_validation->set_rules('DESREC_DESCR', 'DESCRIÇÃO', 'required');
 
         $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
 
+        if ($this->form_validation->run() == TRUE) {
 
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->form_validation->run() == TRUE):
+            $senha = array('DESREC_VALOR' => $this->convert->EmDecimal($formulario['DESREC_VALOR']));
+            $vencimento = array('DESREC_VECIMENTO' => $this->convert->DataParaDB($formulario['DESREC_VECIMENTO']));
+            $formulario = array_replace($formulario, $senha);
+            $formulario = array_replace($formulario, $vencimento);
 
-            $senha = array('USUARIO_SENHA' => hash("sha512", $formulario['USUARIO_SENHA']));
-            $novo_form = array_replace($formulario, $senha);
+            $formulario['USUARIO_ID'] = $this->session->userdata('USUARIO_ID');
 
-            $dados = elements(array('PES_ID', 'USUARIO_APELIDO', 'USUARIO_LOGIN', 'USUARIO_SENHA', 'CARG_ID'), $novo_form);
-            if ($this->crud_model->inserir('USUARIOS', $dados) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
+            $dados = elements($campos, $formulario);
+            if ($this->crud_model->inserir('DESPESA_RECEITA', $dados) === TRUE) {
+                $this->mensagem = "Inserido com sucesso!";
             } else {
-                $this->mensagem = $this->lang->line("msg_cadastro_erro");
+                $this->mensagem = "Erro: problema ao gravar no banco de dados";
             }
-
-        endif;
+        }
         $dados = array(
             'tela' => 'financeiro/novo',
             'mensagem' => $this->mensagem,

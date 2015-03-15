@@ -29,7 +29,7 @@ if (isset($mensagem) and $mensagem != NULL) {
 
         <input type="hidden" name="id_os" value="<?php echo $OsDados->OS_ID ?>" />
     </fieldset>
-    <div class="botoes">
+    <div class="botoes-modal">
         <button type="submit" class="btn btn-danger Model-Submit">SIM</button>
         <button type="button" class="btn btn-success" data-dismiss="modal" aria-hidden="true">NÃO</button>
     </div>

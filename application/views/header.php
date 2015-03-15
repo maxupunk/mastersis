@@ -9,10 +9,7 @@
         <!-- Bootstrap CSS -->
         <link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet" media="screen">
         <link href="<?php echo base_url('assets/css/bootstrap-theme.min.css'); ?>" rel="stylesheet" media="screen">
-        
-        <link href="<?php echo base_url('assets/css/sortable-theme-minimal.css'); ?>" rel="stylesheet" media="screen">
-        <link href="<?php echo base_url('assets/css/bootstrap-datepicker.min.css'); ?>" rel="stylesheet" media="screen">
-        
+                
         <!-- Custom CSS -->
         <link href="<?php echo base_url('assets/css/mastersis.css'); ?>" rel="stylesheet" media="screen">
 

@@ -6,22 +6,36 @@
             <li><a href="2">Pendente</a></li>
             <li><a href="3">Cocluida</a></li>
             <li><a href="4">Entregue</a></li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown">
-                    Opções<span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="ordemservico/cadastrar" id="InModel">Nova Ordem</a></li>
-                    <li><a href="ordemservico/gerenciaitens" id="Op-Os">Gerenciar Itens/Serviços</a></li>
-                    <li><a href="ordemservico/imprimir" id="Op-Os">Imprimir</a></li>
-                    <li><a href="ordemservico/editar" data-titulo="Editar" id="Op-Os">Editar</a></li>
-                    <li><a href="ordemservico/excluir" id="Op-Os">Excluir ?</a></li>
-                    <li><a href="ordemservico/entregar" id="Op-Os">Entregar</a></li>
-                    <li><a href="ordemservico/reabrir" id="Op-Os">Reabrir Ordem</a></li>
-                </ul>
-            </li>
         </ul>
-        <div class="well-sm"><input type="text" id="buscar" placeholder="Filtrar"></div>
+        <div class="row">
+            <div class="col-sm-9 espacamento">
+                <div class="btn-group btn-group-sm btn-group-justified" role="group">
+                    <a href="ordemservico/cadastrar" class="btn btn-link" id="InModel">
+                    <span class="glyphicon glyphicon-plus"></span> Nova</a>
+                    
+                    <a href="ordemservico/gerenciaitens" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-shopping-cart"></span> Itens</a>
+                        
+                    <a href="ordemservico/imprimir" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-print"></span> Imprimir</a>
+                        
+                    <a href="ordemservico/editar" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-edit"></span> Editar</a>
+                        
+                    <a href="ordemservico/excluir" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-trash"></span> Excluir</a>
+                        
+                    <a href="ordemservico/entregar" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-check"></span> Entregar</a>
+                        
+                    <a href="ordemservico/reabrir" class="btn btn-link" id="Op-Os">
+                        <span class="glyphicon glyphicon-open"></span> Reabrir</a>
+                </div>
+            </div>
+            <div class="col-sm-3 espacamento">
+                <input type="text" id="buscar" placeholder="Filtrar">
+            </div>
+        </div>
 
         <table class="table table-hover" id="LstEmOrdens"></table>
 
@@ -31,7 +45,7 @@
     $(document).ready(function() {
 
         setInterval(function() {
-            $('.nav-tabs a[href="' + MenuSelect + '"]').parents('li').addClass('active');
+            $('.nav-tabs a[href="' + MenuSelect + '"]').tab('show');
             CarregaJsonOs(MenuSelect);
         }, 3000);
 
@@ -115,13 +129,13 @@
         }
 
         $("#buscar").keyup(function() {
-            input = this;
+            input = $(this);
             // Show only matching TR, hide rest of them
             $.each($("#LstEmOrdens").find("tr"), function() {
-                if ($(this).text().toLowerCase().indexOf($(input).val().toLowerCase()) === -1) {
+                if ($(this).text().toLowerCase().indexOf(input.val().toLowerCase()) === -1) {
                     $(this).hide();
                     if ($(this).children().first().text() === Menu) {
-                        $(this).siblings('tr.active').removeClass("active");
+                        $(this).removeClass("active");
                         Menu = null;
                     }
                 } else {

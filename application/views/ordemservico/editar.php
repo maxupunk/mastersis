@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="botoes">
+    <div class="botoes-modal">
         <button type="submit"  class="btn btn-primary Model-Submit">Salvar</button>
     </div>
 

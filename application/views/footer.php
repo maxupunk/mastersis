@@ -12,21 +12,13 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
-<div class="modal" id="modal-ajax">
-    <div class="modal-dialog">
-        <div class="modal-content" id="modal-ajax-content">
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/bootstrap/typeahead.bundle.min.js'); ?>"></script>
 
 <!-- plug-ins -->
 <script src="<?php echo base_url('assets/js/jquery/plugins/jquery.mask.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/js/jquery/plugins/jquery.PrintArea.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery/plugins/jQuery.print.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery/plugins/sortable.min.js'); ?>"></script>
 
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap-datepicker.min.js'); ?>"></script>

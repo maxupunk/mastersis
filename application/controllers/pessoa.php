@@ -50,7 +50,7 @@ class Pessoa extends CI_Controller {
 
                 // converte a data pra inserir no db
                 if ($this->input->post('PES_TIPO') == 'f') {
-                    $data_nasc = array('PES_NASC_DATA' => implode("-", array_reverse(explode("/", $post_pessoa['PES_NASC_DATA']))));
+                    $data_nasc = array('PES_NASC_DATA' => $this->convert->DataParaDB($post_pessoa['PES_NASC_DATA']));
                     $post_pessoa = array_replace($post_pessoa, $data_nasc);
                 }
                 // faz a atualização do array com os dados assima

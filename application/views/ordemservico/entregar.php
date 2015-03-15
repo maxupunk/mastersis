@@ -15,6 +15,6 @@ if ($total->total == NULL) {
     <div class="col-sm-4"><label>TOTAL</label><input type="text" name="valor-total" id="valor-total" value="<?php echo $total->total ?>" class="valor" disabled /></div>
 </div>
 
-<div class="botoes">
+<div class="botoes-modal">
     <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default Model-Submit" id="InModel">Finalizar</button>
 </div>
