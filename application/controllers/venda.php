@@ -46,18 +46,18 @@ class Venda extends CI_Controller {
 
     public function Pagamento($id_pedido) {
 
-        $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
+            $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
 
-        $post = $this->input->post();
+            $post = $this->input->post();
 
-        if ($post['NPARCELA'] > 1) {
-            $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
-            $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
-        }
-        
-        $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
+            if ($this->input->post('NPARCELA') > 1) {
+                $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
+                $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
+            }
 
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+            $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
+
+            $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE) {
 
@@ -67,9 +67,9 @@ class Venda extends CI_Controller {
             $total = $this->geral_model->TotalPedido($id_pedido)->row();
 
             if ($this->geral_model->FechaVenda($id_pedido) > 0) {
-
-                $Nparcela = $pedido->PEDIDO_NPARC;
                 
+                $Nparcela = $pedido->PEDIDO_NPARC;
+
                 $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $post['FPG']))->row();
                 $Jurus = (((($FPG->FPG_AJUSTE / 100) * $total->total) * $Nparcela) - $pedido->PEDIDO_DESCONTO);
                 $TotalJurus = $Jurus + $total->total;
@@ -79,8 +79,8 @@ class Venda extends CI_Controller {
                 } else {
                     $valor_parcela = $total->total;
                 }
-                
-                if ($post['PES_ID'] != null){
+
+                if ($post['PES_ID'] != null) {
                     $pes_id = $post['PES_ID'];
                 } else {
                     $pes_id = null;
@@ -97,9 +97,9 @@ class Venda extends CI_Controller {
                         'DESCRE_ESTATUS' => 'AB'
                     );
                     if ($this->crud_model->inserir('DESPESA_RECEITA', $dados) !== TRUE) {
-                        log_message('error', 'Erro ao grava parcela no banco de dados!');
+                        log_message('error', 'Erro ao grava parcela no banco de dados! PArcela:' . $i);
                     }
-                    $dias = ($dias + 30);
+                    $dias += 30;
                 }
 
                 $atualizar = array(

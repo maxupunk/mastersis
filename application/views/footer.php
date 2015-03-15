@@ -2,7 +2,7 @@
 </div>
 <div id="footer">
     <div class="container">
-        <p class="muted credit">MasterSis by Maxuel Aguiar</p>
+        <p class="muted credit">MasterSis by Maxuel Aguiar. (Memoria: {memory_usage} | Carregamento: {elapsed_time})</p>
     </div>
 </div>
 

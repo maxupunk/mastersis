@@ -21,7 +21,7 @@ class Financeiro extends CI_Controller {
         );
         $this->load->view('home', $dados);
     }
-    
+
     ///// Funções para validação /////////////
     public function id_check($str) {
         $pedido = $this->crud_model->pega("DESPESA_RECEITA", array('PEDIDO_ID' => $str))->row();
@@ -40,7 +40,7 @@ class Financeiro extends CI_Controller {
         $data = $_POST['DESREC_VECIMENTO'];
         $natureza = $_POST['DESREC_NATUREZA'];
 
-        $condicao = array('PES_ID' => $id,'DESREC_VECIMENTO' => $natureza, 'DESREC_VECIMENTO' => $this->convert->DataParaDB($data));
+        $condicao = array('PES_ID' => $id, 'DESREC_VECIMENTO' => $natureza, 'DESREC_VECIMENTO' => $this->convert->DataParaDB($data));
         $parcela = $this->crud_model->pega("DESPESA_RECEITA", $condicao)->row();
         if ($parcela != null) {
             $this->form_validation->set_message('parcela_check', 'Já existe uma parcela nessa vecimento para esse cliente');
@@ -49,6 +49,7 @@ class Financeiro extends CI_Controller {
             return TRUE;
         }
     }
+
     /////////////////////////////////////////////////
 
     public function ReceitaDespesaLst($natureza = 1) {
@@ -191,7 +192,7 @@ class Financeiro extends CI_Controller {
         $this->form_validation->set_rules('DESREC_NATUREZA', '', 'required');
         $this->form_validation->set_rules('ADICIONA', '', 'required');
 
-        if ($formulario['ADICIONA'] > 1) {
+        if ($this->input->post('ADICIONA') > 1) {
             $this->form_validation->set_rules('PED_OS_ID', 'ID', 'required|is_natural_no_zero|callback_id_check');
             switch ($formulario['ADICIONA']) {
                 case 2:
@@ -207,7 +208,7 @@ class Financeiro extends CI_Controller {
             $this->form_validation->set_rules('DESREC_DESCR', 'Descrição', 'required');
         }
 
-        if ($formulario['DESCRE_ESTATUS'] == "pg") {
+        if ($this->input->post('DESCRE_ESTATUS') == "pg") {
             $this->form_validation->set_rules('DESCRE_DATA_PG', 'DATA DO PAGAMENTO', 'required');
             $data_pg = array('DESCRE_DATA_PG' => $this->convert->DataParaDB($formulario['DESCRE_DATA_PG']));
             $formulario = array_replace($formulario, $data_pg);
