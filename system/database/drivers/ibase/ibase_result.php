@@ -32,13 +32,13 @@
  * @copyright	Copyright (c) 2014 - 2015, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	http://codeigniter.com
- * @since	Version 1.3.0
+ * @since	Version 3.0.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * SQLite Result Class
+ * Interbase/Firebird Result Class
  *
  * This class extends the parent result class: CI_DB_result
  *
@@ -46,21 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		http://codeigniter.com/user_guide/database/
  */
-class CI_DB_sqlite_result extends CI_DB_result {
-
-	/**
-	 * Number of rows in the result set
-	 *
-	 * @return	int
-	 */
-	public function num_rows()
-	{
-		return is_int($this->num_rows)
-			? $this->num_rows
-			: $this->num_rows = @sqlite_num_rows($this->result_id);
-	}
-
-	// --------------------------------------------------------------------
+class CI_DB_ibase_result extends CI_DB_result {
 
 	/**
 	 * Number of fields in the result set
@@ -69,7 +55,7 @@ class CI_DB_sqlite_result extends CI_DB_result {
 	 */
 	public function num_fields()
 	{
-		return @sqlite_num_fields($this->result_id);
+		return ibase_num_fields($this->result_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -84,9 +70,10 @@ class CI_DB_sqlite_result extends CI_DB_result {
 	public function list_fields()
 	{
 		$field_names = array();
-		for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
+		for ($i = 0, $num_fields = $this->num_fields(); $i < $num_fields; $i++)
 		{
-			$field_names[$i] = sqlite_field_name($this->result_id, $i);
+			$info = ibase_field_info($this->result_id, $i);
+			$field_names[] = $info['name'];
 		}
 
 		return $field_names;
@@ -106,10 +93,12 @@ class CI_DB_sqlite_result extends CI_DB_result {
 		$retval = array();
 		for ($i = 0, $c = $this->num_fields(); $i < $c; $i++)
 		{
+			$info = ibase_field_info($this->result_id, $i);
+
 			$retval[$i]			= new stdClass();
-			$retval[$i]->name		= sqlite_field_name($this->result_id, $i);
-			$retval[$i]->type		= NULL;
-			$retval[$i]->max_length		= NULL;
+			$retval[$i]->name		= $info['name'];
+			$retval[$i]->type		= $info['type'];
+			$retval[$i]->max_length		= $info['length'];
 		}
 
 		return $retval;
@@ -118,18 +107,13 @@ class CI_DB_sqlite_result extends CI_DB_result {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Data Seek
+	 * Free the result
 	 *
-	 * Moves the internal pointer to the desired offset. We call
-	 * this internally before fetching results to make sure the
-	 * result set starts at zero.
-	 *
-	 * @param	int	$n
-	 * @return	bool
+	 * @return	void
 	 */
-	public function data_seek($n = 0)
+	public function free_result()
 	{
-		return sqlite_seek($this->result_id, $n);
+		ibase_free_result($this->result_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -143,7 +127,7 @@ class CI_DB_sqlite_result extends CI_DB_result {
 	 */
 	protected function _fetch_assoc()
 	{
-		return sqlite_fetch_array($this->result_id);
+		return ibase_fetch_assoc($this->result_id, IBASE_FETCH_BLOBS);
 	}
 
 	// --------------------------------------------------------------------
@@ -158,7 +142,20 @@ class CI_DB_sqlite_result extends CI_DB_result {
 	 */
 	protected function _fetch_object($class_name = 'stdClass')
 	{
-		return sqlite_fetch_object($this->result_id, $class_name);
+		$row = ibase_fetch_object($this->result_id, IBASE_FETCH_BLOBS);
+
+		if ($class_name === 'stdClass' OR ! $row)
+		{
+			return $row;
+		}
+
+		$class_name = new $class_name();
+		foreach ($row as $key => $value)
+		{
+			$class_name->$key = $value;
+		}
+
+		return $class_name;
 	}
 
 }
