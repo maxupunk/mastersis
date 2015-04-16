@@ -10,7 +10,7 @@ class Pessoa extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'convert'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
@@ -37,6 +37,7 @@ class Pessoa extends CI_Controller {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE) {
 
+            $this->db->trans_begin();
             $endereco = elements(array('END_NUMERO', 'END_REFERENCIA', 'RUA_ID'), $this->input->post());
             if ($this->crud_model->inserir('ENDERECOS', $endereco) === TRUE) {
 
@@ -50,7 +51,7 @@ class Pessoa extends CI_Controller {
 
                 // converte a data pra inserir no db
                 if ($this->input->post('PES_TIPO') == 'f') {
-                    $data_nasc = array('PES_NASC_DATA' => $this->convert->DataParaDB($post_pessoa['PES_NASC_DATA']));
+                    $data_nasc = array('PES_NASC_DATA' => $this->convert->DataParaDB($this->input->post('PES_NASC_DATA')));
                     $post_pessoa = array_replace($post_pessoa, $data_nasc);
                 }
                 // faz a atualização do array com os dados assima
@@ -59,10 +60,16 @@ class Pessoa extends CI_Controller {
 
                 $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA', 'PES_EMAIL'), $post_pessoa);
                 if ($this->crud_model->inserir('PESSOAS', $pessoa) === TRUE) {
-                    $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
+                    $this->mensagem = "Cadastrado com sucesso!";
                 } else {
-                    $this->mensagem = $this->lang->line("msg_cadastro_erro");
+                    $this->mensagem = "Erro: problema ao gravar no banco de dados";
                 }
+            }
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $this->mensagem .= 'Ouve algum problema na transação com o banco de dados!';
+            } else {
+                $this->db->trans_commit();
             }
         }
 
@@ -121,7 +128,7 @@ class Pessoa extends CI_Controller {
                 if ($this->crud_model->excluir("ENDERECOS", array('END_ID' => $this->input->post('endereco_id'))) === TRUE) {
                     $this->mensagem .= "Endereço excluido com sucesso";
                 } else {
-                    $this->mensagem .= "Erro: Problema a excluir o endereço. N: ". $this->input->post('endereco_id');
+                    $this->mensagem .= "Erro: Problema a excluir o endereço. N: " . $this->input->post('endereco_id');
                 }
             } else {
                 $this->mensagem = "Erro: Problema ao tenta excluir";

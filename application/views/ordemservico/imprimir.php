@@ -42,18 +42,20 @@
 
         $this->table->add_row('', '', '', 'TOTAL:', $this->convert->em_real($total->total));
 
-        $tmpl = array('table_open' => '<table class="table">');
+        $tmpl = array('table_open' => '<table class="table table-hover">');
         $this->table->set_template($tmpl);
 
         echo $this->table->generate();
         ?>
 
-        <table class="rodape-recibo">
+        <table class="table table-hover">
+            <thead>
             <tr>
                 <th>USUARIO</th>
                 <th>ENTRADA</th>
                 <th>ESTATUS</th>
             </tr>
+            </thead>
             <tr>
                 <td><?php echo $usuario->USUARIO_APELIDO; ?></td>
                 <td><?php echo date("d/m/Y - H:i:s", strtotime($OsDados->OS_DATA_ENT)) ?></td>
@@ -63,6 +65,6 @@
     </div>
 
 </div>
-<div class="botoes-modal">
+<div class="modal-footer">
     <button class="btn btn-primary" id="imprimir">Imprimir</button>
 </div>

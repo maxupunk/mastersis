@@ -5,7 +5,7 @@
             <div class="btn-group">
                 <button type="button" id="NovoPedido" class="btn btn-default btn-sm">Nova</button>
                 <button type="button" id="Finalizar" class="btn btn-default btn-sm" disabled>Finalizar</button>
-                <a href="pedido/LmpLstEmAberto" id="InModel" class="btn btn-danger btn-sm">Limpa</a>
+                <a href="pedido/LmpLstEmAberto" data-toggle="modal" data-target="#Modal" class="btn btn-danger btn-sm">Limpa</a>
                 <button type="button" id="EmAberto" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="col-sm-7">
-            <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off" placeholder="Nome ou descrição ou codigo do produtos" disabled/>
+            <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off" placeholder="Nome ou descrição do produtos" disabled/>
         </div>
         <div class="col-sm-2">
             <input type="number" id="IdPed" class="IdPed" placeholder="Pedido" autocomplete="off"/>
@@ -61,8 +61,7 @@
         });
         //Finaliza o pedido
         $(document).on('click', '#Finalizar', function() {
-            $("#modal-content").load("venda/pagamento/" + $("#IdPed").val());
-            $('#modal').modal('show');
+            $('#Modal').modal({remote: "venda/pagamento/" + $("#IdPed").val()})
             return false;
         });
         //Lista o pedido em Aberto

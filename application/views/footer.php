@@ -6,11 +6,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal">
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalGeral" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" id="modal-content"></div>
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
 
 <!-- bootstrap -->
 <script src="<?php echo base_url('assets/js/bootstrap/bootstrap.min.js'); ?>"></script>

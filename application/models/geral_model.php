@@ -35,6 +35,14 @@ class Geral_model extends CI_Model {
         return $this->db->get();
     }
 
+    public function ParcelasRestante($id) {
+        $this->db->select('COUNT(*) AS qnt', FALSE);
+        $this->db->from('DESPESA_RECEITA');
+        $this->db->where('DESPESA_RECEITA.PEDIDO_ID', $id);
+        $this->db->or_where('DESPESA_RECEITA.OS_ID', $id);
+        return $this->db->get();
+    }
+
     public function ExcluirOs($id) {
         $this->db->delete('LISTA_PRODUTOS', array('OS_ID' => $id));
         $this->db->delete('ORDEM_SERV', array('OS_ID' => $id));

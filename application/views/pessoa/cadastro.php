@@ -10,7 +10,6 @@
 
         <?php echo validation_errors(); ?>
 
-
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-2">
@@ -81,7 +80,7 @@
                     <?php echo form_dropdown('BAIRRO_ID'); ?>
                 </div>
                 <div class="col-sm-3">
-                    <a href="endereco/bairro" class="btn btn-success" id="InModel">Add bairro</a>
+                    <a href="endereco/bairro" class="btn btn-success" data-toggle="modal" data-target="#Modal">Add bairro</a>
                 </div>
             </div>
 
@@ -91,7 +90,7 @@
                     <?php echo form_dropdown('RUA_ID'); ?>
                 </div>
                 <div class="col-sm-3">
-                    <a href="endereco/rua" class="btn btn-success" id="InModel">Add rua</a>
+                    <a href="endereco/rua" class="btn btn-success" data-toggle="modal" data-target="#Modal">Add rua</a>
                 </div>
             </div>
 

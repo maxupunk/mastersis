@@ -69,7 +69,8 @@ class Auth {
                     }
                     // Se não estiver logado, sera redirecionado para o login.
                 } else {
-                    redirect(base_url('home/login'), 'refresh');
+                    $atual_link = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+                    redirect(base_url('home/login')."?url=".$atual_link);
                 }
             }
         }

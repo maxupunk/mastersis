@@ -10,7 +10,7 @@ class Produto extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('crud_model', 'join_model'));
-        $this->load->library(array('form_validation', 'table'));
+        $this->load->library(array('form_validation', 'table', 'convert'));
         $this->auth->check_logged($this->router->class, $this->router->method);
     }
 
@@ -191,19 +191,17 @@ class Produto extends CI_Controller {
     public function PegaProduto() {
 
         $busca = $_GET['buscar'];
-
+        
         if ($this->uri->segment(3) == FALSE) {
             $rows = $this->join_model->ProdutoBusca($busca)->result();
         } else {
             $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
         }
         
-        setlocale(LC_MONETARY, "pt_BR");
-
         $json_array = array();
         foreach ($rows as $row) {
             $estoq_atual = ($row->PRO_TIPO == "s") ? "Serviço" : $row->ESTOQ_ATUAL;
-            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $estoq_atual . ' | ' . money_format('%n', $row->ESTOQ_PRECO)));
+            array_push($json_array, array('id' => $row->PRO_ID, 'value' => $row->PRO_DESCRICAO . ' | ' . $estoq_atual . ' | ' . $this->convert->em_real($row->ESTOQ_PRECO)));
         }
 
         $dados = array('query' => $json_array);

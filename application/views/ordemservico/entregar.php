@@ -7,14 +7,20 @@ if ($total->total == NULL) {
     exit;
 }
 ?>
-<div class="row">
-    <div class="col-sm-9"><label>CLIENTE</label><input type="text" name="PES_NOME" value="<?php echo $pessoa->PES_NOME ?>" disabled /></div>
-    <div class="col-sm-3"><label>PEDIDO</label><input type="text" id="id_pedido" value="<?php echo $id_pedido ?>" disabled /></div>
-</div>
-<div class="row">
-    <div class="col-sm-4"><label>TOTAL</label><input type="text" name="valor-total" id="valor-total" value="<?php echo $total->total ?>" class="valor" disabled /></div>
-</div>
+<form action="<?php echo base_url('ordemservico'); ?>/entregar/<?php echo $id_pedido ?>" id="SubmitAjax" method="post" accept-charset="utf-8">
+    <fieldset>
+    <div class="row">
+        <div class="col-sm-9"><label>CLIENTE</label><input type="text" name="PES_NOME" value="<?php echo $pessoa->PES_NOME ?>" readonly /></div>
+        <div class="col-sm-3"><label>PEDIDO</label><input type="text" name="PEDIDO_ID" id="id_pedido" value="<?php echo $id_pedido ?>" readonly /></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"><label>TOTAL</label><input type="text" name="valor-total" id="valor-total" value="<?php echo $this->convert->em_real($total->total); ?>" class="valor" readonly /></div>
+    </div>
 
-<div class="botoes-modal">
-    <button href="ordemservico/finaliza/<?php echo $id_pedido ?>" class="btn btn-default Model-Submit" id="InModel">Finalizar</button>
-</div>
+    <input type="hidden" name="PEDIDO_ID" value="<?php echo $id_pedido ?>"/>
+
+    </fieldset>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-default">Finalizar</button>
+    </div>
+</form>

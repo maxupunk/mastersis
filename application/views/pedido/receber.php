@@ -5,7 +5,7 @@
 
     <span><?php echo validation_errors(); ?></span>
     <?php if ($LstPedido <> NULL) { ?>
-        <table>
+        <table data-sortable>
             <thead>
                 <tr class="bg-primary"><th width="5%"></th><th>DESCRIÇÃO (Disponibilidade)</th><th width="8%">QNT</th><th width="12%">CUSTO</th><th width="15%">VENDA</th></tr>
             </thead>
@@ -81,7 +81,7 @@
                     dataType: "html",
                     data: dados,
                     success: function() {
-                        $('input').eq($('input').index(valor)+1).focus();
+                        $('input').eq($('input').index(valor) + 1).focus();
                         valor.removeClass("alert-danger");
                         valor.addClass("alert-success");
                     },

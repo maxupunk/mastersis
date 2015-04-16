@@ -18,9 +18,10 @@ $(document).ready(function() {
         cache: false,
         error: function(x, request, settings)
         {
-            $('#modal').modal('show');
-            $("#modal-content").html(x.responseText);
-            $("#modal-content").append("Para mais informações: Sistema > Log de sistema");
+            $('#Modal').removeData('bs.modal');
+            $("#Modal .modal-content").html(x.responseText);
+            $("#Modal .modal-content").append("Para mais informações: Sistema > Log de sistema");
+            $('#Modal').modal('show');
         },
         xhrFields: {
             onprogress: function(e) {
@@ -34,17 +35,14 @@ $(document).ready(function() {
             $(".carregando").hide();
         }
     });
+
     $(document).ajaxStart(function() {
         $(".carregando").show();
     });
 
-// In model
-    $(document).on('click', '#InModel', function() {
-        $('.modal-title').text($(this).text());
-        $('.in,.open').removeClass('in open');
-        $("#modal-content").load($(this).attr('href'));
-        $('#modal').modal('show');
-        return false;
+    // limpa modal apos fechado
+    $('body').on('hidden.bs.modal', '.modal', function() {
+        $(this).removeData('bs.modal');
     });
 
     $(document).on("submit", '#confirmacao', function() {
@@ -54,7 +52,13 @@ $(document).ready(function() {
             dataType: "html",
             data: $(this).serialize(),
             success: function(response) {
-                $('#modal').modal('hide');
+                $('#Modal').modal('hide');
+            },
+            error: function(x, request, settings)
+            {
+                $('#Modal').modal('show');
+                $("#Modal .modal-content").html(x.responseText);
+                $("#Modal .modal-content").append("Para mais informações: Sistema > Log de sistema");
             }
         });
         return false;
@@ -93,8 +97,9 @@ $(document).ready(function() {
             data: $(this).serialize(),
             // enviado com sucesso
             success: function(response) {
-                if ($("#modal-content").is(':visible')) {
-                    $("#modal-content").html(response);
+                if ($("#Modal .modal-content").is(':visible')) {
+                    $('#Modal').removeData('bs.modal');
+                    $("#Modal .modal-content").html(response);
                 } else {
                     $("#content-sub-menu").html(response);
                 }
@@ -234,6 +239,10 @@ $(document).ready(function() {
 ///////////////////////////////////////////////////////////
 // Funcões
 ///////////////////////////////////////////////////////////
+function Data(data) {
+    d = new Date(data);
+    return d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()
+}
 
 function comparaArray(a1, a2) {
     return JSON.stringify(a1) == JSON.stringify(a2);

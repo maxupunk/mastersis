@@ -10,25 +10,25 @@
         <div class="row">
             <div class="col-sm-9 espacamento">
                 <div class="btn-group btn-group-sm btn-group-justified" role="group">
-                    <a href="ordemservico/cadastrar" class="btn btn-link" id="InModel">
-                    <span class="glyphicon glyphicon-plus"></span> Nova</a>
-                    
-                    <a href="ordemservico/gerenciaitens" class="btn btn-link" id="Op-Os">
+                    <a href="ordemservico/cadastrar" class="btn btn-link" data-toggle="modal" data-target="#Modal">
+                        <span class="glyphicon glyphicon-plus"></span> Nova</a>
+
+                    <a href="ordemservico/gerenciaitens" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-shopping-cart"></span> Itens</a>
-                        
-                    <a href="ordemservico/imprimir" class="btn btn-link" id="Op-Os">
+
+                    <a href="ordemservico/imprimir" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-print"></span> Imprimir</a>
-                        
-                    <a href="ordemservico/editar" class="btn btn-link" id="Op-Os">
+
+                    <a href="ordemservico/editar" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-edit"></span> Editar</a>
-                        
-                    <a href="ordemservico/excluir" class="btn btn-link" id="Op-Os">
+
+                    <a href="ordemservico/excluir" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-trash"></span> Excluir</a>
-                        
-                    <a href="ordemservico/entregar" class="btn btn-link" id="Op-Os">
+
+                    <a href="ordemservico/entregar" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-check"></span> Entregar</a>
-                        
-                    <a href="ordemservico/reabrir" class="btn btn-link" id="Op-Os">
+
+                    <a href="ordemservico/reabrir" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-open"></span> Reabrir</a>
                 </div>
             </div>
@@ -46,16 +46,18 @@
 
         setInterval(function() {
             $('.nav-tabs a[href="' + MenuSelect + '"]').tab('show');
-            CarregaJsonOs(MenuSelect);
+            CarregaJson(MenuSelect);
         }, 3000);
 
         var json = {};
-        var Menu = null;
+        var idSelect = null;
         var MenuSelect = 1;
-
+        
+        CarregaJson(MenuSelect);
+        
         // comportamento do Model apos fechar
         $(document).on('hidden.bs.modal', function() {
-            CarregaJsonOs(MenuSelect);
+            CarregaJson(MenuSelect);
         });
 
         // compoetamento do menu
@@ -63,8 +65,7 @@
             href = $(this).find("a").attr('href');
             $(this).tab('show');
             MenuSelect = href;
-            CarregaJsonOs(href);
-            $('.in,.open').removeClass('in open');
+            CarregaJson(href);
             return false;
         });
 
@@ -72,23 +73,34 @@
         $(document).on('click', '#LstEmOrdens tr', function() {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
-            Menu = $(this).children().first().text();
+            idSelect = $(this).children().first().text();
         });
 
         // comportamento do menu opções
-        $(document).on('click', '#Op-Os', function() {
-            if (Menu == null) {
-                $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
+        $(document).on('click', '#Opcao', function() {
+            if (idSelect === null) {
+                $("#Modal .modal-content").text("Você não selecionou um item!");
+                $('#Modal').modal('show');
             } else {
-                $("#modal-content").load($(this).attr('href') + "/" + Menu);
+                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelect})
             }
-            $('.in,.open').removeClass('in open');
-            $('#modal').modal('show');
             return false;
         });
 
-        $(document).on('click', '.Model-Submit', function() {
-            $('#modal-content > form').submit();
+        // comportamento dos formularios
+        $(document).on("submit", '#SubmitAjax', function() {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                dataType: "html",
+                data: $(this).serialize(),
+                // enviado com sucesso
+                success: function(response) {
+                    $("#Modal .modal-content").html(response);
+                    CarregaJson(MenuSelect);
+                }
+            });
+            return false;
         });
 
         // comportamento dos formularios das ordems
@@ -100,14 +112,14 @@
                 data: $(this).serialize(),
                 // enviado com sucesso
                 success: function(response) {
-                    $("#modal-content").html(response);
-                    CarregaJsonOs(MenuSelect);
+                    CarregaJson(MenuSelect);
+                    $("#Modal .modal-content").html(response);
                 }
             });
             return false;
         });
         // Carrega a lista de ordem das tabelas 
-        function CarregaJsonOs(href) {
+        function CarregaJson(href) {
             $.getJSON("ordemservico/ordens/" + href, function(data) {
                 if (!comparaArray(json, data)) {
                     $('#LstEmOrdens').empty();
@@ -123,7 +135,7 @@
                         });
                     }
                     json = data;
-                    Menu = null;
+                    idSelect = null;
                 }
             });
         }
@@ -136,7 +148,7 @@
                     $(this).hide();
                     if ($(this).children().first().text() === Menu) {
                         $(this).removeClass("active");
-                        Menu = null;
+                        idSelect = null;
                     }
                 } else {
                     $(this).show();

@@ -8,7 +8,7 @@ foreach ($query as $linha) {
 
     $this->table->add_row($linha->PRO_ID, $estatus." ".$tipo,
             anchor("produto/editar/$linha->PRO_ID", '<span class="glyphicon glyphicon-edit"></span>', 'id="InContent"').' '.
-            anchor("produto/excluir/$linha->PRO_ID", '<span class="glyphicon glyphicon-trash"></span>', 'id="InModel"').' '.
+            anchor("produto/excluir/$linha->PRO_ID", '<span class="glyphicon glyphicon-trash"></span>', 'data-toggle="modal" data-target="#Modal"').' '.
             anchor("produto/exibir/$linha->PRO_ID", '<span class="glyphicon glyphicon-list-alt"></span>', 'id="InContent"').' '.
             anchor("produto/imagem/$linha->PRO_ID", '<span class="glyphicon glyphicon-picture"></span>', 'id="InContent"'));
 }

@@ -7,7 +7,7 @@ foreach ($query as $linha) {
 
     $this->table->add_row($linha->PES_ID, $estatus, $linha->PES_CEL1,
             anchor("pessoa/editar/$linha->PES_ID", '<span class="glyphicon glyphicon-edit"></span>', 'id="InContent"') . ' ' .
-            anchor("pessoa/excluir/$linha->PES_ID", '<span class="glyphicon glyphicon-trash"></span>', 'id="InModel"') . ' ' .
+            anchor("pessoa/excluir/$linha->PES_ID", '<span class="glyphicon glyphicon-trash"></span>', 'data-toggle="modal" data-target="#Modal"') . ' ' .
             anchor("venda/listar/$linha->PES_ID", '<span class="glyphicon glyphicon-list-alt"></span>', 'id="InContent"'));
 }
 

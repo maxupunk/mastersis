@@ -7,7 +7,7 @@
         <div class="col-sm-2"><label>PEDIDO N.</label><input type="text" name="PEDIDO_ID" id="IdPed" value="<?php echo $IdPed ?>" disabled /></div>
         <div class="col-sm-2"><br>
             <?php echo anchor('pedido/Delete/' . $IdPed . '/compras', 'Excluir', 'class="btn btn-warning"'); ?>
-            <?php echo anchor('compras/fecha/' . $IdPed, 'Fechar', 'class="btn btn-primary" id="InModel"'); ?></div>
+            <?php echo anchor('compras/fecha/' . $IdPed, 'Fechar', 'class="btn btn-primary" data-toggle="modal" data-target="#Modal"'); ?></div>
     </div>
 </div>
 <div class="well">
@@ -16,7 +16,7 @@
             <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off"/>
         </div>
         <div class="col-sm-3">
-            <?php echo anchor('produto', 'Novo Produto', 'class="btn btn-success" id="InModel"'); ?>
+            <?php echo anchor('produto', 'Novo Produto', 'class="btn btn-success" data-toggle="modal" data-target="#Modal"'); ?>
         </div>
     </div>
 </div>

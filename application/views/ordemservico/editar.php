@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('ordemservico'); ?>/editar/<?php echo $OsDados->OS_ID ?>" id="OrdemServicos" method="post" accept-charset="utf-8">
+<form action="<?php echo base_url('ordemservico'); ?>/editar/<?php echo $OsDados->OS_ID ?>" id="SubmitAjax" method="post" accept-charset="utf-8">
     <?php
     if (isset($mensagem) and $mensagem != NULL)
         echo '<div class="alert alert-info">' . $mensagem . '</div>';
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="botoes-modal">
+    <div class="modal-footer">
         <button type="submit"  class="btn btn-primary Model-Submit">Salvar</button>
     </div>
 

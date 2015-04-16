@@ -127,58 +127,50 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function gerenciaitens($id_os) {
+    public function gerenciaitens($id) {
         $dados = array(
             'tela' => 'ordemservico/gerenciaitem',
             'mensagem' => $this->mensagem,
-            'id_os' => $id_os,
-            'LstProd' => $this->join_model->ListaProdOs($id_os)->result(),
-            'Total' => $this->geral_model->TotalProdOS($id_os)->row(),
+            'id_os' => $id,
+            'LstProd' => $this->join_model->ListaProdOs($id)->result(),
+            'Total' => $this->geral_model->TotalProdOS($id)->row(),
         );
         $this->load->view('contente', $dados);
     }
 
-    public function entregar($id_os) {
-
-        $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id_os))->row();
-
-        $dados = array(
-            'tela' => "ordemservico/entregar",
-            'total' => $this->geral_model->TotalProdOS($id_os)->row(),
-            'pessoa' => $this->join_model->EnderecoCompleto($os->PES_ID)->row(),
-            'id_pedido' => $id_os,
-        );
-        $this->load->view('contente', $dados);
-    }
-
-    public function finaliza($id_os) {
-        
-        
-
-        $OsDados = $this->join_model->OsDados($id_os)->row();
-        
-        if ($this->geral_model->FechaOs($id_os) > 0) {
-            $this->mensagem = 'Ordem entregue com sucesso!';
+    public function entregar($id) {
+        $this->form_validation->set_rules('PEDIDO_ID', 'ID DO PEDIDO', 'required');
+        if ($this->form_validation->run() === TRUE) {
+            $OsDados = $this->join_model->OsDados($id)->row();
+            if ($this->geral_model->FechaOs($id) > 0) {
+                $this->mensagem = 'Ordem entregue com sucesso!';
+            } else {
+                $this->mensagem = 'Essa ordem já foi fechado anteriormente ou ouve outro problema!';
+            }
+            $dados = array(
+                'tela' => "ordemservico/recibo",
+                'mensagem' => $this->mensagem,
+                'ListaPedido' => $this->join_model->ListaProdOs($id)->result(),
+                'total' => $this->geral_model->TotalProdOs($id)->row(),
+                'OsDados' => $OsDados,
+                'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
+                'pessoa' => $this->join_model->EnderecoCompleto($OsDados->PES_ID)->row(),
+            );
         } else {
-            $this->mensagem = 'Essa ordem já foi fechado anteriormente ou ouve outro problema!';
+            $os = $this->crud_model->pega("ORDEM_SERV", array('OS_ID' => $id))->row();
+            $dados = array(
+                'tela' => "ordemservico/entregar",
+                'total' => $this->geral_model->TotalProdOS($id)->row(),
+                'pessoa' => $this->join_model->EnderecoCompleto($os->PES_ID)->row(),
+                'id_pedido' => $id,
+            );
         }
-
-        $dados = array(
-            'tela' => "ordemservico/finaliza",
-            'mensagem' => $this->mensagem,
-            'ListaPedido' => $this->join_model->ListaProdOs($id_os)->result(),
-            'total' => $this->geral_model->TotalProdOs($id_os)->row(),
-            'OsDados' => $OsDados,
-            'empresa' => $this->crud_model->pega_tudo("EMPRESAS")->row(),
-            'pessoa' => $this->join_model->EnderecoCompleto($OsDados->PES_ID)->row(),
-        );
-
         $this->load->view('contente', $dados);
     }
 
-    public function reabrir($id_os) {
-        
-        if ($this->geral_model->ReabrirOs($id_os) > 0) {
+    public function reabrir($id) {
+
+        if ($this->geral_model->ReabrirOs($id) > 0) {
             $this->mensagem = 'Pedido foi reaberto com sucesso!';
         } else {
             $this->mensagem = 'Esse pedido já esta aberto!';

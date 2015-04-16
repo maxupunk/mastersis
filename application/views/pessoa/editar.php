@@ -47,7 +47,6 @@ endif;
 
 
             <div class="well">
-                <legend>Contatos:</legend>
                 <div class="row">
                     <div class="col-sm-4">
                         <label>Telefone:</label>

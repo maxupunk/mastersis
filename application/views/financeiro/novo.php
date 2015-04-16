@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('financeiro'); ?>/novo" method="post" id="finanSubmit" accept-charset="utf-8">
+<form action="<?php echo base_url('financeiro'); ?>/novo" method="post" id="SubmitAjax" accept-charset="utf-8">
 
     <?php
     echo validation_errors();
@@ -62,7 +62,7 @@
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
-        <div class="botoes-modal">
+        <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Salvar</button>
             <input type="reset" class="btn btn-warning" value="Limpar"/>
         </div>

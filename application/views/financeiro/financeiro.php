@@ -7,12 +7,12 @@
         </ul>
 
         <div class="row">
-            <div class="col-sm-8 espacamento">
+            <div class="col-sm-6 espacamento">
                 <div class="btn-group btn-group-justified" role="group">
-                    <a href="financeiro/novo" class="btn btn-link" id="InModel">
+                    <a href="financeiro/novo" class="btn btn-link" data-toggle="modal" data-target="#Modal">
                         <span class="glyphicon glyphicon-plus"></span> Nova</a>
 
-                    <a type="button" class="btn btn-link">
+                    <a href="financeiro/baixa" class="btn btn-link" id="Opcao">
                         <span class="glyphicon glyphicon-piggy-bank"></span> Baixar</a>
 
                     <a type="button" class="btn btn-link">
@@ -29,13 +29,28 @@
                 </div>
             </div>
             <div class="col-sm-4 espacamento">
-                <input type="text" id="buscar" placeholder="Buscar no servidor">
+                <input type="text" id="buscar" placeholder="Buscar">
+            </div>
+            <div class="col-sm-2 espacamento">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select name="estatus">
+                            <option value="ab">ABERTO</option>
+                            <option value="pg">PAGO</option>
+                        </select>           
+                    </div>
+                </div>
             </div>
         </div>
 
 
-        <table class="table table-hover">
-            <tbody id="LstEmOrdens"></tbody>
+        <table class="table table-hover" data-sortable>
+            <thead>
+                <tr>
+                    <th width="5%">#</th><th>DESCRIÇÃO/CLIENTE/FORNECEDOR</th><th width="15%">VENCIMENTO</th><th width="10%">VALOR</th><th width="10%">ESTATUS</th>
+                </tr>
+            </thead>
+            <tbody id="LstRecDes"></tbody>
         </table>
 
 
@@ -46,12 +61,14 @@
 
         setInterval(function() {
             $('.nav-tabs a[href="' + MenuSelect + '"]').parents('li').addClass('active');
-            CarregaJson(MenuSelect)
+            CarregaJson(MenuSelect);
         }, 3000);
 
         var json = {};
-        var Menu = null;
+        var idSelect = null;
         var MenuSelect = 1;
+        
+        CarregaJson(MenuSelect);
 
         // comportamento do Model apos fechar
         $(document).on('hidden.bs.modal', function() {
@@ -69,27 +86,25 @@
         });
 
         // sistema de seleção das ordens
-        $(document).on('click', '#LstEmOrdens tr', function() {
+        $(document).on('click', '#LstRecDes tr', function() {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
-            Menu = $(this).children().first().text();
+            idSelect = $(this).children().first().text();
         });
 
         // comportamento do menu opções
-        $(document).on('click', '#Op-Os', function() {
-            if (Menu == null) {
-                $("#modal-content").text("Você não selecionou uma Ordem de serviço!");
+        $(document).on('click', '#Opcao', function() {
+            if (idSelect === null) {
+                $("#Modal .modal-content").text("Você não selecionou um item!");
+                $('#Modal').modal('show');
             } else {
-                $("#modal-content").load($(this).attr('href') + "/" + Menu);
+                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelect})
             }
-            $('.modal-title').text($(this).text());
-            $('.in,.open').removeClass('in open');
-            $('#modal').modal('show');
             return false;
         });
 
-        // comportamento dos formularios das ordems
-        $(document).on("submit", '#finanSubmit', function() {
+        // comportamento dos formularios
+        $(document).on("submit", '#SubmitAjax', function() {
             $.ajax({
                 type: "POST",
                 url: $(this).attr('action'),
@@ -97,17 +112,18 @@
                 data: $(this).serialize(),
                 // enviado com sucesso
                 success: function(response) {
-                    $("#modal-content").html(response);
+                    $("#Modal .modal-content").html(response);
                     CarregaJson(MenuSelect);
                 }
             });
             return false;
         });
+
         // Carrega a lista de ordem das tabelas 
         function CarregaJson(href) {
             $.getJSON("financeiro/ReceitaDespesaLst/" + href, function(data) {
                 if (!comparaArray(json, data)) {
-                    $('#LstEmOrdens').empty();
+                    $('#LstRecDes').empty();
                     if (data != "") {
                         $.each(data, function(key, value) {
                             if (value.DESREC_DESCR === null) {
@@ -115,24 +131,20 @@
                             } else {
                                 Descricao = value.DESREC_DESCR;
                             }
-                            $('#LstEmOrdens').append(
+                            $('#LstRecDes').append(
                                     $('<tr>').append(
                                     $('<td>').text(value.DESREC_ID),
                                     $('<td>').text(Descricao),
                                     $('<td>').text(Data(value.DESREC_VECIMENTO)),
-                                    $('<td>').text(FloatReal(value.DESREC_VALOR))
+                                    $('<td>').text(FloatReal(value.DESREC_VALOR)),
+                                    $('<td>').text(value.DESCRE_ESTATUS)
                                     ));
                         });
                     }
                     json = data;
-                    Menu = null;
+                    idSelect = null;
                 }
             });
-        }
-
-        function Data(data) {
-            d = new Date(data);
-            return d.getDate()+"/"+d.getMonth()+"/"+d.getFullYear()
         }
 
         // Menu Novo

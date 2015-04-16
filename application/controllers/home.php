@@ -58,7 +58,7 @@ class Home extends CI_Controller {
             $this->db->insert('LOG_ACESSOS', $data);
 
             $this->session->set_userdata($login);
-            redirect(base_url('home'), 'refresh');
+            redirect("http://".$this->input->get('url'));
         }
     }
 

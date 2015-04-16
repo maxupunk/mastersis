@@ -1,4 +1,4 @@
-<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" id="OrdemServicos" data-titulo="Gerenciando Itens" method="post" accept-charset="utf-8">
+<form action="<?php echo base_url('ordemservico'); ?>/cadastrar" id="SubmitAjax" method="post" accept-charset="utf-8">
 
     <fieldset>
 
@@ -28,7 +28,7 @@
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>
 
-        <div class="botoes-modal">
+        <div class="modal-footer">
             <button type="submit" class="btn btn-primary Model-Submit">Salvar</button>
         </div>
 

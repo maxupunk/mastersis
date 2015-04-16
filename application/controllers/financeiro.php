@@ -35,12 +35,11 @@ class Financeiro extends CI_Controller {
     }
 
     public function parcela_check($id) {
+        $data = $this->input->post('DESREC_VECIMENTO');
+        $natureza = $this->input->post('DESREC_NATUREZA');
 
-        $valor = $_POST['DESREC_VALOR'];
-        $data = $_POST['DESREC_VECIMENTO'];
-        $natureza = $_POST['DESREC_NATUREZA'];
-
-        $condicao = array('PES_ID' => $id, 'DESREC_VECIMENTO' => $natureza, 'DESREC_VECIMENTO' => $this->convert->DataParaDB($data));
+        // verifica se já existe uma parcela para esse vencimento para esse cliente
+        $condicao = array('PES_ID' => $id, 'DESREC_NATUREZA' => $natureza, 'DESREC_VECIMENTO' => $this->convert->DataParaDB($data));
         $parcela = $this->crud_model->pega("DESPESA_RECEITA", $condicao)->row();
         if ($parcela != null) {
             $this->form_validation->set_message('parcela_check', 'Já existe uma parcela nessa vecimento para esse cliente');
@@ -237,6 +236,37 @@ class Financeiro extends CI_Controller {
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
+    }
+
+    public function baixa($id) {
+
+        $this->form_validation->set_rules('PES_ID', 'NOME DA CLIENTE/FORNECEDOR', 'required|callback_parcela_check');
+        $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
+        $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            
+        }
+
+        $DadosPedido = $this->join_model->RecDesTudo($id)->row();
+
+        $dados = array(
+            'tela' => 'financeiro/baixa',
+            'query' => $DadosPedido,
+            'Parcelas' => $this->geral_model->ParcelasRestante($DadosPedido->PEDIDO_ID)->row(),
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function teste($id) {
+        echo "<pre>";
+        $tudo = $this->join_model->RecDesTudo($id)->row();
+        print_r($tudo);
+        echo "</pre>";
+        echo "<pre>";
+        print_r($this->geral_model->ParcelaTotal($tudo->PEDIDO_ID)->row());
+        echo "</pre>";
     }
 
 }
