@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <label>ADICIONA EM</label>
-                <select name="ADICIONA">
+                <select name="ADICIONA" id="ADICIONA">
                     <option value="1" <?php echo set_select('ADICIONA', '1', TRUE); ?> >Avulso</option>
                     <option value="2" <?php echo set_select('ADICIONA', '2'); ?> >Ordem</option>
                     <option value="3" <?php echo set_select('ADICIONA', '3'); ?> >Comp/Vend</option>
@@ -41,23 +41,23 @@
             </div>
             <div class="col-sm-2">
                 <label class="PedOsId">ID</label>
-                <input type="text" name="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>" />
+                <input type="text" name="PED_OS_ID" id="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>" disabled/>
             </div>
             <div class="col-sm-3">
                 <label>ESTATUS</label>
-                <select name="DESCRE_ESTATUS">
+                <select name="DESCRE_ESTATUS" id="DESCRE_ESTATUS">
                     <option value="ab" <?php echo set_select('DESCRE_ESTATUS', 'ab', TRUE); ?>>Aberto</option>
                     <option value="pg" <?php echo set_select('DESCRE_ESTATUS', 'pg'); ?>>pago</option>
                 </select>
             </div>
             <div class="col-sm-4">
                 <label>PAGO EM</label>
-                <input type="text" class="data" name="DESCRE_DATA_PG" value="<?php echo set_value('DESCRE_DATA_PG'); ?>" disabled/>
+                <input type="text" class="data" id="DESCRE_DATA_PG" name="DESCRE_DATA_PG" value="<?php echo set_value('DESCRE_DATA_PG'); ?>" disabled/>
             </div>
         </div>
 
         <label>DESCRIÇÃO</label>
-        <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR'); ?>" />
+        <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR'); ?>" required />
 
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>

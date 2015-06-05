@@ -394,15 +394,16 @@ class Pedido extends CI_Controller {
     // Funções privadas
     /////////////////////////////////////////////////////
     private function UpdtQntItem($ListPed, $Estoq_id, $qtd) {
-        // Verifica se a quantidade digitada é maior que 0
-        if ($qtd > 0) {
+        // Verifica se a quantidade digitada é maior que 0\
+        //echo is_numeric($qtd);
+        if ($qtd > 0 AND is_numeric($qtd) == TRUE) {
             // pega o item dentro da lista de produto
             $pedido = $this->crud_model->pega("LISTA_PRODUTOS", array('LIST_PED_ID' => $ListPed))->result();
             if ($pedido != NULL) {
                 $produto = $this->crud_model->pega("ESTOQUES", array('ESTOQ_ID' => $Estoq_id))->row();
                 // Verifica de tem estoque suficiente ou se é serviço "-1
                 if ($produto->ESTOQ_ATUAL < $qtd AND $produto->ESTOQ_MIN != -1) {
-                    $this->mensagem = "Não existe estoque suficiente! Estoque atual é de " . $produto->ESTOQ_ATUAL;
+                    $this->mensagem = "Não existe estoque suficiente! O estoque atual é de " . $produto->ESTOQ_ATUAL . " unidades!";
                 }
                 $atualizar = array('LIST_PED_QNT' => $qtd);
                 $condicao = array('LIST_PED_ID' => $ListPed);
@@ -413,7 +414,7 @@ class Pedido extends CI_Controller {
                 $this->mensagem = "Erro: Nã existe esse item no pedido";
             }
         } else {
-            $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01";
+            $this->mensagem = "Erro: Não é aceitavel quantidades menores que 0,01! ou você não digitou numero";
         }
         if ($this->mensagem == NULL)
             return true;

@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Financeiro extends CI_Controller {
 
@@ -50,9 +51,20 @@ class Financeiro extends CI_Controller {
     }
 
     /////////////////////////////////////////////////
+    // funcões privada
+    ////////////////////////////////////////////////
+    private function log($id) {
+        $data['USUARIO_ID'] = $this->session->userdata('USUARIO_ID');
+        $data['DESREC_ID'] = $id;
+        $data['HISTORICO_CMD'] = $this->router->method;
+        $data['HISTORICO_DATA'] = date("Y-m-d h:i:s");
+        $this->db->insert('HISTORICO', $data);
+    }
+
+    ///////////////////////////////////////////////
 
     public function ReceitaDespesaLst($natureza = 1) {
-        $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc')->result();
+        $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc', '15')->result();
         if (isset($ReceitaDespesas)) {
             $this->load->view('json', array('query' => $ReceitaDespesas));
         }
@@ -85,16 +97,14 @@ class Financeiro extends CI_Controller {
 
         if ($this->mensagem == NULL) {
             $Retorno_array = array();
-            $Dados_Array = array();
 
             $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
-
-            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
-            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
-            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_COMP;
-
             $Total = $this->geral_model->TotalPedComp($post['Pedido'])->row();
-            array_push($Retorno_array, $Dados_Array);
+
+            $Retorno_array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+            $Retorno_array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+            $Retorno_array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_COMP;
+
             array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
         } else {
             $Retorno_array = array('msg' => $this->mensagem);
@@ -180,7 +190,7 @@ class Financeiro extends CI_Controller {
     public function novo() {
 
         $formulario = $this->input->post();
-        $campos = array('USUARIO_ID', 'PES_ID', 'DESREC_NATUREZA', 'DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO', 'DESCRE_ESTATUS');
+        $campos = array('PES_ID', 'DESREC_NATUREZA', 'DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO', 'DESCRE_ESTATUS');
 
         // validar o formulario
         $this->form_validation->set_rules('PES_NOME', 'NOME DA CLIENTE/FORNECEDOR', 'required|strtoupper');
@@ -217,15 +227,12 @@ class Financeiro extends CI_Controller {
 
         if ($this->form_validation->run() == TRUE) {
 
-            $senha = array('DESREC_VALOR' => $this->convert->EmDecimal($formulario['DESREC_VALOR']));
-            $vencimento = array('DESREC_VECIMENTO' => $this->convert->DataParaDB($formulario['DESREC_VECIMENTO']));
-            $formulario = array_replace($formulario, $senha);
-            $formulario = array_replace($formulario, $vencimento);
-
-            $formulario['USUARIO_ID'] = $this->session->userdata('USUARIO_ID');
+            $formulario['DESREC_VALOR'] = $this->convert->EmDecimal($formulario['DESREC_VALOR']);
+            $formulario['DESREC_VECIMENTO'] = $this->convert->DataParaDB($formulario['DESREC_VECIMENTO']);
 
             $dados = elements($campos, $formulario);
             if ($this->crud_model->inserir('DESPESA_RECEITA', $dados) === TRUE) {
+                $this->log($this->db->insert_id());
                 $this->mensagem = "Inserido com sucesso!";
             } else {
                 $this->mensagem = "Erro: problema ao gravar no banco de dados";
@@ -238,34 +245,186 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function baixa($id) {
+    public function baixar($id) {
 
-        $this->form_validation->set_rules('PES_ID', 'NOME DA CLIENTE/FORNECEDOR', 'required|callback_parcela_check');
-        $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
-        $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
+        // verifica se está aberto
+        if ($this->crud_model->pega("DESPESA_RECEITA", array('DESCRE_ESTATUS' => 'ab', 'DESREC_ID' => $id))->row() !== NULL) {
+            $this->form_validation->set_rules('DESREC_ID', 'ID DESPEZA / RECEITA', 'required');
 
-        if ($this->form_validation->run() == TRUE) {
-            
+            if ($this->form_validation->run() == TRUE) {
+                if ($this->geral_model->BaixaPg($id) > 0) {
+                    $this->log($id);
+                    $this->mensagem = "Baixa feita com sucesso!";
+                } else {
+                    $this->mensagem = "Erro: Despeza / Receita não existe ou já foi baixada anteriormente";
+                }
+            }
+        } else {
+            $this->mensagem = "O item não poder ser baixado, o mesmo não está em aberto";
         }
-
+        
         $DadosPedido = $this->join_model->RecDesTudo($id)->row();
 
+        $PED_ID = $DadosPedido->DESREC_ID;
+        $selecao = 'dr';
+
+        if ($DadosPedido->OS_ID !== NULL) {
+            $PED_ID = $DadosPedido->OS_ID;
+            $selecao = 'os';
+        }
+        if ($DadosPedido->PEDIDO_ID !== NULL) {
+            $PED_ID = $DadosPedido->PEDIDO_ID;
+            $selecao = 'pd';
+        }
+
         $dados = array(
-            'tela' => 'financeiro/baixa',
+            'tela' => 'financeiro/baixar',
             'query' => $DadosPedido,
-            'Parcelas' => $this->geral_model->ParcelasRestante($DadosPedido->PEDIDO_ID)->row(),
+            'Parcelas' => $this->geral_model->ParcelasRestante($PED_ID, $selecao)->row(),
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
-    public function teste($id) {
+    public function detalhes($id) {
+
+        $DadosPedido = $this->join_model->RecDesTudo($id)->row();
+
+        $PED_ID = $DadosPedido->DESREC_ID;
+        $selecao = 'dr';
+
+        if ($DadosPedido->OS_ID !== NULL) {
+            $PED_ID = $DadosPedido->OS_ID;
+            $selecao = 'os';
+        }
+        if ($DadosPedido->PEDIDO_ID !== NULL) {
+            $PED_ID = $DadosPedido->PEDIDO_ID;
+            $selecao = 'pd';
+        }
+
+        $dados = array(
+            'tela' => 'financeiro/detalhes',
+            'query' => $DadosPedido,
+            'Parcelas' => $this->geral_model->ParcelasRestante($PED_ID, $selecao)->row(),
+            'historicos' => $this->join_model->Historico($id, "dr")->result(),
+            'mensagem' => $this->mensagem,
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function editar($id) {
+
+        $formulario = $this->input->post();
+
+        // validar o formulario
+        $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
+        $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
+        $this->form_validation->set_rules('DESREC_NATUREZA', '', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $formulario['DESREC_VALOR'] = $this->convert->EmDecimal($formulario['DESREC_VALOR']);
+            $formulario['DESREC_VECIMENTO'] = $this->convert->DataParaDB($formulario['DESREC_VECIMENTO']);
+
+            $campos = array('DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO');
+            $elementos = elements($campos, $formulario);
+            if ($this->crud_model->update("DESPESA_RECEITA", $elementos, array('DESREC_ID' => $formulario['DESREC_ID'])) === TRUE) {
+                $this->log($id);
+                $this->mensagem = "Edição salva com sucesso!";
+            } else {
+                $this->mensagem = "Erro: problema ao grava alterações no banco de dados";
+            }
+        }
+
+        $DadosPedido = $this->join_model->RecDesTudo($id)->row();
+
+        $PED_ID = $DadosPedido->DESREC_ID;
+        $selecao = 'dr';
+
+        if ($DadosPedido->OS_ID !== NULL) {
+            $PED_ID = $DadosPedido->OS_ID;
+            $selecao = 'os';
+        }
+        if ($DadosPedido->PEDIDO_ID !== NULL) {
+            $PED_ID = $DadosPedido->PEDIDO_ID;
+            $selecao = 'pd';
+        }
+
+        $dados = array(
+            'tela' => 'financeiro/editar',
+            'query' => $DadosPedido,
+            'Parcelas' => $this->geral_model->ParcelasRestante($PED_ID, $selecao)->row(),
+            'mensagem' => $this->mensagem
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function canselar($id) {
+        // verifica se já não está canselada
+        if ($this->crud_model->pega("DESPESA_RECEITA", array('DESCRE_ESTATUS' => 'cn', 'DESREC_ID' => $id))->row() === NULL) {
+
+            $this->form_validation->set_rules('DESREC_ID', '', 'required');
+
+            if ($this->form_validation->run() == TRUE) {
+                $atualizar = array('DESCRE_ESTATUS' => 'cn');
+                $condicao = array('DESREC_ID' => $this->input->post('DESREC_ID'));
+                if ($this->crud_model->update("DESPESA_RECEITA", $atualizar, $condicao) === TRUE) {
+                    $this->log($id);
+                    $this->mensagem = "Canselado com sucesso!";
+                } else {
+                    $this->mensagem = "Erro: problema ao grava alterações no banco de dados";
+                }
+            }
+
+            $DadosPedido = $this->join_model->RecDesTudo($id)->row();
+
+            $PED_ID = $DadosPedido->DESREC_ID;
+            $selecao = 'dr';
+
+            if ($DadosPedido->OS_ID !== NULL) {
+                $PED_ID = $DadosPedido->OS_ID;
+                $selecao = 'os';
+            }
+            if ($DadosPedido->PEDIDO_ID !== NULL) {
+                $PED_ID = $DadosPedido->PEDIDO_ID;
+                $selecao = 'pd';
+            }
+
+            $dados = array(
+                'tela' => 'financeiro/canselar',
+                'query' => $DadosPedido,
+                'Parcelas' => $this->geral_model->ParcelasRestante($PED_ID, $selecao)->row(),
+                'historicos' => $this->join_model->Historico($id, "dr")->result(),
+                'mensagem' => $this->mensagem,
+            );
+        } else {
+            $dados = array(
+                'tela' => 'financeiro/canselar',
+                'mensagem' => 'Essa conta já foi canselada anteriormente',
+            );
+        }
+        $this->load->view('contente', $dados);
+    }
+
+    public function busca() {
+        $this->form_validation->set_rules('qtd', '', 'required');
+        $this->form_validation->set_rules('estatus', '', 'required');
+        $this->form_validation->set_rules('natureza', '', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $formulario = $this->input->post();
+            $busca = $formulario['busca'];
+            $estatus = $formulario['estatus'];
+            $qnt = $formulario['qtd'];
+            $natureza = $formulario['natureza'];
+            $query = $this->join_model->RecDesBusca($busca, $estatus, $qnt, $natureza)->result();
+            $dados = array('query' => $query);
+            $this->load->view('json', $dados);
+        }
+    }
+
+    public function teste($id, $id2) {
         echo "<pre>";
-        $tudo = $this->join_model->RecDesTudo($id)->row();
-        print_r($tudo);
-        echo "</pre>";
-        echo "<pre>";
-        print_r($this->geral_model->ParcelaTotal($tudo->PEDIDO_ID)->row());
+        print_r($this->join_model->Historico($id, $id2)->result());
         echo "</pre>";
     }
 

@@ -101,7 +101,7 @@ class Pessoa extends CI_Controller {
                 $this->mensagem = $this->lang->line("msg_editar_sucesso");
 
                 $endereco = elements(array('END_NUMERO', 'END_REFERENCIA'), $this->input->post());
-                if ($this->crud_model->update("ENDERECOS", $endereco, array('END_ID' => $this->input->post('id_pessoa'))) === TRUE) {
+                if ($this->crud_model->update("ENDERECOS", $endereco, array('DESREC_ID' => $this->input->post('id_pessoa'))) === TRUE) {
                     $this->mensagem .= $this->lang->line("msg_editar_sucesso");
                 } else {
                     $this->mensagem .= $this->lang->line("msg_editar_erro");
@@ -144,7 +144,7 @@ class Pessoa extends CI_Controller {
     }
 
     public function busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
         $dados = array(
             'tela' => "pessoa/busca",
             'query' => $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca, 'PES_EMAIL' => $busca))->result(),
@@ -153,7 +153,7 @@ class Pessoa extends CI_Controller {
     }
 
     public function pegapessoa() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
 
         $this->db->cache_on();
         $rows = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();

@@ -21,31 +21,33 @@ endif;
 
 <div class="row">
     <div class="col-lg-12">
-    <form action="<?php echo base_url('categoria'); ?>/imagem/<?php echo $id_categoria ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
-        <fieldset>
-            <legend><?php echo $query->CATE_NOME; ?></legend>
+        <form action="<?php echo base_url('categoria'); ?>/imagem/<?php echo $id_categoria ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
+            <fieldset>
+                <legend><?php echo $query->CATE_NOME; ?></legend>
 
 
-            <?php
-            if (isset($upload))
-                print_r($upload);
-            if (isset($thumb))
-                print_r($thumb);
-            if (isset($mensagem) and $mensagem != NULL)
-                echo '<div class="alert alert-info">' . $mensagem . '</div>';
-            ?>
+                <?php
+                if (isset($upload)) {
+                    print_r($upload);
+                }
+                if (isset($thumb)) {
+                    print_r($thumb);
+                }
+                if (isset($mensagem) and $mensagem != NULL) {
+                    echo '<div class="alert alert-info">' . $mensagem . '</div>';
+                }
+                ?>
 
-            <label class="file_input_button">Click para seleciona arquivo!
-                <input type="file" name="userfile" />
-            </label>
-            <input type="hidden" value="<?php echo $id_categoria; ?>" name="id_categoria" />
-            <button type="submit" id="img_botao" class="btn btn-primary">Adiciona/Alterar</button>
-        </fieldset>
-    </form>
-    <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
+                <label class="file_input_button"><span>Click para seleciona arquivo!</span>
+                    <input type="file" name="userfile" id="ArqUpload" />
+                </label>
+                <input type="hidden" value="<?php echo $id_categoria; ?>" name="id_categoria" />
+            </fieldset>
+        </form>
+        <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
     </div>
 </div>
 
 <div class="row">
-    <?php if ($query->CATE_IMG != NULL) echo '<img src="assets/arquivos/categoria/' . $query->CATE_IMG . '" >' ?>
+    <?php if ($query->CATE_IMG != NULL) echo '<img src="assets/arquivos/categoria/' . $query->CATE_IMG . '" class="col-sm-12">' ?>
 </div>

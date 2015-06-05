@@ -12,7 +12,7 @@
 
         <div class="well-sm">
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                     <label>Tipo *:</label>
                     <?php echo form_dropdown('PES_TIPO', array('f' => 'FISICA', 'j' => 'JURIDICA'), $this->input->post('PES_TIPO'), 'id="pessoa_tipo" autofocus'); ?>
                 </div>
@@ -20,7 +20,7 @@
                     <label class="cpf-cnpj-label">C.P.F *:</label>
                     <input type="text" name="PES_CPF_CNPJ" value="<?php echo set_value('PES_CPF_CNPJ'); ?>" class="cpf" id="cpf-cnpj" required />
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     <label>Dt.Nasc.:</label>
                     <input type="text" class="data" name="PES_NASC_DATA" value="<?php echo set_value('PES_NASC_DATA'); ?>"/>
                 </div>
@@ -64,8 +64,9 @@
                 <div class="col-sm-6">
                     <?php
                     $options = array('' => 'Selecione o Estado');
-                    foreach ($estados as $estado)
+                    foreach ($estados as $estado) {
                         $options[$estado->ESTA_ID] = $estado->ESTA_NOME;
+                    }
                     echo form_dropdown('ESTA_ID', $options);
                     ?>
                 </div>
@@ -94,14 +95,18 @@
                 </div>
             </div>
 
-
-            <label>Numero:</label>
-            <?php echo form_error('END_NUMERO'); ?>
-            <input type="text" name="END_NUMERO" value="<?php echo set_value('END_NUMERO'); ?>" />
-
-            <label>Referencia:</label>
-            <?php echo form_error('END_REFERENCIA'); ?>
-            <input type="text" name="END_REFERENCIA" value="<?php echo set_value('END_REFERENCIA'); ?>" />
+            <div class="row">
+                <div class="col-sm-2">
+                    <label>Numero:</label>
+                    <?php echo form_error('END_NUMERO'); ?>
+                    <input type="text" name="END_NUMERO" value="<?php echo set_value('END_NUMERO'); ?>" />
+                </div>
+                <div class="col-sm-10"
+                     <label>Referencia:</label>
+                         <?php echo form_error('END_REFERENCIA'); ?>
+                    <input type="text" name="END_REFERENCIA" value="<?php echo set_value('END_REFERENCIA'); ?>" />
+                </div>
+            </div>
         </div>
 
         <input type="hidden" name="PES_DATE" />

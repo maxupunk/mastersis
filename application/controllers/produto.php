@@ -66,19 +66,28 @@ class Produto extends CI_Controller {
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
 
-        // se for valido ele chama o inserir dentro do produto_model
+        // se for valido ele faz o update
         if ($this->form_validation->run() == TRUE) {
+            // inicia a trasação
+            $this->db->trans_begin();
+
             $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
-            if ($this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                if ($dados['PRO_TIPO'] == "s") {
-                    $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1);
-                } else {
-                    $estoque = array('ESTOQ_MIN' => NULL);
-                }
-                $this->crud_model->update("ESTOQUES", $estoque, array('PRO_ID' => $this->input->post('id_produto')));
-                $this->mensagem = $this->lang->line("msg_editar_sucesso");
+            $this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto')));
+            if ($dados['PRO_TIPO'] == "s") {
+                $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1);
             } else {
-                $this->mensagem = $this->lang->line("msg_editar_erro");
+                $estoque = array('ESTOQ_MIN' => NULL);
+            }
+            $this->crud_model->update("ESTOQUES", $estoque, array('PRO_ID' => $this->input->post('id_produto')));
+            $this->db->trans_commit();
+            $this->mensagem = "Atualização feita com sucesso";
+
+            if ($this->db->trans_status() === TRUE) {
+                $this->db->trans_commit();
+                $this->mensagem = "Atualização feita com sucesso";
+            } else {
+                $this->db->trans_rollback();
+                $this->mensagem = "Problema ao atualizar";
             }
         }
 
@@ -92,59 +101,108 @@ class Produto extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function Imagem() {
+    public function Imagem($id_produto) {
 
-        // validar o formulario
+        //$id_produto = $this->uri->segment(3);
+        $this->form_validation->set_rules('id_produto', '', 'required');
+
         $this->load->library(array('image_lib', 'upload'));
+        if ($this->form_validation->run() == TRUE) {
 
-        $img['upload_path'] = 'assets/arquivos/produto/';
-        $img['allowed_types'] = 'jpg';
-        $img['max_size'] = '2048';
-        $img['file_name'] = $this->input->post('id_produto');
-        $img['overwrite'] = TRUE;
+            $img['upload_path'] = 'assets/arquivos/produto/';
+            $img['allowed_types'] = 'jpg';
+            $img['file_ext_tolower'] = TRUE;
+            $img['max_size'] = '2048';
+            $img['file_name'] = $this->input->post('id_produto') . "-img";
+            $img['max_filename_increment'] = '100';
+            $img['overwrite'] = false;
 
-        $this->upload->initialize($img);
+            $this->upload->initialize($img);
 
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->upload->do_upload() == TRUE):
+            // se for valido ele chama o inserir dentro do produto_model
+            if ($this->upload->do_upload() == TRUE) {
 
-            $data = $this->upload->data();
+                $data = $this->upload->data();
 
-            $thumb['image_library'] = "gd";
-            $thumb['source_image'] = $data['file_path'] . $data['file_name'];
-            $thumb['create_thumb'] = TRUE;
-            $thumb['maintain_ratio'] = TRUE;
-            $thumb['master_dim'] = "auto";
-            $thumb['quality'] = "100%";
-            $thumb['width'] = "120";
-            $thumb['height'] = "120";
-            $this->image_lib->initialize($thumb);
-            $this->image_lib->resize();
+                $thumb['image_library'] = "gd";
+                $thumb['source_image'] = $data['file_path'] . $data['file_name'];
+                $thumb['create_thumb'] = FALSE;
+                $thumb['maintain_ratio'] = TRUE;
+                $thumb['master_dim'] = "auto";
+                $thumb['quality'] = "80%";
+                $thumb['width'] = "120";
+                $thumb['height'] = "120";
+                $this->image_lib->initialize($thumb);
+                $this->image_lib->resize();
 
-            if ($this->crud_model->update("PRODUTOS", array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_imagem_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_imagem_erro");
+                $ProdDados = $this->crud_model->pega("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto')))->row();
+                if ($ProdDados->PRO_IMG == NULL) {
+                    if ($this->crud_model->update("PRODUTOS", array('PRO_IMG' => $data['file_name']), array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
+                        $this->mensagem = "Imagem alterada com sucesso";
+                    } else {
+                        $this->mensagem = "Erro: problema ao altera a imagem.";
+                    }
+                }
+
+                $imgDados = array('PROIMG_NOME' => $data['file_name'], 'PRO_ID' => $this->input->post('id_produto'));
+                if ($this->crud_model->inserir('PRODUTO_IMG', $imgDados)) {
+                    $this->mensagem = "Imagem adicionada com sucesso!";
+                } else {
+                    $this->mensagem = "Erro: problema ao asiciona a imagem.";
+                }
             }
-
-        endif;
+        }
 
         $dados = array(
             'tela' => "produto/imagem",
+            'id_produto' => $id_produto,
             'upload' => $this->upload->display_errors(),
             'thumb' => $this->image_lib->display_errors(),
+            'imagens' => $this->crud_model->pega("PRODUTO_IMG", array('PRO_ID' => $id_produto))->result(),
             'mensagem' => $this->mensagem,
         );
         $this->load->view('contente', $dados);
     }
 
-    public function Excluir($id_produto) {
+    public function ImagemCapa($id_pro, $img) {
+        if ($this->crud_model->update("PRODUTOS", array('PRO_IMG' => $img), array('PRO_ID' => $id_pro)) === TRUE) {
+            $this->mensagem = "Imagem padrão alterada com sucesso";
+        } else {
+            $this->mensagem = "Erro: problema ao altera a imagem padrão.";
+        }
+        $dados = array('query' => array('msg' => $this->mensagem));
+        $this->load->view('json', $dados);
+    }
 
+    public function ImagemExcluir($id) {
+        if ($this->input->post('id') > 0):
+            $imagem = $this->crud_model->pega("PRODUTO_IMG", array('PROIMG_ID' => $id))->row();
+            $produto = $this->crud_model->pega("PRODUTOS", array('PRO_IMG' => $imagem->PROIMG_NOME))->row();
+            if ($produto) {
+                $this->crud_model->update('PRODUTOS', array('PRO_IMG' => NULL), array('PRO_ID' => $produto->PRO_ID));
+            }
+            if ($this->crud_model->excluir("PRODUTO_IMG", array('PROIMG_ID' => $id)) === TRUE) {
+                unlink("assets/arquivos/produto/" . $imagem->PROIMG_NOME);
+                $this->mensagem = "Imagem removida com sucesso!";
+            } else {
+                $this->mensagem = "Erro: problema no banco de dados";
+            }
+        endif;
+
+        $dados = array(
+            'tela' => "produto/excluir_img",
+            'mensagem' => $this->mensagem,
+            'query' => $this->crud_model->pega("PRODUTO_IMG", array('PROIMG_ID' => $id))->row(),
+        );
+        $this->load->view('contente', $dados);
+    }
+
+    public function Excluir($id_produto) {
         if ($this->input->post('id_produto') > 0):
             if ($this->crud_model->excluir("PRODUTOS", array('PRO_ID' => $this->input->post('id_produto'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_excluir_sucesso");
+                $this->mensagem = "Excluido com sucesso";
             } else {
-                $this->mensagem = $this->lang->line("msg_excluir_erro");
+                $this->mensagem = "Erro: problemas no banco de dados";
             }
         endif;
 
@@ -157,7 +215,7 @@ class Produto extends CI_Controller {
     }
 
     public function Busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
         $dados = array(
             'tela' => "produto/busca",
             'query' => $this->crud_model->buscar("PRODUTOS", array('PRO_ID' => $busca, 'PRO_DESCRICAO' => $busca, 'PRO_CARAC_TEC' => $busca))->result(),
@@ -190,14 +248,14 @@ class Produto extends CI_Controller {
 
     public function PegaProduto() {
 
-        $busca = $_GET['buscar'];
-        
+        $busca = $this->input->get('buscar', TRUE);
+
         if ($this->uri->segment(3) == FALSE) {
             $rows = $this->join_model->ProdutoBusca($busca)->result();
         } else {
             $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
         }
-        
+
         $json_array = array();
         foreach ($rows as $row) {
             $estoq_atual = ($row->PRO_TIPO == "s") ? "Serviço" : $row->ESTOQ_ATUAL;
@@ -205,20 +263,6 @@ class Produto extends CI_Controller {
         }
 
         $dados = array('query' => $json_array);
-        $this->load->view('json', $dados);
-    }
-    
-    public function AjustePreco() {
-        $busca = $_GET['buscar'];
-        if ($this->uri->segment(3) == FALSE) {
-            $rows = $this->join_model->ProdutoBusca($busca)->result();
-        } else {
-            $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
-        }
-        
-        setlocale(LC_MONETARY, "pt_BR");
-
-        $dados = array('query' => $rows);
         $this->load->view('json', $dados);
     }
 

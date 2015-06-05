@@ -21,12 +21,12 @@ class Home extends CI_Controller {
         $this->load->view('home_login');
     }
 
-    function dologin() {
+    public function dologin() {
         $usuario = $this->input->post('usuario');
         $senha = hash("sha512", $this->input->post('senha'));
 
         //echo hash("sha512", $this->input->post('senha'));
-        
+
         if ($usuario == "" || $this->input->post('senha') == "") {
             redirect(base_url('home/login'), 'refresh');
             exit();
@@ -34,7 +34,7 @@ class Home extends CI_Controller {
 
         if (isset($_POST['lembrar'])) {
             setcookie("usuario", $usuario);
-            setcookie("lembrar", "checked");
+            //setcookie("lembrar", "checked");
         }
 
         $result = $this->crud_model->pega("USUARIOS", array('USUARIO_LOGIN' => $usuario, 'USUARIO_SENHA' => $senha, 'USUARIO_ESTATUS' => 'a'))->row();
@@ -58,13 +58,56 @@ class Home extends CI_Controller {
             $this->db->insert('LOG_ACESSOS', $data);
 
             $this->session->set_userdata($login);
-            redirect("http://".$this->input->get('url'));
+            redirect('home');
         }
     }
 
-    function logout() {
+    public function logout() {
         $this->session->sess_destroy();
         $this->login();
+    }
+
+    public function download() {
+        // local file that should be send to the client
+        $local_file = 'teste.zip';
+
+// filename that the user gets as default
+        $download_file = 'your-download-name.zip';
+
+// set the download rate limit (=> 20,5 kb/s)
+        $download_rate = 20.5;
+
+        if (file_exists($local_file) && is_file($local_file)) {
+
+            // send headers
+            header('Cache-control: private');
+            header('Content-Type: application/octet-stream');
+            header('Content-Length: ' . filesize($local_file));
+            header('Content-Disposition: filename=' . $download_file);
+
+            // flush content
+            flush();
+
+            // open file stream
+            $file = fopen($local_file, "r");
+
+            while (!feof($file)) {
+
+                // send the current file part to the browser
+                print fread($file, round($download_rate * 1024));
+
+                // flush the content to the browser
+                flush();
+
+                // sleep one second
+                sleep(1);
+            }
+
+            // close file stream
+            fclose($file);
+        } else {
+            die('Error: The file ' . $local_file . ' does not exist!');
+        }
     }
 
 }

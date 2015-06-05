@@ -40,7 +40,7 @@ class Medida extends CI_Controller {
     }
 
     public function busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
         $dados = array(
             'tela' => "medida/busca",
             'query' => $this->crud_model->buscar("MEDIDAS", array('MEDI_NOME' => $busca))->result(),

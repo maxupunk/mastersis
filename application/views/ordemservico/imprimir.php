@@ -50,11 +50,11 @@
 
         <table class="table table-hover">
             <thead>
-            <tr>
-                <th>USUARIO</th>
-                <th>ENTRADA</th>
-                <th>ESTATUS</th>
-            </tr>
+                <tr>
+                    <th>USUARIO</th>
+                    <th>ENTRADA</th>
+                    <th>ESTATUS</th>
+                </tr>
             </thead>
             <tr>
                 <td><?php echo $usuario->USUARIO_APELIDO; ?></td>

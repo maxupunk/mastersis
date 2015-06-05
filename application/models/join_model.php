@@ -129,6 +129,7 @@ class Join_model extends CI_Model {
         }
 
         $this->db->where('DESPESA_RECEITA.DESREC_NATUREZA', $natureza);
+        $this->db->where('DESPESA_RECEITA.DESCRE_ESTATUS', 'ab');
         return $this->db->get();
     }
 
@@ -138,8 +139,44 @@ class Join_model extends CI_Model {
         $this->db->join('PESSOAS', 'DESPESA_RECEITA.PES_ID = PESSOAS.PES_ID', 'left');
         $this->db->join('PEDIDOS', 'DESPESA_RECEITA.PEDIDO_ID = PEDIDOS.PEDIDO_ID', 'left');
         $this->db->join('ORDEM_SERV', 'DESPESA_RECEITA.OS_ID = ORDEM_SERV.OS_ID', 'left');
-
         $this->db->where('DESPESA_RECEITA.DESREC_ID', $id);
+        return $this->db->get();
+    }
+
+    public function RecDesBusca($busca, $estatus = 'ab', $quant = 0, $natureza = 1) {
+        $this->db->select('*');
+        $this->db->from('DESPESA_RECEITA', 'PESSOAS', 'PEDIDOS', 'ORDEM_SERV');
+        $this->db->join('PESSOAS', 'DESPESA_RECEITA.PES_ID = PESSOAS.PES_ID', 'left');
+        $this->db->join('PEDIDOS', 'DESPESA_RECEITA.PEDIDO_ID = PEDIDOS.PEDIDO_ID', 'left');
+        $this->db->join('ORDEM_SERV', 'DESPESA_RECEITA.OS_ID = ORDEM_SERV.OS_ID', 'left');
+        $this->db->like('PESSOAS.PES_NOME', $busca);
+        $this->db->where('DESPESA_RECEITA.DESCRE_ESTATUS', $estatus);
+        $this->db->where('DESPESA_RECEITA.DESREC_NATUREZA', $natureza);
+        $this->db->order_by("DESPESA_RECEITA.DESREC_VECIMENTO", "asc");
+        if ($quant !== 0) {
+            $this->db->limit($quant);
+        }
+        return $this->db->get();
+    }
+
+    public function Historico($id, $selecao) {
+        $this->db->select('USUARIO_LOGIN, HISTORICO_CMD, HISTORICO_DATA');
+        $this->db->from('HISTORICO', 'USUARIOS');
+        $this->db->join('USUARIOS', 'HISTORICO.USUARIO_ID = USUARIOS.USUARIO_ID');
+        switch ($selecao) {
+            case 'dr':
+                $this->db->where('HISTORICO.DESREC_ID', $id);
+                break;
+            case 'pd':
+                $this->db->where('HISTORICO.PEDIDO_ID', $id);
+                break;
+            case 'os':
+                $this->db->where('HISTORICO.OS_ID', $id);
+                break;
+            case 'et':
+                $this->db->where('HISTORICO.ESTOQ_ID', $id);
+                break;
+        }
         return $this->db->get();
     }
 

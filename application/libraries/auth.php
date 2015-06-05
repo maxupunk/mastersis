@@ -1,78 +1,48 @@
 <?php
 
+//
+// Control de permisão e altenticação baseado em um codigo fonte liberado na internet
+// totalmente alterado e melhorado para um maior desempenho e segurança
+// ainda em TESTE
+// By Maxuel Alcântara Aguiar
+//
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Auth {
 
     private $CI;
+    //sim privado for 1 todos os novos metodos vão ser gravado como privado
+    private $privado = 0;
 
     public function __construct() {
         $this->CI = & get_instance();
     }
 
     function check_logged($classe, $metodo) {
-        /*
-         * Criando uma instância do CodeIgniter para poder acessar
-         * banco de dados, sessionns, models, etc...
-         */
-        
-        inicio:
-        /**
-         * Buscando a classe e metodo da tabela sys_metodos
-         */
-        $array = array('METOD_CLASS' => $classe, 'METOD_METODO' => $metodo);
-        $this->CI->db->where($array);
-        $query = $this->CI->db->get('METODOS');
-        $result = $query->result();
 
+        //verifica se já existe e traz as informacoes de publico ou privado
+        if ($this->check_tabela($classe, $metodo)) {
+            // Se for privado, verifica o login
+            $nome = $this->CI->session->userdata('USUARIO_APELIDO');
+            $logged_in = $this->CI->session->userdata('LOGGET_IN');
+            $id_usuario = $this->CI->session->userdata('USUARIO_ID');
 
-        // Se este metodo ainda não existir na tabela sera cadastrado
-        if (count($result) == 0) {
-            $data = array(
-                'METOD_CLASS' => $classe,
-                'METOD_METODO' => $metodo,
-                'METOD_APELIDO' => $classe . '/' . $metodo,
-                'METOD_PRIVADO' => 0
-            );
-            $this->CI->db->insert('METODOS', $data);
-            // volta para o inicio da funçao
-            goto inicio;
-            
-        } else {
-            //Se ja existir tras as informacoes de publico ou privado
-            if ($result[0]->METOD_PRIVADO == 0) {
-                // Escapa da validacao e mostra o metodo.
-                return false;
-            } else {
-                // Se for privado, verifica o login
-                $nome = $this->CI->session->userdata('USUARIO_APELIDO');
-                $logged_in = $this->CI->session->userdata('LOGGET_IN');
-                $id_usuario = $this->CI->session->userdata('USUARIO_ID');
-
-                $id_sys_metodos = $result[0]->METOD_ID;
-
-                // Se o usuario estiver logado vai verificar se tem permissao na tabela.
-                if ($nome && $logged_in && $id_usuario) {
-
-                    $array = array('METOD_ID' => $id_sys_metodos, 'USUARIO_ID' => $id_usuario);
-                    $this->CI->db->where($array);
-                    $query2 = $this->CI->db->get('PERMISSOES');
-                    $result2 = $query2->result();
-
-                    // Se não vier nenhum resultado da consulta, manda para página de
-                    // usuario sem permissão.
-                    if (count($result2) == 0) {
-                        show_error("VOCÊ NÃO TEM PERMICÃO DE ACESSAR ESSA PAGINA!", 401, "AREA RESTRITA");
-                    } else {
-                        return true;
-                    }
-                    // Se não estiver logado, sera redirecionado para o login.
+            // Se o usuario estiver logado vai verificar se tem permissao na tabela.
+            if ($nome && $logged_in && $id_usuario) {
+                // verifica se o usuario tem permisão, se não manda mensagem de erro.
+                if ($this->check_permissao($classe, $metodo)) {
+                    return true;
                 } else {
-                    $atual_link = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-                    redirect(base_url('home/login')."?url=".$atual_link);
+                    show_error("VOCÊ NÃO TEM PERMICÃO DE ACESSAR ESSA PAGINA!", 401, "AREA RESTRITA");
                 }
+            } else {
+                // Se não estiver logado, sera redirecionado para o login.
+                redirect(base_url('home/login'));
             }
+        } else {
+            // Escapa da validacao e mostra o metodo.
+            return false;
         }
     }
 
@@ -80,20 +50,44 @@ class Auth {
      * Método auxiliar para autenticar entradas em menu.
      * Não faz parte do plugin como um todo.
      */
-    function check_menu($classe, $metodo) {
-        $this->CI = & get_instance();
+    function check_permissao($classe, $metodo) {
         $sql = "SELECT SQL_CACHE
-                count(PERMISSOES.PREM_ID) as found
+                count(PERMISSOES.PERM_ID) as found
                 FROM
                 PERMISSOES
                 INNER JOIN METODOS
                 ON METODOS.METOD_ID = PERMISSOES.METOD_ID
-                WHERE USUARIO_ID = '" . $this->CI->session->userdata('id_usuario') . "'
+                WHERE USUARIO_ID = '" . $this->CI->session->userdata('USUARIO_ID') . "'
                 AND METOD_CLASS = '" . $classe . "'
                 AND METOD_METODO = '" . $metodo . "'";
-        $query = $this->CI->db->query($sql);
-        $result = $query->result();
-        return $result[0]->found;
+        $result = $this->CI->db->query($sql)->row();
+        return $result->found;
+    }
+
+    // Verifica se já existe a MEDOTO e CLASS na tabela
+    function check_tabela($classe, $metodo) {
+        
+        $this->CI->db->where(array('METOD_CLASS' => $classe, 'METOD_METODO' => $metodo));
+        $result = $this->CI->db->get('METODOS')->row();
+        // Se este metodo ainda não existir na tabela será cadastrado
+        if (count($result) == 0) {
+            $data['METOD_CLASS'] = $classe;
+            $data['METOD_METODO'] = $metodo;
+            $data['METOD_PRIVADO'] = $this->privado;
+            $this->CI->db->insert('METODOS', $data);
+            return $data['METOD_PRIVADO'];
+        } else {
+            return $result->METOD_PRIVADO;
+        }
+    }
+
+    // Log no DB
+    function log($metod_id) {
+        $data['USUARIO_ID'] = $this->CI->session->userdata('USUARIO_ID');
+        $data['LOG_ACESS_IP'] = getenv("REMOTE_ADDR");
+        $data['LOG_ACESS_DATA'] = date("Y-m-d h:i:s");
+        $data['METOD_ID'] = $metod_id;
+        $this->CI->db->insert('LOG_ACESSOS', $data);
     }
 
 }

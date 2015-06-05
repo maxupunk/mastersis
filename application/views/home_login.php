@@ -28,7 +28,7 @@
             </h4>
 
 
-            <form action="<?php echo base_url('home'); ?>/dologin?url=<?php echo $this->input->get('url'); ?>"" method="post" accept-charset="utf-8" class="form-signin form-group bg-success">
+            <form action="<?php echo base_url('home'); ?>/dologin" method="post" accept-charset="utf-8" class="form-signin form-group bg-success">
                 <h2 class="form-signin-heading">MasterSis<i class="glyphicon glyphicon glyphicon-leaf"></i></h2>
                 <input type="text" name="usuario" class="form-control" placeholder="Usuario" required autofocus>
                 <input type="password" name="senha" class="form-control" placeholder="Senha" required>

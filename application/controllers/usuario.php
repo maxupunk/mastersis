@@ -1,7 +1,8 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Usuario extends CI_Controller {
 
@@ -52,7 +53,7 @@ class Usuario extends CI_Controller {
     }
 
     public function busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
         $dados = array(
             'tela' => "usuario/busca",
             'query' => $this->crud_model->buscar("USUARIOS", array('USUARIO_APELIDO' => $busca, 'USUARIO_LOGIN' => $busca))->result(),
@@ -90,13 +91,14 @@ class Usuario extends CI_Controller {
     }
 
     public function pegausuario() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
 
         $rows = $this->crud_model->buscar("USUARIOS", array('USUARIO_APELIDO' => $busca, 'USUARIO_LOGIN' => $busca))->result();
 
         $json_array = array();
-        foreach ($rows as $row)
+        foreach ($rows as $row) {
             array_push($json_array, array('id' => $row->USUARIO_ID, 'value' => $row->USUARIO_LOGIN));
+        }
 
         $dados = array(
             'query' => $json_array,

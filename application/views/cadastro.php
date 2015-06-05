@@ -3,7 +3,7 @@
         <ul class="nav nav-tabs nav-justified submenu-cadastro">
             <li><a href="<?php echo base_url('produto') ?>">Produto/Serviço</a></li>
             <li><a href="<?php echo base_url('pessoa') ?>">Pessoa/Fornecedor</a></li>
-            <li><a href="<?php echo base_url('usuario') ?>">Usario</a></li>
+            <li><a href="<?php echo base_url('usuario') ?>">Usuario</a></li>
             <li><a href="<?php echo base_url('endereco') ?>">Endereco</a></li>
             <li><a href="<?php echo base_url('categoria') ?>">Categoria</a></li>
             <li><a href="<?php echo base_url('medida') ?>">Un. Medida</a></li>

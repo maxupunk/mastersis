@@ -82,30 +82,29 @@
             if (data.msg !== undefined) {
                 alert(data.msg);
             } else {
-                Tamanho = (data.length - 1);
-                for (var i = 0; i < Tamanho; i++) {
-                    drawRow(data[i]);
-                }
-                $("#total").text(data[data.length - 1].Total);
+                $.each(data, function(key, value) {
+                    if (value.Total) {
+                        $("#total").text(value.Total);
+                        return false;
+                    }
+                    lstPedId = value.LIST_PED_ID;
+                    if ($('#' + lstPedId).length) {
+                        RowId = $('#' + lstPedId).find("td");
+                        RowId.eq(4).text(FloatReal(value.LIST_PED_QNT * value.LIST_PED_PRECO));
+                    } else {
+                        $('.lista-produto').append(
+                                $('<tr id=' + lstPedId + ' itemref=' + value.ESTOQ_ID + '>').append(
+                                $('<td>').text(value.PRO_ID),
+                                $('<td>').html(value.PRO_DESCRICAO),
+                                $('<td>').html('<input type=number id=quantidade value=' + value.LIST_PED_QNT + '>'),
+                                $('<td>').text(FloatReal(value.LIST_PED_PRECO)),
+                                $('<td>').text(FloatReal(value.LIST_PED_QNT * value.LIST_PED_PRECO)),
+                                $('<td class="close" id="excluir-item">').html('&times;')
+                                ));
+                    }
+                });
             }
         }
 
-        function drawRow(rowData) {
-            lstPedId = rowData.LIST_PED_ID;
-            if ($('#' + lstPedId).length) {
-                RowId = $('#' + lstPedId).find("td");
-                RowId.eq(4).text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO));
-            } else {
-                $('.lista-produto').append(
-                        $('<tr id=' + lstPedId + ' itemref=' + rowData.ESTOQ_ID + '>').append(
-                        $('<td>').text(rowData.PRO_ID),
-                        $('<td>').html(rowData.PRO_DESCRICAO),
-                        $('<td>').html('<input type=number id=quantidade value=' + rowData.LIST_PED_QNT + '>'),
-                        $('<td>').text(FloatReal(rowData.LIST_PED_PRECO)),
-                        $('<td>').text(FloatReal(rowData.LIST_PED_QNT * rowData.LIST_PED_PRECO)),
-                        $('<td class="close" id="excluir-item">').html('&times;')
-                        ));
-            }
-        }
     });
 </script>

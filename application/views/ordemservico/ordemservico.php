@@ -4,7 +4,7 @@
         <ul class="nav nav-tabs nav-justified submenu-os" role="tablist" id="myTab">
             <li><a href="1">Em Abertas</a></li>
             <li><a href="2">Pendente</a></li>
-            <li><a href="3">Cocluida</a></li>
+            <li><a href="3">Concluida</a></li>
             <li><a href="4">Entregue</a></li>
         </ul>
         <div class="row">
@@ -45,12 +45,11 @@
     $(document).ready(function() {
 
         setInterval(function() {
-            $('.nav-tabs a[href="' + MenuSelect + '"]').tab('show');
             CarregaJson(MenuSelect);
         }, 3000);
 
         var json = {};
-        var idSelect = null;
+        var idSelect = 1;
         var MenuSelect = 1;
         
         CarregaJson(MenuSelect);
@@ -103,27 +102,12 @@
             return false;
         });
 
-        // comportamento dos formularios das ordems
-        $(document).on("submit", '#OrdemServicos', function() {
-            $.ajax({
-                type: "POST",
-                url: $(this).attr('action'),
-                dataType: "html",
-                data: $(this).serialize(),
-                // enviado com sucesso
-                success: function(response) {
-                    CarregaJson(MenuSelect);
-                    $("#Modal .modal-content").html(response);
-                }
-            });
-            return false;
-        });
         // Carrega a lista de ordem das tabelas 
         function CarregaJson(href) {
             $.getJSON("ordemservico/ordens/" + href, function(data) {
                 if (!comparaArray(json, data)) {
                     $('#LstEmOrdens').empty();
-                    if (data != "") {
+                    if (data !== "") {
                         $.each(data, function(key, value) {
                             $('#LstEmOrdens').append(
                                     $('<tr>').append(
@@ -136,6 +120,7 @@
                     }
                     json = data;
                     idSelect = null;
+                    $('.nav-tabs a[href="' + MenuSelect + '"]').tab('show');
                 }
             });
         }

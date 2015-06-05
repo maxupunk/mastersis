@@ -2,9 +2,6 @@
 <meta http-equiv="Expires" content="-1">
 
 <?php
-$id_produto = $this->uri->segment(3);
-
-
 if ($id_produto == NULL):
     echo '<div class="alert alert-success">ERRO NA URL! Tente novamente.</div>';
     exit();
@@ -21,30 +18,63 @@ endif;
 
 <div class="row">
     <div class="col-lg-12">
-    <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
-        <fieldset>
-            <legend><?php echo $query->PRO_DESCRICAO ?></legend>
+        <form action="<?php echo base_url('produto'); ?>/imagem/<?php echo $id_produto; ?>" method="post" name="form-data" accept-charset="utf-8" enctype="multipart/form-data">
+            <fieldset>
+                <legend><?php echo $query->PRO_DESCRICAO ?></legend>
 
-            <?php
-            if (isset($upload))
-                print_r($upload);
-            if (isset($thumb))
-                print_r($thumb);
-            if (isset($mensagem) and $mensagem != NULL)
-                echo '<div class="alert alert-info">' . $mensagem . '</div>';
-            ?>
-            <label class="file_input_button">Seleciona arquivo
-                <input type="file" name="userfile" />
-            </label>
-            <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
-            <button type="submit" id="img_botao" class="btn btn-primary">Adiciona/Alterar</button>
-        </fieldset>
-    </form>
-    <p>Obs.: Se já exista uma imagem a mesma será substituida.</p>
+                <?php
+                if (isset($upload))
+                    print_r($upload);
+                if (isset($thumb))
+                    print_r($thumb);
+                if (isset($mensagem) and $mensagem != NULL)
+                    echo '<div class="alert alert-info">' . $mensagem . '</div>';
+                ?>
+                <label class="file_input_button"><span>Click para seleciona arquivo!</span>
+                    <input type="file" name="userfile" id="ArqUpload" />
+                </label>
+                <input type="hidden" value="<?php echo $id_produto; ?>" name="id_produto"/>
+            </fieldset>
+        </form>
     </div>
 </div>
 
-
 <div class="row">
-    <?php if ($query->PRO_IMG != NULL) echo '<img src="assets/arquivos/produto/' . $query->PRO_IMG . '" class="col-sm-12 hidden-xs">' ?>
+    <div class="col-lg-12">
+        <ul class="imagem-list">
+            <?php if($imagens == null){
+                echo "<p align='center'>Sem imagens</p>";
+            }
+            foreach ($imagens as $imagem) : ?>
+                <li>
+                    <img src="assets/arquivos/produto/<?php echo $imagem->PROIMG_NOME ?>">
+                    <a href="<?php echo base_url('produto'); ?>/ImagemCapa/<?php echo $id_produto; ?>/<?php echo $imagem->PROIMG_NOME ?>" class="glyphicon glyphicon-ok" id="ImagemCapa" aria-hidden="true"></a>
+                    <a href="<?php echo base_url('produto'); ?>/ImagemExcluir/<?php echo $imagem->PROIMG_ID ?>" class="glyphicon glyphicon-trash" id="ImagemExcluir" aria-hidden="true"></a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 </div>
+
+<script>
+    // compoetamento excluir e padrão
+    $(document).on('click', '#ImagemCapa', function () {
+        var href = $(this).attr('href');
+        $.getJSON(href, function (data) {
+            if (data.msg !== undefined) {
+                $("#Modal .modal-content").text(data.msg).css('text-align', 'center');
+                $('#Modal').modal('show');
+            }
+        }
+        );
+        return false;
+    });
+    // compoetamento excluir e padrão
+    $(document).on('click', '#ImagemExcluir', function () {
+        var href = $(this).attr('href');
+        $("#Modal .modal-content").load(href).css('text-align', 'center');
+        $('#Modal').modal('show');
+        return false;
+    });
+
+</script>

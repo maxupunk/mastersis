@@ -1,11 +1,11 @@
 <?php
 if (isset($mensagem) and $mensagem != NULL) {
-    echo '<div class="alert alert-info">' . $mensagem . '</div>';
+    echo $mensagem;
     exit();
 }
 
 if ($query == NULL):
-    echo '<div class="alert alert-error">Esse item não existe ou foi excluido!</div>';
+    echo 'Esse item não existe ou foi excluido!';
     exit();
 endif;
 ?>

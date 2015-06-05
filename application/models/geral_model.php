@@ -35,11 +35,21 @@ class Geral_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function ParcelasRestante($id) {
-        $this->db->select('COUNT(*) AS qnt', FALSE);
+    public function ParcelasRestante($id, $selecao) {
+        $this->db->select('COUNT(*) AS qnt');
         $this->db->from('DESPESA_RECEITA');
-        $this->db->where('DESPESA_RECEITA.PEDIDO_ID', $id);
-        $this->db->or_where('DESPESA_RECEITA.OS_ID', $id);
+        $this->db->where('DESPESA_RECEITA.DESCRE_ESTATUS', 'ab');
+        switch ($selecao) {
+            case 'dr':
+                $this->db->where('DESPESA_RECEITA.DESREC_ID', $id);
+                break;
+            case 'pd':
+                $this->db->where('DESPESA_RECEITA.PEDIDO_ID', $id);
+                break;
+            case 'os':
+                $this->db->where('DESPESA_RECEITA.OS_ID', $id);
+                break;
+        }
         return $this->db->get();
     }
 
@@ -111,10 +121,12 @@ class Geral_model extends CI_Model {
 
     public function PedidosCliente($id_cliente, $quant = 0, $inicial = 0, $ordeby = NULL) {
         if ($id_cliente != NULL) {
-            if ($ordeby != NULL)
+            if ($ordeby != NULL) {
                 $this->db->order_by($ordeby);
-            if ($quant > 0)
+            }
+            if ($quant > 0) {
                 $this->db->limit($quant, $inicial);
+            }
 
             $this->db->where('PEDIDOS.PES_ID', $id_cliente);
             $this->db->where('PEDIDOS.PEDIDO_ESTATUS >=', '2');
@@ -131,6 +143,16 @@ class Geral_model extends CI_Model {
         $this->db->where('PEDIDOS.PEDIDO_TIPO', 'c');
         $this->db->where('PEDIDOS.PEDIDO_ESTATUS <=', '3');
         return $this->db->get('PEDIDOS');
+    }
+
+    public function BaixaPg($desrec_id, $estatus = 'pg') {
+
+        $this->db->query('UPDATE DESPESA_RECEITA SET
+            DESPESA_RECEITA.DESCRE_ESTATUS = "' . $estatus . '",
+            DESPESA_RECEITA.DESCRE_DATA_PG = NOW()
+            WHERE DESPESA_RECEITA.DESREC_ID=' . $desrec_id . ' AND DESPESA_RECEITA.DESCRE_ESTATUS="ab"');
+
+        return $this->db->affected_rows();
     }
 
 }

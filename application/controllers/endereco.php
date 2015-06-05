@@ -135,7 +135,7 @@ class Endereco extends CI_Controller {
     }
 
     public function busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);
         $dados = array(
             'tela' => "endereco/busca",
             'busca_rua' => $this->crud_model->buscar("RUAS", array('RUA_NOME' => $busca, 'RUA_CEP' => $busca))->result(),

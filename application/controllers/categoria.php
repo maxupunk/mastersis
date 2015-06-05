@@ -6,21 +6,22 @@ if (!defined('BASEPATH'))
 class Categoria extends CI_Controller {
 
     var $mensagem;
+
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
         $this->load->library(array('form_validation', 'table'));
-        $this->auth->check_logged($this->router->class , $this->router->method);
+        $this->auth->check_logged($this->router->class, $this->router->method);
     }
-    
+
     public function index() {
 
         $this->form_validation->set_rules('CATE_NOME', 'CATEGORIAS', 'required|max_length[20]|strtoupper|is_unique[CATEGORIAS.CATE_NOME]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
-        
-        
+
+
         //verifica se passou na validação
         if ($this->form_validation->run() == TRUE):
 
@@ -40,11 +41,10 @@ class Categoria extends CI_Controller {
     }
 
     public function busca() {
-        $busca = $_GET['buscar'];
+        $busca = $this->input->get('buscar', TRUE);;
         $dados = array(
             'tela' => "categoria/busca",
             'query' => $query = $this->crud_model->buscar("CATEGORIAS", array('CATE_ID' => $busca, 'CATE_NOME' => $busca))->result(),
-
         );
         $this->load->view('contente', $dados);
     }
@@ -55,7 +55,7 @@ class Categoria extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-        
+
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
 
@@ -78,40 +78,41 @@ class Categoria extends CI_Controller {
 
     public function imagem() {
         // validar o formulario
+        $this->form_validation->set_rules('id_categoria', '', 'required');
+
         $this->load->library(array('image_lib', 'upload'));
 
-        $img['upload_path'] = 'assets/arquivos/categoria/';
-        $img['allowed_types'] = 'jpg';
-        $img['max_size'] = '2048';
-        $img['file_name'] = $this->input->post('id_categoria');
-        $img['overwrite'] = TRUE;
+        if ($this->form_validation->run() == TRUE) {
+            $img['upload_path'] = 'assets/arquivos/categoria/';
+            $img['allowed_types'] = 'jpg';
+            $img['max_size'] = '2048';
+            $img['file_name'] = $this->input->post('id_categoria');
+            $img['overwrite'] = TRUE;
 
-        $this->upload->initialize($img);
+            $this->upload->initialize($img);
 
-        
-        // se for valido ele chama o inserir dentro do produto_model
-        if ($this->upload->do_upload() == TRUE):
+            if ($this->upload->do_upload() == TRUE) {
+                echo "Upou os dados";
+                $data = $this->upload->data();
 
-            $data = $this->upload->data();
+                $thumb['image_library'] = "gd";
+                $thumb['source_image'] = $data['file_path'] . $data['file_name'];
+                $thumb['create_thumb'] = TRUE;
+                $thumb['maintain_ratio'] = TRUE;
+                $thumb['master_dim'] = "auto";
+                $thumb['quality'] = "100%";
+                $thumb['width'] = "120";
+                $thumb['height'] = "120";
+                $this->image_lib->initialize($thumb);
+                $this->image_lib->resize();
 
-            $thumb['image_library'] = "gd";
-            $thumb['source_image'] = $data['file_path'] . $data['file_name'];
-            $thumb['create_thumb'] = TRUE;
-            $thumb['maintain_ratio'] = TRUE;
-            $thumb['master_dim'] = "auto";
-            $thumb['quality'] = "100%";
-            $thumb['width'] = "120";
-            $thumb['height'] = "120";
-            $this->image_lib->initialize($thumb);
-            $this->image_lib->resize();
-
-            if ($this->crud_model->update("CATEGORIAS", array('CATE_IMG' => $data['file_name']), array('CATE_ID' => $this->input->post('id_categoria'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_imagem_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_imagem_erro");
+                if ($this->crud_model->update("CATEGORIAS", array('CATE_IMG' => $data['file_name']), array('CATE_ID' => $this->input->post('id_categoria'))) === TRUE) {
+                    $this->mensagem = $this->lang->line("msg_imagem_sucesso");
+                } else {
+                    $this->mensagem = $this->lang->line("msg_imagem_erro");
+                }
             }
-
-        endif;
+        }
 
         $dados = array(
             'tela' => "categoria/imagem",
