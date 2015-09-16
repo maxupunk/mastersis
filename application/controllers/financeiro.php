@@ -468,8 +468,13 @@ class Financeiro extends CI_Controller {
         }
     }
 
-    public function FormasPG() {
-        $FormaPG = $this->crud_model->pega("FORMA_PG", array('FPG_STATUS' => 'a'))->result();
+    public function FormasPG($id = null) {
+        if ($id !== null) {
+            $condicao = array('FPG_ID' => $id);
+        } else {
+            $condicao = array('FPG_STATUS' => 'a');
+        }
+        $FormaPG = $this->crud_model->pega("FORMA_PG", $condicao)->result();
         if (isset($FormaPG)) {
             $this->load->view('json', array('query' => $FormaPG));
         }
@@ -477,22 +482,39 @@ class Financeiro extends CI_Controller {
 
     public function NovaFormaPG() {
 
-        $this->form_validation->set_rules('DescrFPG', 'FORMA DE PAGAMENTO', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
-        $this->form_validation->set_rules('ParceFPT', 'PARCELAS', 'required');
-        $this->form_validation->set_rules('JurusFPG', 'JURUS', 'required');
-        
-        //verifica se passou na validação
-        if ($this->form_validation->run() == TRUE):
-            $dados = elements(array('CATE_NOME', 'CATE_DESCRIC'), $this->input->post());
-            if ($this->crud_model->inserir("CATEGORIAS", $dados) == TRUE) {
-                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_cadastro_erro");
-            }
-        endif;
+        $this->form_validation->set_rules('FPG_DESCR', 'FORMAPG', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
+        $this->form_validation->set_rules('FPG_PARCE', 'PARCELAS', 'required');
+        $this->form_validation->set_rules('FPG_AJUSTE', 'JURUS', 'required');
 
-        if (isset($FormaPG)) {
-            $this->load->view('json', array('query' => $FormaPG));
+        //verifica se passou na validação
+        if ($this->form_validation->run() == TRUE) {
+            $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
+            if ($this->crud_model->inserir("FORMA_PG", $dados) !== TRUE) {
+                log_message('error', 'Erro: Falha ao gravar no banco de dados!');
+                show_error(500);
+            }
+        } else {
+            log_message('error', validation_errors());
+            show_error(500);
+        }
+    }
+
+    public function EditaFormaPG() {
+
+        $this->form_validation->set_rules('FPG_DESCR', 'FORMAPG', 'required|max_length[30]');
+        $this->form_validation->set_rules('FPG_PARCE', 'PARCELAS', 'required');
+        $this->form_validation->set_rules('FPG_AJUSTE', 'JURUS', 'required');
+
+        //verifica se passou na validação
+        if ($this->form_validation->run() == TRUE) {
+            $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
+            if ($this->crud_model->update("FORMA_PG", $dados, array('FPG_ID' => $this->input->post('FPG_ID'))) !== TRUE) {
+                log_message('error', 'Erro: Falha ao gravar no banco de dados!');
+                show_error(500);
+            }
+        } else {
+            log_message('error', validation_errors());
+            show_error(500);
         }
     }
 

@@ -149,7 +149,7 @@
                         <div class="row">
                             <div class="col-sm-12 BordaOs">
                                 <div class="btn-group btn-group-justified" role="group">
-                                    <a href="financeiro/editar" class="btn btn-link" id="OpFPG">
+                                    <a href="financeiro/FormasPG" class="btn btn-link" id="OpFPGEdit">
                                         <span class="glyphicon glyphicon-edit"></span> Editar</a>
 
                                     <a href="financeiro/canselar" class="btn btn-link" id="OpFPG">
@@ -414,24 +414,26 @@
 
         $(document).on("click", ".btn-financ-add", function (event) {
             if ($('.DescrFPG').val() && $('.ParceFPT').val() && $('.JurusFPG').val()) {
+                if (idFPG === null) {
+                    urlFPG = "financeiro/NovaFormaPG";
+                } else {
+                    urlFPG = "financeiro/EditaFormaPG";
+                }
                 var dados = {
-                    DescrFPG: $('.DescrFPG').val(),
-                    ParceFPT: $('.ParceFPT').val(),
-                    JurusFPG: $('.JurusFPG').val()
+                    FPG_ID: idFPG,
+                    FPG_DESCR: $('.DescrFPG').val(),
+                    FPG_PARCE: $('.ParceFPT').val(),
+                    FPG_AJUSTE: $('.JurusFPG').val()
                 };
                 $.ajax({
                     type: "POST",
-                    url: "financeiro/NovaFormaPG",
+                    url: urlFPG,
                     dataType: "html",
                     data: dados,
                     success: function () {
-                        $('input').eq($('input').index(valor) + 1).focus();
-                        valor.removeClass("alert-danger");
-                        valor.addClass("alert-success");
-                    },
-                    error: function () {
-                        valor.removeClass("alert-success");
-                        valor.addClass("alert-danger");
+                        $('.DescrFPG, .ParceFPT, .JurusFPG').val("");
+                        idFPG = null;
+                        CarregarFPG();
                     }
                 });
                 return false;
@@ -465,12 +467,18 @@
         });
 
         // comportamento do menu opções
-        $(document).on('click', '#OpFPG', function () {
+        $(document).on('click', '#OpFPGEdit', function () {
             if (idSelecFPG === null) {
                 $("#Modal .modal-content").text("Você não selecionou um item!");
                 $('#Modal').modal('show');
             } else {
-                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelecRD})
+                $.getJSON("financeiro/FormasPG/" + idSelecFPG, function (data) {
+                    console.log(data[0]);
+                    $('.DescrFPG').val(data[0].FPG_DESCR);
+                    $('.ParceFPT').val(data[0].FPG_PARCE);
+                    $('.JurusFPG').val(data[0].FPG_AJUSTE);
+                    idFPG = data[0].FPG_ID;
+                });
             }
             return false;
         });
