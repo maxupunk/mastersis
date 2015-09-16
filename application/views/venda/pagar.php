@@ -56,7 +56,7 @@ if ($total->total == NULL) {
 
         $(document).on('change', '#FPG', function () {
             if ($('#FPG').val() !== "") {
-                $.getJSON("financeiro/FormaPG/" + $('#FPG').val(), function (data) {
+                $.getJSON("financeiro/PegaFormaPG/" + $('#FPG').val(), function (data) {
                     if (data.msg !== undefined) {
                         alert(data.msg);
                     } else {

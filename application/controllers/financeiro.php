@@ -149,12 +149,10 @@ class Financeiro extends CI_Controller {
             $atualizar = array('ESTOQ_PRECO' => $this->convert->EmDecimal($post['Valor']));
             $condicao = array('ESTOQ_ID' => $post['IdEstq']);
             if ($this->crud_model->update("ESTOQUES", $atualizar, $condicao) == FALSE) {
-                log_message('error', 'Problema ao atualuzar item!');
-                show_error(500);
+                show_error('Problema ao atualuzar item!', 500);
             }
         } else {
-            log_message('error', 'Erro: Falta parametros');
-            show_error(500);
+            show_error(validation_errors(), 500);
         }
     }
 
@@ -169,31 +167,11 @@ class Financeiro extends CI_Controller {
             $atualizar = array('ESTOQ_CUSTO' => $this->convert->EmDecimal($post['Valor']));
             $condicao = array('ESTOQ_ID' => $post['IdEstq']);
             if ($this->crud_model->update("ESTOQUES", $atualizar, $condicao) == FALSE) {
-                log_message('error', 'Problema ao atualuzar item!');
-                show_error(500);
+                show_error('Problema ao atualuzar item!', 500);
             }
         } else {
-            log_message('error', 'Erro: Falta parametros');
-            show_error(500);
+            show_error(validation_errors(), 500);
         }
-    }
-
-    public function FormaPG($FPG_ID = null) {
-
-        if ($FPG_ID != NULL) {
-            $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $FPG_ID))->row();
-            if ($FPG == NULL) {
-                $FPG = array('msg' => "Essa forma de pagamento não existe no banco de dados!");
-            }
-        } else {
-            $FPG = array('msg' => "Forma de pagamento invalida!");
-        }
-
-        $dados = array(
-            'query' => $FPG,
-        );
-
-        $this->load->view('json', $dados);
     }
 
     public function Nparcelas($pedidoId = NULL, $FPG_ID = NULL, $Nparcela = NULL) {
@@ -468,54 +446,76 @@ class Financeiro extends CI_Controller {
         }
     }
 
-    public function FormasPG($id = null) {
-        if ($id !== null) {
-            $condicao = array('FPG_ID' => $id);
-        } else {
-            $condicao = array('FPG_STATUS' => 'a');
-        }
-        $FormaPG = $this->crud_model->pega("FORMA_PG", $condicao)->result();
+    public function LstFormaPGs() {
+        $FormaPG = $this->crud_model->pega_tudo("FORMA_PG")->result();
         if (isset($FormaPG)) {
             $this->load->view('json', array('query' => $FormaPG));
         }
     }
 
-    public function NovaFormaPG() {
-
-        $this->form_validation->set_rules('FPG_DESCR', 'FORMAPG', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
-        $this->form_validation->set_rules('FPG_PARCE', 'PARCELAS', 'required');
-        $this->form_validation->set_rules('FPG_AJUSTE', 'JURUS', 'required');
-
-        //verifica se passou na validação
-        if ($this->form_validation->run() == TRUE) {
-            $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
-            if ($this->crud_model->inserir("FORMA_PG", $dados) !== TRUE) {
-                log_message('error', 'Erro: Falha ao gravar no banco de dados!');
-                show_error(500);
+    public function PegaFormaPG($FPG_ID = null) {
+        if ($FPG_ID != NULL) {
+            $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $FPG_ID))->row();
+            if ($FPG == NULL) {
+                $FPG = array('msg' => "Essa forma de pagamento não existe no banco de dados!");
             }
         } else {
-            log_message('error', validation_errors());
-            show_error(500);
+            $FPG = array('msg' => "Forma de pagamento invalida!");
         }
+        $dados = array('query' => $FPG);
+
+        $this->load->view('json', $dados);
     }
 
-    public function EditaFormaPG() {
+    public function AtiDesFormaPG($id) {// Atva e desativa forma de pagamento
+        $FormPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $id))->row();
+        $FPGestatus = ($FormPG->FPG_STATUS === "a") ? "d" : "a";
+        $condicao = array('FPG_ID' => $id);
+        if ($this->crud_model->update("FORMA_PG", array('FPG_STATUS' => $FPGestatus), $condicao) !== TRUE) {
+            log_message('error', 'Erro: Falha ao gravar no banco de dados!');
+            show_error('Erro: Falha ao gravar no banco de dados!', 500);
+        } else {
+            $msg = array('query' => $FPGestatus);
+        }
+        $this->load->view('json', $msg);
+    }
 
-        $this->form_validation->set_rules('FPG_DESCR', 'FORMAPG', 'required|max_length[30]');
+    public function GrcFormaPG() {// gerencia a forma de pagamento
+        $FormPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $this->input->post('FPG_ID')))->row();
         $this->form_validation->set_rules('FPG_PARCE', 'PARCELAS', 'required');
         $this->form_validation->set_rules('FPG_AJUSTE', 'JURUS', 'required');
 
-        //verifica se passou na validação
-        if ($this->form_validation->run() == TRUE) {
-            $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
-            if ($this->crud_model->update("FORMA_PG", $dados, array('FPG_ID' => $this->input->post('FPG_ID'))) !== TRUE) {
-                log_message('error', 'Erro: Falha ao gravar no banco de dados!');
-                show_error(500);
+        if ($FormPG) { // Entendi que existe cadastro e faz o update
+            $is_unique = ($this->input->post('FPG_DESCR') != $FormPG->FPG_DESCR) ? '|is_unique[FORMA_PG.FPG_DESCR]' : '';
+            $this->form_validation->set_rules('FPG_DESCR', 'DESCRIÇÃO', 'required|max_length[30]' . $is_unique);
+            //verifica se passou na validação
+            if ($this->form_validation->run() == TRUE) {
+                $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
+                if ($this->crud_model->update("FORMA_PG", $dados, array('FPG_ID' => $this->input->post('FPG_ID'))) !== TRUE) {
+                    log_message('error', 'Erro: Falha ao gravar no banco de dados!');
+                    show_error('Erro: Falha ao gravar no banco de dados!', 500);
+                } else {
+                    $msg = array('query' => 'ok');
+                }
+            } else {
+                $msg = array('query' => validation_errors());
             }
-        } else {
-            log_message('error', validation_errors());
-            show_error(500);
+        } else { // Intendo como novo cadastro
+            $this->form_validation->set_rules('FPG_DESCR', 'DESCRIÇÃO', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
+            //verifica se passou na validação
+            if ($this->form_validation->run() == TRUE) {
+                $dados = elements(array('FPG_DESCR', 'FPG_PARCE', 'FPG_AJUSTE'), $this->input->post());
+                if ($this->crud_model->inserir("FORMA_PG", $dados) !== TRUE) {
+                    log_message('error', 'Erro: Falha ao gravar no banco de dados!');
+                    show_error('Erro: Falha ao gravar no banco de dados!', 500);
+                } else {
+                    $msg = array('query' => 'ok');
+                }
+            } else {
+                $msg = array('query' => validation_errors());
+            }
         }
+        $this->load->view('json', $msg);
     }
 
 }

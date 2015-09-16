@@ -233,6 +233,12 @@ $(document).ready(function () {
 ///////////////////////////////////////////////////////////
 // Funcões
 ///////////////////////////////////////////////////////////
+function MensagemModal(msg) {
+    $('#Modal').removeData('bs.modal');
+    $("#Modal .modal-content").html(msg);
+    $('#Modal').modal('show');
+}
+
 function progressbar(e) {
     if (e.lengthComputable) {
         //$('progress').attr({value: e.loaded, max: e.total});

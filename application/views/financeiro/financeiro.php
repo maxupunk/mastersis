@@ -130,16 +130,16 @@
                     <div class="col-sm-6"><!-- Direita Gerenciar Forma de pagamento -->
                         <div class="row BordaOs">
                             <div class="col-sm-6">
-                                <label>Descrição (Forma de PG)</label>
-                                <input type="text" value="" class="DescrFPG"/>
+                                <label>Forma de agamento</label>
+                                <input type="text" value="" class="DescrFPG" placeholder="Descrição"/>
                             </div>
                             <div class="col-sm-2">
-                                <label>Parcelas</label>
-                                <input type="text" value="" class="ParceFPT"/>
+                                <label>Parcela(s)</label>
+                                <input type="text" value="" class="ParceFPT" placeholder="maxi."/>
                             </div>
                             <div class="col-sm-2">
-                                <label>Juros(A.M)</label>
-                                <input type="text" value="" class="Porcento JurusFPG"/>
+                                <label>Juros</label>
+                                <input type="text" value="" class="Porcento JurusFPG" placeholder="ao ano"/>
                             </div>
                             <div class="col-sm-2">
                                 <button class="btn btn-success btn-financ-add">Add/Salva</button>
@@ -149,10 +149,10 @@
                         <div class="row">
                             <div class="col-sm-12 BordaOs">
                                 <div class="btn-group btn-group-justified" role="group">
-                                    <a href="financeiro/FormasPG" class="btn btn-link" id="OpFPGEdit">
+                                    <a href="" class="btn btn-link" id="OpFPGEdit">
                                         <span class="glyphicon glyphicon-edit"></span> Editar</a>
 
-                                    <a href="financeiro/canselar" class="btn btn-link" id="OpFPG">
+                                    <a href="" class="btn btn-link" id="OpFPGAtDe">
                                         <span class="glyphicon glyphicon-off"></span> Ativa/Desativa</a>
                                 </div>
                             </div>
@@ -334,32 +334,14 @@
                 $('.ProPeso').val(data.PRO_PESO);
                 $('.PRO_CARAC_TEC').html(data.PRO_CARAC_TEC);
                 $('.PrecoVenda, .PrecoCusto').removeClass("alert-success");
-                $('.PrecoVenda, .PrecoCusto').removeClass("alert-danger");
             });
         });
 
         $(document).on("keyup", ".PrecoCusto", function (event) {
-            Porcento = GetLucro($(this).val(), $('.PrecoVenda').val());
-            $('.Lucro').val(Porcento);
+            $('.Lucro').val(GetLucro($(this).val(), $('.PrecoVenda').val()));
             $(this).removeClass("alert-success");
-            $(this).removeClass("alert-danger");
             if (event.which === 13) {
-                valor = $(this);
-                var dados = {IdEstq: $('.id_estoque').val(), Valor: $(this).val()};
-                $.ajax({
-                    type: "POST",
-                    url: "financeiro/VlCstProduto",
-                    dataType: "html",
-                    data: dados,
-                    success: function () {
-                        valor.removeClass("alert-danger");
-                        valor.addClass("alert-success");
-                    },
-                    error: function () {
-                        valor.removeClass("alert-success");
-                        valor.addClass("alert-danger");
-                    }
-                });
+                PrecoVC("financeiro/VlCstProduto", $(this))
                 return false;
             }
         });
@@ -368,9 +350,8 @@
         $(document).on("keyup", ".PrecoVenda", function (event) {
             $('.Lucro').val(GetLucro($('.PrecoCusto').val(), $(this).val()));
             $(this).removeClass("alert-success");
-            $(this).removeClass("alert-danger");
             if (event.which === 13) {
-                ValorVenda()
+                PrecoVC("financeiro/VlVndProduto", $(this))
                 return false;
             }
         });
@@ -378,28 +359,21 @@
         $(document).on("keyup", ".Lucro", function (event) {
             $('.PrecoVenda').val(SetLucro($('.PrecoCusto').val(), $(this).val()));
             $('.PrecoVenda').removeClass("alert-success");
-            $('.PrecoVenda').removeClass("alert-danger");
             if (event.which === 13) {
-                ValorVenda();
+                PrecoVC("financeiro/VlVndProduto", $('.PrecoVenda'));
                 return false;
             }
         });
 
-        function ValorVenda() {
-            valor = $('.PrecoVenda');
-            var dados = {IdEstq: $('.id_estoque').val(), Valor: valor.val()};
+        function PrecoVC(url, botao) {
+            var dados = {IdEstq: $('.id_estoque').val(), Valor: botao.val()};
             $.ajax({
                 type: "POST",
-                url: "financeiro/VlVndProduto",
-                dataType: "html",
+                url: url,
                 data: dados,
                 success: function () {
-                    valor.removeClass("alert-danger");
-                    valor.addClass("alert-success");
-                },
-                error: function () {
-                    valor.removeClass("alert-success");
-                    valor.addClass("alert-danger");
+                    $('input').eq($('input').index(botao) + 1).focus();
+                    botao.addClass("alert-success");
                 }
             });
         }
@@ -408,39 +382,31 @@
         ///////////////////////////////////////////////////////////////////////
         var jsonFPG = {};
         var idSelecFPG = null;
-        var idFPG = null;
 
         CarregarFPG();
 
-        $(document).on("click", ".btn-financ-add", function (event) {
-            if ($('.DescrFPG').val() && $('.ParceFPT').val() && $('.JurusFPG').val()) {
-                if (idFPG === null) {
-                    urlFPG = "financeiro/NovaFormaPG";
-                } else {
-                    urlFPG = "financeiro/EditaFormaPG";
-                }
-                var dados = {
-                    FPG_ID: idFPG,
-                    FPG_DESCR: $('.DescrFPG').val(),
-                    FPG_PARCE: $('.ParceFPT').val(),
-                    FPG_AJUSTE: $('.JurusFPG').val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: urlFPG,
-                    dataType: "html",
-                    data: dados,
-                    success: function () {
+        $(document).on("click", ".btn-financ-add", function () {
+            var dados = {
+                FPG_ID: idFPG,
+                FPG_DESCR: $('.DescrFPG').val(),
+                FPG_PARCE: $('.ParceFPT').val(),
+                FPG_AJUSTE: $('.JurusFPG').val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "financeiro/GrcFormaPG",
+                dataType: "json",
+                data: dados,
+                success: function (e) {
+                    if (e !== 'ok') {
+                        MensagemModal(e);
+                    } else {
                         $('.DescrFPG, .ParceFPT, .JurusFPG').val("");
-                        idFPG = null;
                         CarregarFPG();
                     }
-                });
-                return false;
-            } else {
-                $("#Modal .modal-content").text("Todos os campos devem ser preenchidos! Descriçao, Parcelas, Jurus.");
-                $('#Modal').modal('show');
-            }
+                }
+            });
+            return false;
         });
 
         $(document).on("keyup", ".DescrFPG, .ParceFPT", function (event) {
@@ -453,7 +419,6 @@
         $(document).on("keyup", ".JurusFPG", function (event) {
             if (event.which === 13) {
                 $('.btn-financ-add').click();
-                //ValorVenda();
                 return false;
             }
         });
@@ -469,22 +434,32 @@
         // comportamento do menu opções
         $(document).on('click', '#OpFPGEdit', function () {
             if (idSelecFPG === null) {
-                $("#Modal .modal-content").text("Você não selecionou um item!");
-                $('#Modal').modal('show');
+                MensagemModal("Você não selecionou um item!");
             } else {
-                $.getJSON("financeiro/FormasPG/" + idSelecFPG, function (data) {
-                    console.log(data[0]);
-                    $('.DescrFPG').val(data[0].FPG_DESCR);
-                    $('.ParceFPT').val(data[0].FPG_PARCE);
-                    $('.JurusFPG').val(data[0].FPG_AJUSTE);
-                    idFPG = data[0].FPG_ID;
+                $.getJSON("financeiro/PegaFormaPG/" + idSelecFPG, function (data) {
+                    $('.DescrFPG').val(data.FPG_DESCR);
+                    $('.ParceFPT').val(data.FPG_PARCE);
+                    $('.JurusFPG').val(data.FPG_AJUSTE);
+                    idFPG = data.FPG_ID;
+                });
+            }
+            return false;
+        });
+        
+        // comportamento do menu opções
+        $(document).on('click', '#OpFPGAtDe', function () {
+            if (idSelecFPG === null) {
+                MensagemModal("Você não selecionou um item!");
+            } else {
+                $.getJSON("financeiro/AtiDesFormaPG/" + idSelecFPG, function (data) {
+                    CarregarFPG();
                 });
             }
             return false;
         });
 
         function CarregarFPG() {
-            $.getJSON("financeiro/FormasPG", function (data) {
+            $.getJSON("financeiro/LstFormaPGs", function (data) {
                 AddTabelaFPG(data);
             });
         }
@@ -500,7 +475,7 @@
                                 $('<td>').text(value.FPG_DESCR),
                                 $('<td>').text(value.FPG_PARCE),
                                 $('<td>').text(value.FPG_AJUSTE + '%'),
-                                $('<td>').text(value.FPG_STATUS = 'a' ? 'Ativo' : 'Desativo')
+                                $('<td>').text(value.FPG_STATUS === 'a' ? 'Ativo' : 'Desativo')
                                 ));
                     });
                 }
