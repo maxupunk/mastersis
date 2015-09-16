@@ -38,7 +38,7 @@
         // inicialisa typeahead UI
         $('#NomeFornecedor').typeahead(null, {
             source: NomeDoFornecedor.ttAdapter()
-        }).on('typeahead:selected', function(object, data) {
+        }).on('typeahead:selected typeahead:autocompleted', function(object, data) {
             $("#ComprasConteiner").load("compras/abrir/" + data.id);
         });
         // lista todas as compras

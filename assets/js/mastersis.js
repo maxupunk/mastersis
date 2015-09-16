@@ -34,6 +34,7 @@ $(document).ready(function () {
         $(this).removeData('bs.modal');
     });
 
+
     $(document).on("submit", '#confirmacao', function () {
         $.ajax({
             type: "POST",
@@ -57,6 +58,7 @@ $(document).ready(function () {
     $(document).on("focus", "input", function () {
         $('.fone').mask('(00)0000-0000');
         $('.valor').mask('0.000.000.000,00', {reverse: true});
+        $('.Porcento').mask('000.00', {reverse: true});
         $('.cpf').mask('000.000.000-00', {reverse: true});
         $('.cnpj').mask('00.000.000.0000-00', {reverse: true});
         $('.data').datepicker({
@@ -96,6 +98,12 @@ $(document).ready(function () {
         });
         return false;
     });
+    $(document).on('keypress', 'form[name="grava"]', function () {
+        $(this).change(function () {
+            $(".alert").hide();
+            ConfirmSair(true);
+        });
+    });
     $(document).on("submit", 'form[name="form-data"]', function () {
         var formData = new FormData($(this)[0]);
         $.ajax({
@@ -114,12 +122,6 @@ $(document).ready(function () {
         var file = this.files[0];
         $('.file_input_button span').text("Carregando " + file.name + " @ " + humanFileSize(file.size));
         $(this).closest("form").submit();
-    });
-    $(document).on('keypress', 'form[name="grava"]', function () {
-        $(this).change(function () {
-            $(".alert").hide();
-            ConfirmSair(true);
-        });
     });
     $(document).on('change', 'select[name="ESTA_ID"]', function () {
         estado = $(this).val();
@@ -197,7 +199,7 @@ $(document).ready(function () {
             url: 'usuario/pegausuario?buscar=%QUERY'
         }
     });
-    usuario.on('typeahead:selected', function (evt, data) {
+    usuario.on('typeahead:selected typeahead:autocompleted', function (evt, data) {
         $("#permissoes").load("permissoes/gerenciar/" + data.id);
     });
     $("#usuario").focus();
@@ -236,18 +238,30 @@ function progressbar(e) {
         //$('progress').attr({value: e.loaded, max: e.total});
         $('.progresso .progress-bar').width("0%");
         $('.progresso .progress-bar').width(e.loaded / e.total * 100 + '%');
-        //console.log(e.loaded / e.total * 100 + '%');
     }
 }
 function humanFileSize(size) {
     var i = Math.floor(Math.log(size) / Math.log(1024));
     return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
-;
 
 function Data(data) {
     d = new Date(data);
     return d.getDate() + "/" + d.getMonth() + "/" + d.getFullYear()
+}
+
+function GetLucro(Custo, Venda) {
+    result = (((parseFloat(Venda) * 100) / parseFloat(Custo)) - 100).toFixed(2);
+    if (result !== 'NaN') {
+        return parseFloat(result);
+    }
+}
+
+function SetLucro(Custo, porcento) {
+    result = (((parseFloat(Custo) * porcento) / 100) + parseFloat(Custo));
+    if (result !== 'NaN') {
+        return result;
+    }
 }
 
 function comparaArray(a1, a2) {

@@ -26,7 +26,7 @@ $TotalParc = isset($query->PEDIDO_NPARC) ? $query->PEDIDO_NPARC : '1';
             </div>
             <div class="col-sm-3">
                 <label>VALOR</label>
-                <input type="text" name="DESREC_VALOR" value="<?php echo $this->convert->em_real($query->DESREC_VALOR) ?>" class="valor" />                
+                <input type="text" name="DESREC_VALOR" value="<?php echo $this->convert->em_real($query->DESREC_VALOR) ?>" class="valor" />
             </div>
             <div class="col-sm-3">
                 <label>VENCIMENTO</label>
@@ -35,7 +35,7 @@ $TotalParc = isset($query->PEDIDO_NPARC) ? $query->PEDIDO_NPARC : '1';
         </div>
 
         <div class="row">
-<?php if ($query->PEDIDO_ID != NULL): ?>
+            <?php if ($query->PEDIDO_ID != NULL): ?>
                 <div class="col-sm-2">
                     <label class="PedOsId">PEDIDO</label>
                     <input type="text" value="<?php echo $query->PEDIDO_ID ?>" disabled />
@@ -44,7 +44,7 @@ $TotalParc = isset($query->PEDIDO_NPARC) ? $query->PEDIDO_NPARC : '1';
                     <label>DATA DO PEDIDO</label>
                     <input type="text" value="<?php echo date("d/m/Y - H:i", strtotime($query->PEDIDO_DATA)); ?>" disabled />
                 </div>
-<?php elseif ($query->OS_ID != NULL): ?>
+            <?php elseif ($query->OS_ID != NULL): ?>
                 <div class="col-sm-2">
                     <label>ORDEM</label>
                     <input type="text" value="<?php echo $query->OS_ID ?>" disabled />
@@ -54,12 +54,14 @@ $TotalParc = isset($query->PEDIDO_NPARC) ? $query->PEDIDO_NPARC : '1';
                     <input type="text" value="<?php echo $query->OS_DATA_ENT ?>" disabled />
                 </div>
             <?php endif; ?>
-<?php if ($query->DESCRE_ESTATUS !== "ab"): ?>
+            <?php if ($query->DESCRE_ESTATUS !== "ab") { ?>
                 <div class="col-sm-3">
                     <label>ESTATUS</label>
                     <?php echo form_dropdown('DESCRE_ESTATUS', array('ab' => 'Aberto', 'pg' => 'Pago', 'cn' => 'Canselada'), set_value('DESCRE_ESTATUS', $query->DESCRE_ESTATUS)); ?>
                 </div>
-<?php endif; ?>
+            <?php } else { ?>
+                <input type="hidden" name="DESCRE_ESTATUS" value="ab"/>
+            <?php } ?>
         </div>
 
         <label>DESCRIÇÃO</label>

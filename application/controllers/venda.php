@@ -46,18 +46,16 @@ class Venda extends CI_Controller {
 
     public function Pagamento($id_pedido) {
 
-            $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
+        $this->form_validation->set_rules('NPARCELA', 'Numero de parcela', 'required');
 
-            $post = $this->input->post();
+        $post = $this->input->post();
 
-            if ($this->input->post('NPARCELA') > 1) {
-                $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
-                $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
-            }
+        $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
+        $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
 
-            $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
+        $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
 
-            $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
+        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         if ($this->form_validation->run() == TRUE) {
 
@@ -66,45 +64,35 @@ class Venda extends CI_Controller {
             $pedido = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $id_pedido))->row();
             $total = $this->geral_model->TotalPedido($id_pedido)->row();
 
-            if ($this->geral_model->FechaVenda($id_pedido) > 0) {
-                
+            if ($this->geral_model->FechaVenda($id_pedido, $post['PES_ID']) > 0) {
+
                 $Nparcela = $pedido->PEDIDO_NPARC;
 
                 $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $post['FPG']))->row();
-                $Jurus = (((($FPG->FPG_AJUSTE / 100) * $total->total) * $Nparcela) - $pedido->PEDIDO_DESCONTO);
+                $Jurus = ((($FPG->FPG_AJUSTE / 100) * $total->total) * $Nparcela);
                 $TotalJurus = $Jurus + $total->total;
 
-                if ($Nparcela >= 2) {
-                    $valor_parcela = floatval($TotalJurus / $Nparcela);
-                } else {
-                    $valor_parcela = $total->total;
-                }
-
-                if ($post['PES_ID'] != null) {
-                    $pes_id = $post['PES_ID'];
-                } else {
-                    $pes_id = null;
-                }
+                $valor_parcela = floatval($TotalJurus / $Nparcela);
 
                 $dias = 0;
                 for ($i = 0; $i < $Nparcela; $i++) {
                     $dados = array(
                         'PEDIDO_ID' => $id_pedido,
-                        'PES_ID' => $pes_id,
+                        'PES_ID' => $post['PES_ID'],
                         'DESREC_NATUREZA' => '1',
                         'DESREC_VALOR' => $valor_parcela,
                         'DESREC_VECIMENTO' => date('Y-m-d', strtotime($dias . " days", strtotime("now"))),
                         'DESCRE_ESTATUS' => 'AB'
                     );
                     if ($this->crud_model->inserir('DESPESA_RECEITA', $dados) !== TRUE) {
-                        log_message('error', 'Erro ao grava parcela no banco de dados! PArcela:' . $i);
+                        log_message('error', 'Erro ao grava parcela no banco de dados! Parcela:' . $i);
                     }
                     $dias += 30;
                 }
 
                 $atualizar = array(
                     'PEDIDO_OBS' => $post['PEDIDO_OBS'],
-                    'PES_ID' => $pes_id
+                    'PES_ID' => $post['PES_ID'],
                 );
                 $condicao = array('PEDIDO_ID' => $id_pedido);
                 if ($this->crud_model->update("PEDIDOS", $atualizar, $condicao) == FALSE) {
@@ -145,7 +133,7 @@ class Venda extends CI_Controller {
             } else {
                 $dados = array(
                     'tela' => "venda/pagar",
-                    'forma_pgs' => $this->crud_model->pega_tudo("FORMA_PG")->result(),
+                    'forma_pgs' => $this->crud_model->pega("FORMA_PG", array('FPG_STATUS' => 'a'))->result(),
                     'total' => $this->geral_model->TotalPedido($id_pedido)->row(),
                     'id_pedido' => $id_pedido,
                 );

@@ -14,7 +14,7 @@
 
         <?php echo form_dropdown('CIDA_ID', array('' => 'Escolha a cidade')); ?>
 
-        <label>Nome:</label>
+        <label>Bairro:</label>
         <?php echo form_error('BAIRRO_NOME'); ?>
         <input type="text" name="BAIRRO_NOME" value="<?php echo set_value('BAIRRO_NOME'); ?>" maxlength="45" />
 

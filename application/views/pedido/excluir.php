@@ -4,7 +4,7 @@ if (isset($mensagem) and $mensagem != NULL) {
     exit();
 }
 ?>
-    <form action="<?php echo base_url('pedido'); ?>/Delete/<?php echo $id_pedido ?>" name="grava" method="post" accept-charset="utf-8">
+    <form action="<?php echo base_url('pedido'); ?>/Delete/<?php echo $id_pedido ?>" id="SubmitPedido" method="post" accept-charset="utf-8">
         <fieldset>
 
             <div>Excluir o pedido <?php echo $id_pedido ?>?</div><br>

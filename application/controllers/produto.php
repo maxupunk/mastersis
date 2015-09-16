@@ -32,10 +32,11 @@ class Produto extends CI_Controller {
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $produto_id = $this->db->insert_id();
                 $estoq_min = ($dados['PRO_TIPO'] == "s") ? -1 : 1;
-                $estoq_atual = ($dados['PRO_TIPO'] == "s") ? -1 : NULL;
+                $estoq_atual = ($dados['PRO_TIPO'] == "s") ? -1 : 0;
                 $estoque = array(
                     'PRO_ID' => $produto_id,
                     'ESTOQ_PRECO' => "0",
+                    'ESTOQ_CUSTO' => "0",
                     'ESTOQ_MIN' => $estoq_min,
                     'ESTOQ_ATUAL' => $estoq_atual,
                     'ESTOQ_ENTRA' => date("Y-m-d h:i:s"));
@@ -249,12 +250,7 @@ class Produto extends CI_Controller {
     public function PegaProduto() {
 
         $busca = $this->input->get('buscar', TRUE);
-
-        if ($this->uri->segment(3) == FALSE) {
-            $rows = $this->join_model->ProdutoBusca($busca)->result();
-        } else {
-            $rows = $this->join_model->ProdutoBusca($busca, $this->uri->segment(3))->result();
-        }
+        $rows = $this->join_model->ProdutoBusca($busca)->result();
 
         $json_array = array();
         foreach ($rows as $row) {

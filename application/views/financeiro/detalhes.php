@@ -14,7 +14,7 @@
         </div>
         <div class="col-sm-3">
             <label>PARCELA</label>
-            <input type="text" value="<?php echo (($TotalParc - $Parcelas->qnt)+1) ?> DE <?php echo $TotalParc; ?>" disabled />
+            <input type="text" value="<?php echo (($TotalParc - $Parcelas->qnt) + 1) ?> DE <?php echo $TotalParc; ?>" disabled />
         </div>
         <div class="col-sm-3">
             <label>VALOR</label>
@@ -50,20 +50,22 @@
 
     <label>DESCRIÇÃO</label>
     <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR', $query->DESREC_DESCR); ?>" disabled />
-
+    
+    <label>LOG DE ALTERAÇÕES</label>
     <div class="row">
-        <div class="col-sm-12 historico">
+        <div class="col-sm-12 rodape-finance">
             <table>
                 <?php foreach ($historicos as $historico) { ?>
                     <tr>
                         <td width="33%"><?php echo $historico->USUARIO_LOGIN; ?></td>
                         <td width="33%"><?php echo $historico->HISTORICO_CMD; ?></td>
-                        <td width="33%"><?php echo date("d/m/Y - H:i:s", strtotime($historico->HISTORICO_DATA)) ?></td>
+                        <td width="33%"><?php echo date("d/m/Y H:i:s", strtotime($historico->HISTORICO_DATA)) ?></td>
                     </tr>
                 <?php } ?>
             </table>
         </div>
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
     </div>

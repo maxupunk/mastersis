@@ -20,14 +20,18 @@
         <?php echo form_error('USUARIO_LOGIN'); ?>
         <input type="text" name="USUARIO_LOGIN" value="<?php echo set_value('USUARIO_LOGIN'); ?>" maxlength="45" />
 
-        <label>SENHA</label>
-        <?php echo form_error('USUARIO_SENHA'); ?>
-        <input type="password" name="USUARIO_SENHA" value="<?php echo set_value('USUARIO_SENHA'); ?>" maxlength="45" />
-
-        <label>REPITA A SENHA</label>
-        <?php echo form_error('USUARIO_SENHA_RE'); ?>
-        <input type="password" name="USUARIO_SENHA_RE" value="<?php echo set_value('USUARIO_SENHA_RE'); ?>" maxlength="45" />
-
+        <div class="row">
+            <div class="col-lg-6">
+                <label>SENHA</label>
+                <?php echo form_error('USUARIO_SENHA'); ?>
+                <input type="password" name="USUARIO_SENHA" value="<?php echo set_value('USUARIO_SENHA'); ?>" maxlength="45" />
+            </div>
+            <div class="col-lg-6">
+                <label>REPITA A SENHA</label>
+                <?php echo form_error('USUARIO_SENHA_RE'); ?>
+                <input type="password" name="USUARIO_SENHA_RE" value="<?php echo set_value('USUARIO_SENHA_RE'); ?>" maxlength="45" />
+            </div>
+        </div>
 
 
         <label>CARGO:</label>

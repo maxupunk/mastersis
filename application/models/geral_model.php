@@ -59,13 +59,16 @@ class Geral_model extends CI_Model {
         return $this->db->trans_status();
     }
 
-    public function FechaVenda($id_pedido, $estatus = 4) {
+    public function FechaVenda($id_pedido, $ped_id, $estatus = 4) {
 
         $this->db->query('UPDATE ESTOQUES, LISTA_PRODUTOS, PEDIDOS
             SET ESTOQUES.ESTOQ_ATUAL = ESTOQUES.ESTOQ_ATUAL - LISTA_PRODUTOS.LIST_PED_QNT,
-            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', PEDIDOS.PEDIDO_DATA = NOW()
+            PEDIDOS.PEDIDO_ESTATUS = ' . $estatus . ', PEDIDOS.PEDIDO_DATA = NOW(),
+            PEDIDOS.PES_ID=' . $ped_id . '
             WHERE PEDIDOS.PEDIDO_ID=' . $id_pedido . ' AND LISTA_PRODUTOS.PEDIDO_ID=' . $id_pedido . '
-            AND ESTOQUES.ESTOQ_MIN!=-1 AND PEDIDOS.PEDIDO_ESTATUS=1 AND ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
+            AND ESTOQUES.ESTOQ_MIN!=-1
+            AND PEDIDOS.PEDIDO_ESTATUS=1
+            AND ESTOQUES.ESTOQ_ID = LISTA_PRODUTOS.ESTOQ_ID');
 
         return $this->db->affected_rows();
     }

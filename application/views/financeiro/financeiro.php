@@ -1,120 +1,213 @@
 <div class="row">
     <div class="col-sm-12">
 
-        <ul class="nav nav-tabs nav-justified submenu-financeiro" role="tablist">
-            <li><a href="1">Receitas</a></li>
-            <li><a href="2">Despeza</a></li>
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#receita-despesa" data-toggle="tab">Receita/Despeza</a></li>
+            <li><a href="#preco" data-toggle="tab">Gerenciar Preço/Formas PG</a></li>
+            <li><a href="#avaria" data-toggle="tab">Avaria</a></li>
         </ul>
 
-        <div class="row">
-            <div class="col-sm-6 espacamento">
-                <div class="btn-group btn-group-justified" role="group">
-                    <a href="financeiro/novo" class="btn btn-link" data-toggle="modal" data-target="#Modal">
-                        <span class="glyphicon glyphicon-plus"></span> Nova</a>
+        <div class="tab-content">
 
-                    <a href="financeiro/baixar" class="btn btn-link" id="Opcao">
-                        <span class="glyphicon glyphicon-piggy-bank"></span> Baixar</a>
+            <div class="tab-pane active" id="receita-despesa">
+                <div class="row">
+                    <div class="col-sm-6 espacamento">
+                        <div class="btn-group btn-group-justified" role="group">
+                            <a href="financeiro/novo" class="btn btn-link" data-toggle="modal" data-target="#Modal">
+                                <span class="glyphicon glyphicon-plus"></span> Nova</a>
 
-                    <a href="financeiro/detalhes" class="btn btn-link" id="Opcao">
-                        <span class="glyphicon glyphicon-sunglasses"></span> Detalhes</a>
+                            <a href="financeiro/baixar" class="btn btn-link" id="OpRD">
+                                <span class="glyphicon glyphicon-piggy-bank"></span> Baixar</a>
 
-                    <a type="button" class="btn btn-link" id="Opcao">
-                        <span class="glyphicon glyphicon-print"></span> Imprimir</a>
+                            <a href="financeiro/detalhes" class="btn btn-link" id="OpRD">
+                                <span class="glyphicon glyphicon-sunglasses"></span> Detalhes</a>
 
-                    <a href="financeiro/editar" class="btn btn-link" id="Opcao">
-                        <span class="glyphicon glyphicon-edit"></span> Editar</a>
+                            <a type="button" class="btn btn-link" id="OpRD">
+                                <span class="glyphicon glyphicon-print"></span> Imprimir</a>
 
-                    <a href="financeiro/canselar" class="btn btn-link" id="Opcao">
-                        <span class="glyphicon glyphicon-trash"></span> Canselar</a>
-                </div>
-            </div>
-            <div class="col-sm-3 espacamento">
-                <input type="text" id="busca" placeholder="Buscar">
-            </div>
-            <div class="col-sm-1 espacamento">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <select name="qtd" id="qtd">
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="0">Tudo</option>
-                        </select>
+                            <a href="financeiro/editar" class="btn btn-link" id="OpRD">
+                                <span class="glyphicon glyphicon-edit"></span> Editar</a>
+
+                            <a href="financeiro/canselar" class="btn btn-link" id="OpRD">
+                                <span class="glyphicon glyphicon-trash"></span> Canselar</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 espacamento form-inline">
+                        <div class="form-group">
+                            <select id="natureza">
+                                <option value="1">Receita</option>
+                                <option value="2">Despesa</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-group-lg">
+                            <input type="text" id="busca" placeholder="Buscar">
+                        </div>
+                        <div class="form-group">
+                            <select name="qtd" id="qtd">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="estatus" id="estatus">
+                                <option value="ab">ABERTO</option>
+                                <option value="pg">PAGO</option>
+                                <option value="cn">CANSELADO</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-2 espacamento">
-                <div class="form-inline">
-                    <div class="form-group">
-                        <select name="estatus" id="estatus">
-                            <option value="ab">ABERTO</option>
-                            <option value="pg">PAGO</option>
-                            <option value="cn">CANSELADO</option>
-                        </select>
-                    </div>
-                    &nbsp;&nbsp;<span class="glyphicon glyphicon-filter" id="filtro"></span>
+
+                <table class="table table-hover" data-sortable>
+                    <thead>
+                        <tr>
+                            <th width="5%">#</th><th>CLIENTE/FORNECEDOR</th><th width="15%">VENCIMENTO</th><th width="10%">VALOR</th><th width="10%">ESTATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TabelaRecDes"></tbody>
+                </table>
+            </div><!-- Menu Receita despesa -->
+
+            <div class="tab-pane" id="preco">
+
+                <div class="row espacamento">
+                    <div class="col-sm-6"><!-- Esquerda Gerenciar preço -->
+                        <div class="row">
+                            <div class="col-sm-12"><input type="text" id="ProdutoPreco" placeholder="Digite o nome do produto para gerenciar o preço!"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <label>Preço Custo</label>
+                                        <input type="text" name="ESTOQ_CUSTO" class="valor PrecoCusto" value="" data-toggle="tooltip" data-placement="bottom" title="Enter para gravar"/>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Preço Venda</label>
+                                        <input type="text" name="ESTOQ_PRECO" value="" class="valor PrecoVenda" data-toggle="tooltip" data-placement="bottom" title="Enter para gravar" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label>Lucro(%)</label>
+                                        <input type="text" value="" class="Lucro" data-toggle="tooltip" data-placement="bottom" title="Enter para gravar"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label>Estoque</label>
+                                        <input type="text" value="" class="EstoqAtual" name="ESTOQ_ATUAL" disabled/>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Tipo:</label>
+                                        <select name="PRO_TIPO" class="tipo" disabled>
+                                            <option value="p">Produto</option>
+                                            <option value="s">Serviço</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Peso(Kg):</label>
+                                        <input type="text" name="PRO_PESO" value="" class="peso ProPeso" disabled />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Estatus:</label>
+                                        <select name="PRO_ESTATUS" class="estatus" disabled>
+                                            <option value="a">Ativo</option>
+                                            <option value="d">Desativo</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <label>Caracteristica Tecnicas:</label>
+                                <pre class="PRO_CARAC_TEC"></pre>
+
+                                <input type="hidden" value="" class="id_estoque"/>
+
+                            </div>
+                        </div>
+                    </div><!-- Esquerda Gerenciar preço -->
+
+                    <div class="col-sm-6"><!-- Direita Gerenciar Forma de pagamento -->
+                        <div class="row BordaOs">
+                            <div class="col-sm-6">
+                                <label>Descrição (Forma de PG)</label>
+                                <input type="text" value="" class="DescrFPG"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Parcelas</label>
+                                <input type="text" value="" class="ParceFPT"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <label>Juros(A.M)</label>
+                                <input type="text" value="" class="Porcento JurusFPG"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-success btn-financ-add">Add/Salva</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 BordaOs">
+                                <div class="btn-group btn-group-justified" role="group">
+                                    <a href="financeiro/editar" class="btn btn-link" id="OpFPG">
+                                        <span class="glyphicon glyphicon-edit"></span> Editar</a>
+
+                                    <a href="financeiro/canselar" class="btn btn-link" id="OpFPG">
+                                        <span class="glyphicon glyphicon-off"></span> Ativa/Desativa</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-hover" data-sortable>
+                            <thead>
+                                <tr>
+                                    <th width="10%">#</th><th>DESCRIÇÃO</th><th width="22%">PARCELAS</th><th width="22%">JUROS A.M</th><th width="15%">EST.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="TabelaFPG"></tbody>
+                        </table>
+                    </div><!-- Direita Gerenciar Forma de pagamento -->
                 </div>
-            </div>
+
+            </div><!-- Menu Preço -->
+
+            <div class="tab-pane" id="avaria">avaria</div><!-- Menu Avaria -->
         </div>
-
-
-        <table class="table table-hover" data-sortable>
-            <thead>
-                <tr>
-                    <th width="5%">#</th><th>DESCRIÇÃO/CLIENTE/FORNECEDOR</th><th width="15%">VENCIMENTO</th><th width="10%">VALOR</th><th width="10%">ESTATUS</th>
-                </tr>
-            </thead>
-            <tbody id="LstRecDes"></tbody>
-        </table>
-
 
     </div>
 </div>
 <script>
     $(document).ready(function () {
-
+        /////////////////////////////////////////////////////////////
+        /// SCRIPT RECEITA/DESPESA
+        /////////////////////////////////////////////////////////////
         setInterval(function () {
-            if (AutoCarrega === 1) {
-                CarregaJson(MenuSelect);
-            }
-        }, 30000);
+            FiltroRecDes();
+        }, 10000);
 
         var json = {};
-        var idSelect = null;
-        var MenuSelect = 1;
-        var AutoCarrega = 1;
+        var idSelecRD = null;
 
-        CarregaJson(MenuSelect);
+        FiltroRecDes();
 
         // comportamento do Model apos fechar
         $(document).on('hidden.bs.modal', function () {
-            if (AutoCarrega === 1) {
-                CarregaJson(MenuSelect);
-            }
+            FiltroRecDes();
         });
-        // compoetamento do menu
-        $(document).on('click', '.submenu-financeiro>li', function () {
-            href = $(this).find("a").attr('href');
-            $(this).tab('show');
-            AutoCarrega = 1;
-            MenuSelect = href;
-            CarregaJson(href);
-            $('.in,.open').removeClass('in open');
-            return false;
-        });
-        // sistema de seleção das ordens
-        $(document).on('click', '#LstRecDes tr', function () {
+
+        // sistema de seleção a lista
+        $(document).on('click', '#TabelaRecDes tr', function () {
             $(this).siblings('tr.active').removeClass("active");
             $(this).addClass("active");
-            idSelect = $(this).children().first().text();
+            idSelecRD = $(this).children().first().text();
         });
         // comportamento do menu opções
-        $(document).on('click', '#Opcao', function () {
-            if (idSelect === null) {
+        $(document).on('click', '#OpRD', function () {
+            if (idSelecRD === null) {
                 $("#Modal .modal-content").text("Você não selecionou um item!");
                 $('#Modal').modal('show');
             } else {
-                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelect})
+                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelecRD})
             }
             return false;
         });
@@ -128,7 +221,7 @@
                 // enviado com sucesso
                 success: function (response) {
                     $("#Modal .modal-content").html(response);
-                    CarregaJson(MenuSelect);
+                    FiltroRecDes();
                 }
             });
             return false;
@@ -162,46 +255,35 @@
 
         $(document).on('keypress', '#busca', function () {
             if ($(this).val().length >= 3) {
-                buscar();
+                FiltroRecDes();
             }
         });
-        $(document).on('click', '#filtro', function () {
-            buscar();
-        });
-        $(document).on('change', '#estatus, #qtd', function () {
-            buscar();
+
+        $(document).on('change', '#estatus, #qtd, #natureza', function () {
+            FiltroRecDes();
         });
 
 
-        function buscar() {
-            var dados = {busca: $('#busca').val(), estatus: $('#estatus').val(), qtd: $('#qtd').val(), natureza: MenuSelect};
+        function FiltroRecDes() {
+            var dados = {busca: $('#busca').val(), estatus: $('#estatus').val(), qtd: $('#qtd').val(), natureza: $('#natureza').val()};
             $.ajax({
                 type: "POST",
-                url: "financeiro/busca",
+                url: "financeiro/filtro",
                 dataType: "json",
                 data: dados,
                 success: function (response) {
-                    AutoCarrega = 0;
-                    AddTabela(response);
+                    AddTabelaRecDes(response);
                 }
             });
             return false;
         }
 
-        // Carrega a lista de ordem das tabelas
-        function CarregaJson(href) {
-            $.getJSON("financeiro/ReceitaDespesaLst/" + href, function (data) {
-                AddTabela(data);
-                $('.nav-tabs a[href="' + MenuSelect + '"]').parents('li').addClass('active');
-            });
-        }
-
-        function AddTabela(data) {
+        function AddTabelaRecDes(data) {
             if (!comparaArray(json, data)) {
-                $('#LstRecDes').empty();
+                $('#TabelaRecDes').empty();
                 if (data !== "") {
                     $.each(data, function (key, value) {
-                        $('#LstRecDes').append(
+                        $('#TabelaRecDes').append(
                                 $('<tr>').append(
                                 $('<td>').text(value.DESREC_ID),
                                 $('<td>').text(value.PES_NOME),
@@ -212,7 +294,210 @@
                     });
                 }
                 json = data;
-                idSelect = null;
+                idSelecRD = null;
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////
+        // SCRIPT DO MENU PREÇO
+        ///////////////////////////////////////////////////////////////////////
+
+        $('#ProdutoPreco').click(function () {
+            $(this).val('');
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+
+        // Auto completa produto
+        var ProdutoPreco = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
+        });
+        ProdutoPreco.clearPrefetchCache();
+        // inicialisa o autocomplete
+        ProdutoPreco.initialize();
+        // inicialisa typeahead UI
+        $('#ProdutoPreco').typeahead(null, {
+            source: ProdutoPreco.ttAdapter()
+        }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
+            $.getJSON("Financeiro/TodosDados/" + data.id, function (data) {
+                $('.id_estoque').val(data.ESTOQ_ID);
+                $('.PrecoCusto').val(FloatReal(data.ESTOQ_CUSTO));
+                $('.PrecoVenda').val(FloatReal(data.ESTOQ_PRECO));
+                $('.Lucro').val(GetLucro(data.ESTOQ_CUSTO, data.ESTOQ_PRECO));
+                $('.EstoqAtual').val(data.ESTOQ_ATUAL);
+                $('.tipo option').removeAttr('selected')
+                        .filter('[value=' + data.PRO_TIPO + ']')
+                        .attr('selected', true);
+                $('.estatus option').removeAttr('selected')
+                        .filter('[value=' + data.PRO_ESTATUS + ']')
+                        .attr('selected', true);
+                $('.ProPeso').val(data.PRO_PESO);
+                $('.PRO_CARAC_TEC').html(data.PRO_CARAC_TEC);
+                $('.PrecoVenda, .PrecoCusto').removeClass("alert-success");
+                $('.PrecoVenda, .PrecoCusto').removeClass("alert-danger");
+            });
+        });
+
+        $(document).on("keyup", ".PrecoCusto", function (event) {
+            Porcento = GetLucro($(this).val(), $('.PrecoVenda').val());
+            $('.Lucro').val(Porcento);
+            $(this).removeClass("alert-success");
+            $(this).removeClass("alert-danger");
+            if (event.which === 13) {
+                valor = $(this);
+                var dados = {IdEstq: $('.id_estoque').val(), Valor: $(this).val()};
+                $.ajax({
+                    type: "POST",
+                    url: "financeiro/VlCstProduto",
+                    dataType: "html",
+                    data: dados,
+                    success: function () {
+                        valor.removeClass("alert-danger");
+                        valor.addClass("alert-success");
+                    },
+                    error: function () {
+                        valor.removeClass("alert-success");
+                        valor.addClass("alert-danger");
+                    }
+                });
+                return false;
+            }
+        });
+
+        // Altera o valor
+        $(document).on("keyup", ".PrecoVenda", function (event) {
+            $('.Lucro').val(GetLucro($('.PrecoCusto').val(), $(this).val()));
+            $(this).removeClass("alert-success");
+            $(this).removeClass("alert-danger");
+            if (event.which === 13) {
+                ValorVenda()
+                return false;
+            }
+        });
+
+        $(document).on("keyup", ".Lucro", function (event) {
+            $('.PrecoVenda').val(SetLucro($('.PrecoCusto').val(), $(this).val()));
+            $('.PrecoVenda').removeClass("alert-success");
+            $('.PrecoVenda').removeClass("alert-danger");
+            if (event.which === 13) {
+                ValorVenda();
+                return false;
+            }
+        });
+
+        function ValorVenda() {
+            valor = $('.PrecoVenda');
+            var dados = {IdEstq: $('.id_estoque').val(), Valor: valor.val()};
+            $.ajax({
+                type: "POST",
+                url: "financeiro/VlVndProduto",
+                dataType: "html",
+                data: dados,
+                success: function () {
+                    valor.removeClass("alert-danger");
+                    valor.addClass("alert-success");
+                },
+                error: function () {
+                    valor.removeClass("alert-success");
+                    valor.addClass("alert-danger");
+                }
+            });
+        }
+        ///////////////////////////////////////////////////////////////////////
+        // SCRIPT Forma de pagamento
+        ///////////////////////////////////////////////////////////////////////
+        var jsonFPG = {};
+        var idSelecFPG = null;
+        var idFPG = null;
+
+        CarregarFPG();
+
+        $(document).on("click", ".btn-financ-add", function (event) {
+            if ($('.DescrFPG').val() && $('.ParceFPT').val() && $('.JurusFPG').val()) {
+                var dados = {
+                    DescrFPG: $('.DescrFPG').val(),
+                    ParceFPT: $('.ParceFPT').val(),
+                    JurusFPG: $('.JurusFPG').val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "financeiro/NovaFormaPG",
+                    dataType: "html",
+                    data: dados,
+                    success: function () {
+                        $('input').eq($('input').index(valor) + 1).focus();
+                        valor.removeClass("alert-danger");
+                        valor.addClass("alert-success");
+                    },
+                    error: function () {
+                        valor.removeClass("alert-success");
+                        valor.addClass("alert-danger");
+                    }
+                });
+                return false;
+            } else {
+                $("#Modal .modal-content").text("Todos os campos devem ser preenchidos! Descriçao, Parcelas, Jurus.");
+                $('#Modal').modal('show');
+            }
+        });
+
+        $(document).on("keyup", ".DescrFPG, .ParceFPT", function (event) {
+            if (event.which === 13) {
+                $('input').eq($('input').index($(this)) + 1).focus();
+                return false;
+            }
+        });
+
+        $(document).on("keyup", ".JurusFPG", function (event) {
+            if (event.which === 13) {
+                $('.btn-financ-add').click();
+                //ValorVenda();
+                return false;
+            }
+        });
+
+
+        // sistema de seleção a lista
+        $(document).on('click', '#TabelaFPG tr', function () {
+            $(this).siblings('tr.active').removeClass("active");
+            $(this).addClass("active");
+            idSelecFPG = $(this).children().first().text();
+        });
+
+        // comportamento do menu opções
+        $(document).on('click', '#OpFPG', function () {
+            if (idSelecFPG === null) {
+                $("#Modal .modal-content").text("Você não selecionou um item!");
+                $('#Modal').modal('show');
+            } else {
+                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelecRD})
+            }
+            return false;
+        });
+
+        function CarregarFPG() {
+            $.getJSON("financeiro/FormasPG", function (data) {
+                AddTabelaFPG(data);
+            });
+        }
+
+        function AddTabelaFPG(data) {
+            if (!comparaArray(jsonFPG, data)) {
+                $('#TabelaFPG').empty();
+                if (data !== "") {
+                    $.each(data, function (key, value) {
+                        $('#TabelaFPG').append(
+                                $('<tr>').append(
+                                $('<td>').text(value.FPG_ID),
+                                $('<td>').text(value.FPG_DESCR),
+                                $('<td>').text(value.FPG_PARCE),
+                                $('<td>').text(value.FPG_AJUSTE + '%'),
+                                $('<td>').text(value.FPG_STATUS = 'a' ? 'Ativo' : 'Desativo')
+                                ));
+                    });
+                }
+                jsonFPG = data;
+                idSelecFPG = null;
             }
         }
 

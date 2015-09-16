@@ -20,13 +20,15 @@ if ($total->total == NULL) {
     <div class="row">
         <div class="col-sm-4"><label>FORMA PG.</label>
             <?php
-            foreach ($forma_pgs as $forma_pg)
+            $options = array('' => 'selecione');
+            foreach ($forma_pgs as $forma_pg) {
                 $options[$forma_pg->FPG_ID] = $forma_pg->FPG_DESCR;
+            }
             echo form_dropdown('FPG', $options, '', 'id="FPG" required');
             ?>
         </div>
         <div class="col-sm-2"><label>PARCELA</label>
-            <select name="NPARCELA" id="nparcela"><option value="1">1</option></select>
+            <select name="NPARCELA" id="nparcela"></select>
         </div>
         <div class="col-sm-3">
             <label>DE</label>
@@ -50,25 +52,31 @@ if ($total->total == NULL) {
 </form>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        $(document).on('change', '#FPG', function() {
-            $.getJSON("financeiro/FormaPG/" + $('#FPG').val(), function(data) {
-                if (data.msg !== undefined) {
-                    alert(data.msg);
-                } else {
-                    $('#nparcela').empty();
-                    for (var x = 1; x <= data.FPG_PARCE; x++) {
-                        $('#nparcela').append(new Option(x, x));
+        $(document).on('change', '#FPG', function () {
+            if ($('#FPG').val() !== "") {
+                $.getJSON("financeiro/FormaPG/" + $('#FPG').val(), function (data) {
+                    if (data.msg !== undefined) {
+                        alert(data.msg);
+                    } else {
+                        $('#nparcela').empty();
+                        for (var x = 1; x <= data.FPG_PARCE; x++) {
+                            $('#nparcela').append(new Option(x, x));
+                        }
                     }
-                }
-            }, $('#nparcela').change());
+                }).done(function () {
+                    $('#nparcela').change();
+                });
+            }
         });
 
-        $(document).on('change', '#nparcela', function() {
-            parcelas = $(this).val();
-            $.getJSON("financeiro/Nparcelas/" + $('#VendaId').val() + "/" + $('#FPG').val() + "/" + parcelas, function(data) {
+        $(document).on('change', '#nparcela', function () {
+            parcelas = ($(this).val() === null) ? 1 : $(this).val();
+            $.getJSON("financeiro/Nparcelas/" + $('#VendaId').val() + "/" + $('#FPG').val() + "/" + parcelas, function (data) {
                 if (data.msg === undefined) {
+                    $('#VPARCELA').val("")
+                    $('#valor-total').val("");
                     $('#valor-total').val(FloatReal(data));
                     $('#VPARCELA').val(FloatReal(data / parcelas));
                 } else {

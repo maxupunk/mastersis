@@ -6,17 +6,18 @@
                                                         value="<?php echo isset($pedido->PEDIDO_DATA) ? date("d/m/Y - H:i:s", strtotime($pedido->PEDIDO_DATA)) : date("d/m/Y - h:i:s") ?>" disabled /></div>
         <div class="col-sm-2"><label>PEDIDO N.</label><input type="text" name="PEDIDO_ID" id="IdPed" value="<?php echo $IdPed ?>" disabled /></div>
         <div class="col-sm-2"><br>
-            <?php echo anchor('pedido/Delete/' . $IdPed . '/compras', 'Excluir', 'class="btn btn-warning"'); ?>
-            <?php echo anchor('compras/fecha/' . $IdPed, 'Fechar', 'class="btn btn-primary" data-toggle="modal" data-target="#Modal"'); ?></div>
+            <?php echo anchor('pedido/Delete/' . $IdPed . '/compras', 'Excluir', 'class="btn btn-warning" data-toggle="modal" data-target="#Modal"'); ?>
+            <?php echo anchor('pedido/receber/' . $IdPed, 'Receber', 'class="btn btn-primary" data-toggle="modal" data-target="#Modal"'); ?></div>
     </div>
 </div>
 <div class="well">
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-8">
             <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off"/>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <?php echo anchor('produto', 'Novo Produto', 'class="btn btn-success" data-toggle="modal" data-target="#Modal"'); ?>
+            <?php echo anchor('pedido/despesas/' . $IdPed, 'Despesas / observação', 'class="btn btn-warning" data-toggle="modal" data-target="#Modal"'); ?>
         </div>
     </div>
 </div>
@@ -34,7 +35,7 @@
                 $sub_total = ($linha->LIST_PED_QNT * $linha->LIST_PED_COMP);
                 $estoq_atual = ($linha->PRO_TIPO == "s") ? "Serviço" : $linha->ESTOQ_ATUAL;
                 ?>
-                <tr id="<?php echo $linha->LIST_PED_ID ?>" itemref="<?php echo $linha->ESTOQ_ID ?>">
+                <tr id="<?php echo $linha->LIST_PED_ID ?>">
                     <td><?php echo $linha->PRO_ID ?></td>
                     <td><?php echo $linha->PRO_DESCRICAO ?> [ <?php echo $estoq_atual ?> ]</td>
                     <td><input type="number" id="quantidade" value="<?php echo $linha->LIST_PED_QNT ?>"></td>
@@ -67,7 +68,7 @@
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
             source: Produto.ttAdapter()
-        }).on('typeahead:selected', function (object, data) {
+        }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
             $.getJSON("pedido/AddProdCompra/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
             });
@@ -81,8 +82,7 @@
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function () {
             ListPedido = $(this).parents('tr').attr('id');
-            Estoque_id = $(this).parents('tr').attr('itemref');
-            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val(), tipo: "c"};
+            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
             $.ajax({
                 type: "POST",
                 url: "pedido/AtualizaQntItems",
@@ -99,11 +99,10 @@
         $(document).on("keypress", ".ValorCompra", function (event) {
             if (event.which === 13) {
                 ListPedido = $(this).parents('tr').attr('id');
-                Estoque_id = $(this).parents('tr').attr('itemref');
                 var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Valor: $(this).val()};
                 $.ajax({
                     type: "POST",
-                    url: "financeiro/ValorCompra",
+                    url: "financeiro/VlrCstPedido",
                     dataType: "json",
                     data: dados,
                     success: function (response) {
@@ -116,7 +115,7 @@
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function () {
             ListPedido = $(this).parents('tr').attr('id');
-            $.getJSON("pedido/removeritem/c/" + $('#IdPed').val() + "/" + ListPedido, function (data) {
+            $.getJSON("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido, function (data) {
                 if (data.msn === undefined) {
                     $('#' + ListPedido).remove();
                     drawTable(data);
@@ -128,7 +127,7 @@
 
         function drawTable(data) {
             if (data.msg !== undefined) {
-                $("#Modal .modal-content").text(data.msg).css('text-align','center');
+                $("#Modal .modal-content").text(data.msg).css('text-align', 'center');
                 $('#Modal').modal('show');
             } else {
                 Total = data.pop();
@@ -140,7 +139,7 @@
                         RowId.eq(4).text(FloatReal(value.LIST_PED_QNT * value.LIST_PED_PRECO));
                     } else {
                         $('.lista-produto').append(
-                                $('<tr id=' + lstPedId + ' itemref=' + value.ESTOQ_ID + '>').append(
+                                $('<tr id=' + lstPedId + '>').append(
                                 $('<td>').text(value.PRO_ID),
                                 $('<td>').html(value.PRO_DESCRICAO),
                                 $('<td>').html('<input type=number id=quantidade value=' + value.LIST_PED_QNT + '>'),
@@ -152,6 +151,63 @@
                 });
             }
         }
+
+        ///////////////// comportamento despesa/abs
+
+        $(document).on("submit", '#SalvaDespesas', function () {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                dataType: "html",
+                data: $(this).serialize(),
+                // enviado com sucesso
+                success: function (response) {
+                    $(".modal-content").html(response);
+                }
+            });
+            return false;
+        });
+
+        //////////////// comportamento Receber compras
+        $(document).on("submit", '#SubmitPedido', function () {
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                dataType: "html",
+                data: $(this).serialize(),
+                // enviado com sucesso
+                success: function (response) {
+                    $("#ComprasConteiner").load("compras/listar");
+                    $(".modal-content").html(response);
+                }
+            });
+            return false;
+        });
+
+        // Altera o valor
+        $(document).on("keypress", ".ValorVenda", function (event) {
+            if (event.which === 13) {
+                valor = $(this);
+                ListPedido = $(this).parents('tr').attr('id');
+                var dados = {Pedido: $('#id_pedido').val(), ListPed: ListPedido, Valor: $(this).val()};
+                $.ajax({
+                    type: "POST",
+                    url: "financeiro/VlrVendaPedido",
+                    dataType: "html",
+                    data: dados,
+                    success: function () {
+                        $('input').eq($('input').index(valor) + 1).focus();
+                        valor.removeClass("alert-danger");
+                        valor.addClass("alert-success");
+                    },
+                    error: function () {
+                        valor.removeClass("alert-success");
+                        valor.addClass("alert-danger");
+                    }
+                });
+                return false;
+            }
+        });
 
     });
 </script>

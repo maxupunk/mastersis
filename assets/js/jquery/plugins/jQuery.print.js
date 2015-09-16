@@ -1,6 +1,5 @@
 jQuery.fn.printDiv = function() {
 
-
     // Create a random name for the print frame.
     var strFrameName = ("printer-" + (new Date()).getTime());
 

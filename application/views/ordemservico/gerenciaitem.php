@@ -8,7 +8,7 @@
 <table class="table table-hover" data-sortable>
     <thead>
         <tr>
-            <th width="5%">#</th><th>DESCRIÇÃO (Disponibilidade)</th><th width="11%">QNT</th><th width="10%">VALOR</th><th width="8%">SUBTOTAL</th><th width="1%"></th>
+            <th width="5%">#</th><th>DESCRIÇÃO (Disponibilidade)</th><th width="14%">QNT</th><th width="10%">VALOR</th><th width="8%">SUBTOTAL</th><th width="1%"></th>
         </tr>
     </thead>
     <tbody class="lista-produto"></tbody>
@@ -20,9 +20,9 @@
 </table>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
-        $.getJSON("pedido/AbrirLstProdutoOS/" + $('#os_id').val(), function(data) {
+        $.getJSON("pedido/AbrirLstProdutoOS/" + $('#os_id').val(), function (data) {
             drawTable(data);
         });
 
@@ -39,61 +39,31 @@
         // inicialisa typeahead UI
         $('#ProdutoServico').typeahead(null, {
             source: ListaProduto.ttAdapter()
-        }).on('typeahead:selected', function(object, data) {
-            $.getJSON("pedido/AddProdOs/" + $('#os_id').val() + "/" + data.id, function(data) {
+        }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
+            $.getJSON("pedido/AddProdOs/" + $('#os_id').val() + "/" + data.id, function (data) {
                 drawTable(data);
             });
             $(this).val('');
         });
 
-        $("#ProdutoServico").click(function() {
+        $("#ProdutoServico").click(function () {
             $(this).val('');
-        });
-
-        // ALTERA QUATIDADE DE PRODUTOS
-        $(document).on('change', '#quantidade', function() {
-            ListPedido = $(this).parents('tr').attr('id');
-            Estoque_id = $(this).parents('tr').attr('itemref');
-            var dados = {Os: $('#os_id').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
-            $.ajax({
-                type: "POST",
-                url: "pedido/AtualizaQntItemOs",
-                dataType: "json",
-                data: dados,
-                success: function(response) {
-                    drawTable(response);
-                }
-            });
-            return false;
-        });
-        // EXCLUIR PRODUTOS
-        $(document).on('click', '#excluir-item', function() {
-            ListPedido = $(this).parents('tr').attr('id');
-            $.getJSON("pedido/RemoverItemOs/" + $('#os_id').val() + "/" + ListPedido, function(data) {
-                if (data.msn === undefined) {
-                    $('#' + ListPedido).remove();
-                } else {
-                    alert(data.msg);
-                }
-            });
         });
 
         function drawTable(data) {
             if (data.msg !== undefined) {
                 alert(data.msg);
             } else {
-                $.each(data, function(key, value) {
-                    if (value.Total) {
-                        $("#total").text(value.Total);
-                        return false;
-                    }
+                Total = data.pop();
+                $("#total").text(Total.Total);
+                $.each(data, function (key, value) {
                     lstPedId = value.LIST_PED_ID;
                     if ($('#' + lstPedId).length) {
                         RowId = $('#' + lstPedId).find("td");
                         RowId.eq(4).text(FloatReal(value.LIST_PED_QNT * value.LIST_PED_PRECO));
                     } else {
                         $('.lista-produto').append(
-                                $('<tr id=' + lstPedId + ' itemref=' + value.ESTOQ_ID + '>').append(
+                                $('<tr id=' + lstPedId + '>').append(
                                 $('<td>').text(value.PRO_ID),
                                 $('<td>').html(value.PRO_DESCRICAO),
                                 $('<td>').html('<input type=number id=quantidade value=' + value.LIST_PED_QNT + '>'),
@@ -105,6 +75,6 @@
                 });
             }
         }
-
+        
     });
 </script>

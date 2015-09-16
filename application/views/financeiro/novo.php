@@ -3,14 +3,14 @@
     <?php
     echo validation_errors();
     if (isset($mensagem) and $mensagem != NULL) {
-        echo '<div class="alert alert-info">' . $mensagem . '</div>';
+        echo $mensagem;
         exit();
     }
     ?>
     <fieldset>
 
         <label>NOME DA CLIENTE/FORNECEDOR</label>  | <span id="pessoa-selec"><?php echo set_value('PES_ID'); ?> - <?php echo set_value('PES_NOME'); ?></span>
-        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>" required/>
+        <input type="text" name="PES_NOME" autocomplete="off" id="pessoa" value="<?php echo set_value('PES_NOME'); ?>"/>
 
         <div class="row">
             <div class="col-sm-4">
@@ -22,11 +22,11 @@
             </div>
             <div class="col-sm-4">
                 <label>VALOR</label>
-                <input type="text" name="DESREC_VALOR" value="<?php echo set_value('DESREC_VALOR'); ?>" class="valor" required />                
+                <input type="text" name="DESREC_VALOR" value="<?php echo set_value('DESREC_VALOR'); ?>" class="valor" />                
             </div>
             <div class="col-sm-4">
                 <label>VENCIMENTO</label>
-                <input type="text" class="data" name="DESREC_VECIMENTO" value="<?php echo set_value('DESREC_VECIMENTO'); ?>" required />
+                <input type="text" class="data" name="DESREC_VECIMENTO" value="<?php echo set_value('DESREC_VECIMENTO'); ?>" />
             </div>
         </div>
 
@@ -41,7 +41,7 @@
             </div>
             <div class="col-sm-2">
                 <label class="PedOsId">ID</label>
-                <input type="text" name="PED_OS_ID" id="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>" disabled/>
+                <input type="text" name="PED_OS_ID" id="PED_OS_ID" value="<?php echo set_value('PED_OS_ID'); ?>"/>
             </div>
             <div class="col-sm-3">
                 <label>ESTATUS</label>
@@ -57,7 +57,7 @@
         </div>
 
         <label>DESCRIÇÃO</label>
-        <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR'); ?>" required />
+        <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR'); ?>" />
 
 
         <input type="hidden" name="PES_ID" id="PES_ID" value="<?php echo set_value('PES_ID'); ?>"/>

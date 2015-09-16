@@ -10,7 +10,7 @@ $(document).ready(function() {
     // inicialisa typeahead UI
     $('#pessoa').typeahead(null, {
         source: ListaUsuario.ttAdapter()
-    }).on('typeahead:selected', function(object, data) {
+    }).on('typeahead:selected typeahead:autocompleted', function(object, data) {
         $("#PES_ID").val(data.id);
         $("#pessoa-selec").text(data.id + " - " + data.value);
     });

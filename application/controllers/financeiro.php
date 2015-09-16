@@ -30,7 +30,7 @@ class Financeiro extends CI_Controller {
         if ($pedido or $os) {
             return TRUE;
         } else {
-            $this->form_validation->set_message('id_check', 'O ID do pedido não existe');
+            $this->form_validation->set_message('id_check', 'O ID do pedido/ordem não existe');
             return FALSE;
         }
     }
@@ -63,20 +63,11 @@ class Financeiro extends CI_Controller {
 
     ///////////////////////////////////////////////
 
-    public function ReceitaDespesaLst($natureza = 1) {
-        $ReceitaDespesas = $this->join_model->ReceitaDespesa($natureza, 'DESREC_VECIMENTO asc', '15')->result();
-        if (isset($ReceitaDespesas)) {
-            $this->load->view('json', array('query' => $ReceitaDespesas));
-        }
-    }
-
-    public function ValorCompra() {
+    public function VlrCstPedido() {
         // validar o formulario
         $this->form_validation->set_rules('Pedido', 'O id do pedido não passado!', 'required');
         $this->form_validation->set_rules('ListPed', 'O id da lista de pedido não passado!', 'required');
         $this->form_validation->set_rules('Valor', 'A quantidade não foi repassada', 'required');
-
-        $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE) {
@@ -97,14 +88,16 @@ class Financeiro extends CI_Controller {
 
         if ($this->mensagem == NULL) {
             $Retorno_array = array();
+            $Dados_Array = array();
 
             $ProdutoInfo = $this->join_model->PedidoProduto($post['ListPed'])->row();
             $Total = $this->geral_model->TotalPedComp($post['Pedido'])->row();
 
-            $Retorno_array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
-            $Retorno_array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
-            $Retorno_array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_COMP;
+            $Dados_Array['LIST_PED_ID'] = $ProdutoInfo->LIST_PED_ID;
+            $Dados_Array['LIST_PED_QNT'] = $ProdutoInfo->LIST_PED_QNT;
+            $Dados_Array['LIST_PED_PRECO'] = $ProdutoInfo->LIST_PED_COMP;
 
+            array_push($Retorno_array, $Dados_Array);
             array_push($Retorno_array, array('Total' => $this->convert->em_real($Total->total)));
         } else {
             $Retorno_array = array('msg' => $this->mensagem);
@@ -117,7 +110,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('json', $dados);
     }
 
-    public function ValorVenda() {
+    public function VlrVendaPedido() {
         // validar o formulario
         $this->form_validation->set_rules('Pedido', 'O id do pedido não passado!', 'required');
         $this->form_validation->set_rules('ListPed', 'O id da lista de pedido não passado!', 'required');
@@ -145,6 +138,46 @@ class Financeiro extends CI_Controller {
         }
     }
 
+    public function VlVndProduto() {
+        // validar o formulario
+        $this->form_validation->set_rules('IdEstq', 'ID do produto', 'required');
+        $this->form_validation->set_rules('Valor', 'Valor do produto', 'required');
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+            $atualizar = array('ESTOQ_PRECO' => $this->convert->EmDecimal($post['Valor']));
+            $condicao = array('ESTOQ_ID' => $post['IdEstq']);
+            if ($this->crud_model->update("ESTOQUES", $atualizar, $condicao) == FALSE) {
+                log_message('error', 'Problema ao atualuzar item!');
+                show_error(500);
+            }
+        } else {
+            log_message('error', 'Erro: Falta parametros');
+            show_error(500);
+        }
+    }
+
+    public function VlCstProduto() {
+        // validar o formulario
+        $this->form_validation->set_rules('IdEstq', 'ID do produto', 'required');
+        $this->form_validation->set_rules('Valor', 'Valor do produto', 'required');
+
+        // se for valido ele chama o inserir dentro do produto_model
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+            $atualizar = array('ESTOQ_CUSTO' => $this->convert->EmDecimal($post['Valor']));
+            $condicao = array('ESTOQ_ID' => $post['IdEstq']);
+            if ($this->crud_model->update("ESTOQUES", $atualizar, $condicao) == FALSE) {
+                log_message('error', 'Problema ao atualuzar item!');
+                show_error(500);
+            }
+        } else {
+            log_message('error', 'Erro: Falta parametros');
+            show_error(500);
+        }
+    }
+
     public function FormaPG($FPG_ID = null) {
 
         if ($FPG_ID != NULL) {
@@ -168,8 +201,7 @@ class Financeiro extends CI_Controller {
         if ($pedidoId != NULL AND $FPG_ID != NULL AND $Nparcela != NULL) {
             $Total = $this->geral_model->TotalPedido($pedidoId)->row();
             $FPG = $this->crud_model->pega("FORMA_PG", array('FPG_ID' => $FPG_ID))->row();
-            $PEDIDO = $this->crud_model->pega("PEDIDOS", array('PEDIDO_ID' => $pedidoId))->row();
-            $Jurus = (((($FPG->FPG_AJUSTE / 100) * $Total->total) * $Nparcela) - $PEDIDO->PEDIDO_DESCONTO);
+            $Jurus = ((($FPG->FPG_AJUSTE / 100) * $Total->total) * $Nparcela);
             $TotalRetorno = $Jurus + $Total->total;
             $atualizar = array('PG_FPG_ID' => $FPG_ID, 'PEDIDO_NPARC' => $Nparcela);
             $condicao = array('PEDIDO_ID' => $pedidoId);
@@ -187,7 +219,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('json', $dados);
     }
 
-    public function novo() {
+    public function Novo() {
 
         $formulario = $this->input->post();
         $campos = array('PES_ID', 'DESREC_NATUREZA', 'DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO', 'DESCRE_ESTATUS');
@@ -245,7 +277,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function baixar($id) {
+    public function Baixar($id) {
 
         // verifica se está aberto
         if ($this->crud_model->pega("DESPESA_RECEITA", array('DESCRE_ESTATUS' => 'ab', 'DESREC_ID' => $id))->row() !== NULL) {
@@ -262,7 +294,7 @@ class Financeiro extends CI_Controller {
         } else {
             $this->mensagem = "O item não poder ser baixado, o mesmo não está em aberto";
         }
-        
+
         $DadosPedido = $this->join_model->RecDesTudo($id)->row();
 
         $PED_ID = $DadosPedido->DESREC_ID;
@@ -286,7 +318,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function detalhes($id) {
+    public function Detalhes($id) {
 
         $DadosPedido = $this->join_model->RecDesTudo($id)->row();
 
@@ -312,7 +344,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function editar($id) {
+    public function Editar($id) {
 
         $formulario = $this->input->post();
 
@@ -320,12 +352,16 @@ class Financeiro extends CI_Controller {
         $this->form_validation->set_rules('DESREC_VALOR', 'VALOR', 'required');
         $this->form_validation->set_rules('DESREC_VECIMENTO', 'VENCIMENTO', 'required');
         $this->form_validation->set_rules('DESREC_NATUREZA', '', 'required');
+        $this->form_validation->set_rules('DESCRE_ESTATUS', '', 'in_list[ab]');
+        $this->form_validation->set_message('in_list', 'Alterações só pode ser feitas se o estatus for colocado em aberto!');
+
+        $this->form_validation->set_error_delimiters('<div class="alert alert-danger">', '</div>');
 
         if ($this->form_validation->run() == TRUE) {
             $formulario['DESREC_VALOR'] = $this->convert->EmDecimal($formulario['DESREC_VALOR']);
             $formulario['DESREC_VECIMENTO'] = $this->convert->DataParaDB($formulario['DESREC_VECIMENTO']);
 
-            $campos = array('DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO');
+            $campos = array('DESREC_NATUREZA', 'DESCRE_ESTATUS', 'DESREC_DESCR', 'DESREC_VALOR', 'DESREC_VECIMENTO');
             $elementos = elements($campos, $formulario);
             if ($this->crud_model->update("DESPESA_RECEITA", $elementos, array('DESREC_ID' => $formulario['DESREC_ID'])) === TRUE) {
                 $this->log($id);
@@ -358,7 +394,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function canselar($id) {
+    public function Canselar($id) {
         // verifica se já não está canselada
         if ($this->crud_model->pega("DESPESA_RECEITA", array('DESCRE_ESTATUS' => 'cn', 'DESREC_ID' => $id))->row() === NULL) {
 
@@ -405,7 +441,7 @@ class Financeiro extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function busca() {
+    public function Filtro() {
         $this->form_validation->set_rules('qtd', '', 'required');
         $this->form_validation->set_rules('estatus', '', 'required');
         $this->form_validation->set_rules('natureza', '', 'required');
@@ -416,16 +452,48 @@ class Financeiro extends CI_Controller {
             $estatus = $formulario['estatus'];
             $qnt = $formulario['qtd'];
             $natureza = $formulario['natureza'];
-            $query = $this->join_model->RecDesBusca($busca, $estatus, $qnt, $natureza)->result();
+            $query = $this->join_model->RecDesFiltro($busca, $estatus, $qnt, $natureza)->result();
             $dados = array('query' => $query);
             $this->load->view('json', $dados);
         }
     }
 
-    public function teste($id, $id2) {
-        echo "<pre>";
-        print_r($this->join_model->Historico($id, $id2)->result());
-        echo "</pre>";
+    public function TodosDados($id = 0) {
+        if ($id != 0) {
+            $produto = $this->join_model->ProdutoEstoque($id)->row();
+            //verifica se o produto existe
+            if (isset($produto)) {
+                $this->load->view('json', array('query' => $produto));
+            }
+        }
+    }
+
+    public function FormasPG() {
+        $FormaPG = $this->crud_model->pega("FORMA_PG", array('FPG_STATUS' => 'a'))->result();
+        if (isset($FormaPG)) {
+            $this->load->view('json', array('query' => $FormaPG));
+        }
+    }
+
+    public function NovaFormaPG() {
+
+        $this->form_validation->set_rules('DescrFPG', 'FORMA DE PAGAMENTO', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
+        $this->form_validation->set_rules('ParceFPT', 'PARCELAS', 'required');
+        $this->form_validation->set_rules('JurusFPG', 'JURUS', 'required');
+        
+        //verifica se passou na validação
+        if ($this->form_validation->run() == TRUE):
+            $dados = elements(array('CATE_NOME', 'CATE_DESCRIC'), $this->input->post());
+            if ($this->crud_model->inserir("CATEGORIAS", $dados) == TRUE) {
+                $this->mensagem = $this->lang->line("msg_cadastro_sucesso");
+            } else {
+                $this->mensagem = $this->lang->line("msg_cadastro_erro");
+            }
+        endif;
+
+        if (isset($FormaPG)) {
+            $this->load->view('json', array('query' => $FormaPG));
+        }
     }
 
 }

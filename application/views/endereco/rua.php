@@ -16,7 +16,7 @@
         <?php echo form_dropdown('BAIRRO_ID', array('' => 'Escolha o bairro')); ?>
 
         </div>
-        <label>Nome:</label>
+        <label>logradouro:</label>
         <?php echo form_error('RUA_NOME'); ?>
         <input type="text" name="RUA_NOME" value="<?php echo set_value('RUA_NOME'); ?>" maxlength="45" />
 

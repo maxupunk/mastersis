@@ -35,15 +35,22 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function ProdutoBusca($busca, $regra = "v") {
+    public function LstProduto($id) {
+        $this->db->select('*');
+        $this->db->from('LISTA_PRODUTOS', 'ESTOQUES', 'PRODUTOS', 'MEDIDAS');
+        $this->db->join('ESTOQUES', 'LISTA_PRODUTOS.ESTOQ_ID = ESTOQUES.ESTOQ_ID');
+        $this->db->join('PRODUTOS', 'ESTOQUES.PRO_ID = PRODUTOS.PRO_ID');
+        $this->db->join('MEDIDAS', 'PRODUTOS.MEDI_ID = MEDIDAS.MEDI_ID');
+        $this->db->where('LISTA_PRODUTOS.LIST_PED_ID = ', $id);
+        return $this->db->get();
+    }
+
+    public function ProdutoBusca($busca) {
         $this->db->select('PRODUTOS.PRO_ID, PRODUTOS.PRO_DESCRICAO, PRODUTOS.PRO_TIPO, ESTOQUES.ESTOQ_ATUAL, ESTOQUES.ESTOQ_PRECO');
         $this->db->from('PRODUTOS', 'ESTOQUES');
         $this->db->join('ESTOQUES', 'PRODUTOS.PRO_ID = ESTOQUES.PRO_ID');
         $this->db->or_like('PRODUTOS.PRO_DESCRICAO', $busca);
         $this->db->or_like('PRODUTOS.PRO_CARAC_TEC', $busca);
-        if ($regra == "v" or $regra == "os") {
-            $this->db->where('PRODUTOS.PRO_ESTATUS', "a");
-        }
 
         return $this->db->get();
     }
@@ -115,24 +122,6 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function ReceitaDespesa($natureza, $ordeby = NULL, $limit = NULL) {
-        $this->db->select('*');
-        $this->db->from('DESPESA_RECEITA', 'PESSOAS');
-        $this->db->join('PESSOAS', 'DESPESA_RECEITA.PES_ID = PESSOAS.PES_ID', 'left');
-
-        if ($ordeby != NULL) {
-            $this->db->order_by($ordeby);
-        }
-
-        if ($limit != NULL) {
-            $this->db->limit($limit);
-        }
-
-        $this->db->where('DESPESA_RECEITA.DESREC_NATUREZA', $natureza);
-        $this->db->where('DESPESA_RECEITA.DESCRE_ESTATUS', 'ab');
-        return $this->db->get();
-    }
-
     public function RecDesTudo($id) {
         $this->db->select('*');
         $this->db->from('DESPESA_RECEITA', 'PESSOAS', 'PEDIDOS', 'ORDEM_SERV');
@@ -143,7 +132,7 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
-    public function RecDesBusca($busca, $estatus = 'ab', $quant = 0, $natureza = 1) {
+    public function RecDesFiltro($busca, $estatus = 'ab', $quant = 0, $natureza = 1) {
         $this->db->select('*');
         $this->db->from('DESPESA_RECEITA', 'PESSOAS', 'PEDIDOS', 'ORDEM_SERV');
         $this->db->join('PESSOAS', 'DESPESA_RECEITA.PES_ID = PESSOAS.PES_ID', 'left');
@@ -153,9 +142,7 @@ class Join_model extends CI_Model {
         $this->db->where('DESPESA_RECEITA.DESCRE_ESTATUS', $estatus);
         $this->db->where('DESPESA_RECEITA.DESREC_NATUREZA', $natureza);
         $this->db->order_by("DESPESA_RECEITA.DESREC_VECIMENTO", "asc");
-        if ($quant !== 0) {
-            $this->db->limit($quant);
-        }
+        $this->db->limit($quant);
         return $this->db->get();
     }
 

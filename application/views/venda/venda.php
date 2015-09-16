@@ -1,4 +1,3 @@
-<?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 <div class="well">
     <div class="row">
         <div class="col-sm-3">
@@ -69,7 +68,7 @@
             $.getJSON('pedido/emaberto', function (data) {
                 $('#EmAbList').empty();
                 if (data == "") {
-                    $('#EmAbList').append(' Não ha pedido em aberto ');
+                    $('#EmAbList').append('<li class="divider"></li>');
                 } else {
                     $.each(data, function (key, value) {
                         descr = value.PEDIDO_ID + ' - ' + value.PEDIDO_DATA
@@ -110,7 +109,7 @@
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
             source: Produto.ttAdapter()
-        }).on('typeahead:selected', function (object, data) {
+        }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
             $.getJSON("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
             });
@@ -124,8 +123,7 @@
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function () {
             ListPedido = $(this).parents('tr').attr('id');
-            Estoque_id = $(this).parents('tr').attr('itemref');
-            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
+            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, qtd: $(this).val()};
             $.ajax({
                 type: "POST",
                 url: "pedido/AtualizaQntItems",
@@ -140,7 +138,7 @@
         // EXCLUIR PRODUTOS
         $(document).on('click', '#excluir-item', function () {
             ListPedido = $(this).parents('tr').attr('id');
-            $.getJSON("pedido/removeritem/v/" + $('#IdPed').val() + "/" + ListPedido, function (data) {
+            $.getJSON("pedido/removeritem/" + $('#IdPed').val() + "/" + ListPedido, function (data) {
                 if (data.msn === undefined) {
                     $('#' + ListPedido).remove();
                     drawTable(data);
@@ -153,7 +151,7 @@
 
         function drawTable(data) {
             if (data.msg !== undefined) {
-                $("#Modal .modal-content").text(data.msg).css('text-align','center');
+                $("#Modal .modal-content").text(data.msg);
                 $('#Modal').modal('show');
             } else {
                 Total = data.pop();
@@ -165,7 +163,7 @@
                         RowId.eq(4).text(FloatReal(value.LIST_PED_QNT * value.LIST_PED_PRECO));
                     } else {
                         $('.lista-produto').append(
-                                $('<tr id=' + lstPedId + ' itemref=' + value.ESTOQ_ID + '>').append(
+                                $('<tr id=' + lstPedId + '>').append(
                                 $('<td>').text(value.PRO_ID),
                                 $('<td>').html(value.PRO_DESCRICAO),
                                 $('<td>').html('<input type=number id=quantidade value="' + value.LIST_PED_QNT + '" autocomplete="off">'),

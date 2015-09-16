@@ -1,10 +1,9 @@
 <div class="row">
     <ul class="relatorio-list">
-        <li>
+        <li itemref="teste">
             <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
             <span class="titulo">Vendas</span>
         </li>
-
         <li>
             <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
             <span class="titulo">Ordem de Serviço</span>
@@ -46,3 +45,13 @@
     </ul>
 </div>
 <br>
+
+<script>
+    // compoetamento excluir e padrão
+    $(document).on('click', '.relatorio-list > li', function () {
+        menu = $(this).attr('itemref');
+        $("#Modal .modal-content").load(menu);
+        $('#Modal').modal('show');
+        return false;
+    });
+</script>

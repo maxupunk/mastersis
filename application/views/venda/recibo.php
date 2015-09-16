@@ -1,6 +1,6 @@
 <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
-<div class="modal-header"><h4 class="modal-title">RECEBO DE PRODUTOS</h4></div>
+<div class="modal-header"><h4 class="modal-title">RECIBO DE PRODUTOS</h4></div>
 <div class="modal-body impresao">
 
     <div class="recibo">
