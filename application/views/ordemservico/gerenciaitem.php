@@ -30,24 +30,20 @@
         var ListaProduto = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {url: 'produto/pegaproduto/os?buscar=%QUERY'}
+            remote: {
+                url: 'produto/pegaproduto/os?buscar=%QUERY',
+                wildcard: '%QUERY'
+            }
         });
-
-        // inicialisa o autocomplete
-        ListaProduto.initialize();
-
         // inicialisa typeahead UI
         $('#ProdutoServico').typeahead(null, {
-            source: ListaProduto.ttAdapter()
+            display: 'value',
+            source: ListaProduto
         }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
             $.getJSON("pedido/AddProdOs/" + $('#os_id').val() + "/" + data.id, function (data) {
                 drawTable(data);
+                $("#ProdutoServico").val('');
             });
-            $(this).val('');
-        });
-
-        $("#ProdutoServico").click(function () {
-            $(this).val('');
         });
 
         function drawTable(data) {

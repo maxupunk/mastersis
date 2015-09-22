@@ -146,6 +146,15 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
+    public function LstAvarias() {
+        $this->db->select('*');
+        $this->db->from('AVARIAS', 'ESTOQUES', 'PRODUTOS', 'USUARIOS');
+        $this->db->join('ESTOQUES', 'AVARIAS.ESTOQ_ID = ESTOQUES.ESTOQ_ID');
+        $this->db->join('PRODUTOS', 'ESTOQUES.PRO_ID = PRODUTOS.PRO_ID');
+        $this->db->join('USUARIOS', 'AVARIAS.USUARIO_ID = USUARIOS.USUARIO_ID');
+        return $this->db->get();
+    }
+
     public function Historico($id, $selecao) {
         $this->db->select('USUARIO_LOGIN, HISTORICO_CMD, HISTORICO_DATA');
         $this->db->from('HISTORICO', 'USUARIOS');

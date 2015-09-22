@@ -486,7 +486,7 @@ class Financeiro extends CI_Controller {
         $this->form_validation->set_rules('FPG_AJUSTE', 'JURUS', 'required');
 
         if ($FormPG) { // Entendi que existe cadastro e faz o update
-            $is_unique = ($this->input->post('FPG_DESCR') != $FormPG->FPG_DESCR) ? '|is_unique[FORMA_PG.FPG_DESCR]' : '';
+            $is_unique = ($this->input->post('FPG_DESCR') != $FormPG->FPG_DESCR) ? '|is_unique[FORMA_PG.FPG_DESCR]' : null;
             $this->form_validation->set_rules('FPG_DESCR', 'DESCRIÇÃO', 'required|max_length[30]' . $is_unique);
             //verifica se passou na validação
             if ($this->form_validation->run() == TRUE) {
@@ -494,11 +494,10 @@ class Financeiro extends CI_Controller {
                 if ($this->crud_model->update("FORMA_PG", $dados, array('FPG_ID' => $this->input->post('FPG_ID'))) !== TRUE) {
                     log_message('error', 'Erro: Falha ao gravar no banco de dados!');
                     show_error('Erro: Falha ao gravar no banco de dados!', 500);
-                } else {
-                    $msg = array('query' => 'ok');
                 }
             } else {
                 $msg = array('query' => validation_errors());
+                $this->load->view('json', $msg);
             }
         } else { // Intendo como novo cadastro
             $this->form_validation->set_rules('FPG_DESCR', 'DESCRIÇÃO', 'required|max_length[30]|is_unique[FORMA_PG.FPG_DESCR]');
@@ -508,14 +507,89 @@ class Financeiro extends CI_Controller {
                 if ($this->crud_model->inserir("FORMA_PG", $dados) !== TRUE) {
                     log_message('error', 'Erro: Falha ao gravar no banco de dados!');
                     show_error('Erro: Falha ao gravar no banco de dados!', 500);
-                } else {
-                    $msg = array('query' => 'ok');
                 }
             } else {
                 $msg = array('query' => validation_errors());
+                $this->load->view('json', $msg);
             }
         }
-        $this->load->view('json', $msg);
+    }
+
+    public function LstAvarias() {
+        $avaria = $this->join_model->LstAvarias()->result();
+        //verifica se o produto existe
+        if (isset($avaria)) {
+            $this->load->view('json', array('query' => $avaria));
+        }
+    }
+
+    public function AddAvaria() {
+        $this->form_validation->set_rules('PRO_ID', 'PRODUTO', 'required');
+        $this->form_validation->set_rules('AVA_QNT', 'QUANTIDADE', 'required');
+        $this->form_validation->set_rules('AVA_MOTIVO', 'MOTIVO', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+            $produto = $this->join_model->ProdutoEstoque($post['PRO_ID'])->row();
+            //verifica se o produto existe
+            if ($produto != NULL) {
+                if ($produto->PRO_TIPO === 'p') {
+                    if ($produto->ESTOQ_ATUAL >= $post['AVA_QNT'] and $post['AVA_QNT'] >= 1) {
+                        //inseri os dados abaixo no db
+                        $dados = array(
+                            'USUARIO_ID' => $this->session->userdata('USUARIO_ID'),
+                            'ESTOQ_ID' => $produto->ESTOQ_ID,
+                            'AVA_QNT' => $post['AVA_QNT'],
+                            'AVA_MOTIVO' => $post['AVA_MOTIVO'],
+                            'AVA_DATA' => date("Y-m-d"));
+                        if ($this->crud_model->inserir('AVARIAS', $dados) != TRUE) {
+                            $this->mensagem = "Erro: problema ao adicionar item na banco de dados!";
+                        } else {
+                            if ($this->geral_model->BaixaEstoque($produto->ESTOQ_ID, $post['AVA_QNT']) < 1) {
+                                log_message('error', 'Erro: Não ouve alteração na base de dados! Função: BaixaEstoque');
+                                show_error('Erro: Não ouve alteração na base de dados! Função: BaixaEstoque', 500);
+                            } else {
+                                $this->mensagem = "Avaria adicionado com sucesso";
+                            }
+                        }
+                    } else {
+                        $this->mensagem = "Não existe produto suficiente em estoque para avaria;" . $this->input->post('AVA_QNT');
+                    }
+                } else {
+                    $this->mensagem = "Erro: Você selecionou um serviço";
+                }
+            } else {
+                $this->mensagem = "Esse produto não existe no banco de dados!";
+            }
+        } else {
+            $this->mensagem = validation_errors();
+        }
+        $this->load->view('json', array('query' => $this->mensagem));
+    }
+
+    public function RmAvaria() {
+        $this->form_validation->set_rules('AVA_ID', 'AVARIA', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+            $avaria = $this->crud_model->pega("AVARIAS", array('AVA_ID' => $post['AVA_ID']))->row();
+            //verifica se o avaria existe
+            if ($avaria != NULL) {
+                if ($this->crud_model->excluir('AVARIAS', array('AVA_ID' => $post['AVA_ID'])) != TRUE) {
+                    $this->mensagem = "Erro: problema ao adicionar item na banco de dados!";
+                } else {
+                    if ($this->geral_model->IncrementEstoque($avaria->ESTOQ_ID, $avaria->AVA_QNT) < 1) {
+                        log_message('error', 'Erro:  ouve alteração na base de dados! Função: IncrementEstoque');
+                        show_error('Erro:  ouve alteração na base de dados! Função: IncrementEstoque', 500);
+                    }
+                }
+            } else {
+                $this->mensagem = "Erro: Essa avaria não existe!";
+            }
+        } else {
+            $this->mensagem = validation_errors();
+        }
+        $this->load->view('json', array('query' => $this->mensagem));
     }
 
 }

@@ -326,8 +326,7 @@ class Pedido extends CI_Controller {
             $resposta = array('msg' => "Erro: problema com a exclusão do item");
         } else {
             $Total = $this->geral_model->TotalProdOS($id_os)->row();
-            $resposta = array();
-            array_push($resposta, array('Total' => $this->convert->em_real($Total->total)));
+            $resposta = array('Total' => $this->convert->em_real($Total->total));
         }
 
         $dados = array('query' => $resposta);
@@ -369,9 +368,9 @@ class Pedido extends CI_Controller {
 
         $this->form_validation->set_rules('id_pedido', 'id', 'is_natural_no_zero');
 
-        $post = $this->input->post();
         if ($this->form_validation->run() == TRUE) {
-            if ($this->geral_model->AddCompraEstoq($id_pedido) > 0) {
+            $post = $this->input->post();
+            if ($this->geral_model->AddCompraEstoq($id_pedido)) {
                 $this->mensagem = "Entrada no estoque feita com sucesso!";
             } else {
                 $this->mensagem = "Não ouve entrada no estoque, provavelmente o pedido já foi fechado anteriormente!";

@@ -62,7 +62,7 @@ endif;
         var href = $(this).attr('href');
         $.getJSON(href, function (data) {
             if (data.msg !== undefined) {
-                $("#Modal .modal-content").text(data.msg).css('text-align', 'center');
+                MensagemModal(data.msg);
                 $('#Modal').modal('show');
             }
         }

@@ -78,8 +78,7 @@
         // comportamento do menu opções
         $(document).on('click', '#Opcao', function () {
             if (idSelect === null) {
-                $("#Modal .modal-content").text("Você não selecionou um item!");
-                $('#Modal').modal('show');
+                MensagemModal("Você não selecionou um item!");
             } else {
                 $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelect})
             }
@@ -127,11 +126,11 @@
 
         $("#buscar").keyup(function () {
             input = $(this);
-            // Show only matching TR, hide rest of them
+            // Mostra somente a TR, ocuta o restante
             $.each($("#LstEmOrdens").find("tr"), function () {
                 if ($(this).text().toLowerCase().indexOf(input.val().toLowerCase()) === -1) {
                     $(this).hide();
-                    if ($(this).children().first().text() === Menu) {
+                    if ($(this).children().first().text() === idSelect) {
                         $(this).removeClass("active");
                         idSelect = null;
                     }
@@ -142,7 +141,7 @@
         });
 
         ////////////////////////////////////
-        // Gerenciar itens
+        // Gerenciar itens (precisa está nessa pagina para evitar carregar + de 1x)
         ///////////////////////////////////
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function () {
@@ -163,8 +162,9 @@
         $(document).on('click', '#excluir-item', function () {
             ListPedido = $(this).parents('tr').attr('id');
             $.getJSON("pedido/RemoverItemOs/" + $('#os_id').val() + "/" + ListPedido, function (data) {
-                if (data.msn === undefined) {
+                if (!data.msn) {
                     $('#' + ListPedido).remove();
+                    $("#total").text(data.Total);
                 } else {
                     alert(data.msg);
                 }

@@ -100,24 +100,20 @@
         var Produto = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
+            remote: {
+                url: 'produto/pegaproduto?buscar=%QUERY',
+                wildcard: '%QUERY'
+            }
         });
-        // inicialisa o autocomplete
-        Produto.initialize();
-        //Produto.clearPrefetchCache();
-
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
-            source: Produto.ttAdapter()
+            display: 'value',
+            source: Produto
         }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
             $.getJSON("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
+                $("#ProdutoDesc").val('');
             });
-            $(this).val('');
-        });
-
-        $("#ProdutoDesc").click(function () {
-            $(this).val('');
         });
 
         // ALTERA QUATIDADE DE PRODUTOS
@@ -151,8 +147,7 @@
 
         function drawTable(data) {
             if (data.msg !== undefined) {
-                $("#Modal .modal-content").text(data.msg);
-                $('#Modal').modal('show');
+                MensagemModal(data.msg);
             } else {
                 Total = data.pop();
                 $("#total").text(Total.Total);

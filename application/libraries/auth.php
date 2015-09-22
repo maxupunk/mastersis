@@ -12,8 +12,8 @@ if (!defined('BASEPATH'))
 class Auth {
 
     private $CI;
-    //sim privado for 1 todos os novos metodos vão ser gravado como privado
-    private $privado = 0;
+    //sim privado for TRUE todos os novos metodos vão ser gravado como privado
+    private $privado = false;
 
     public function __construct() {
         $this->CI = & get_instance();

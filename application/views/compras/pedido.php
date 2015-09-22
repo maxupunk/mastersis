@@ -60,37 +60,32 @@
         var Produto = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {url: 'produto/pegaproduto?buscar=%QUERY'}
+            remote: {
+                url: 'produto/pegaproduto?buscar=%QUERY',
+                wildcard: '%QUERY'
+            }
         });
-        // inicialisa o autocomplete
-        Produto.initialize();
-
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
-            source: Produto.ttAdapter()
+            display: 'value',
+            source: Produto
         }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
             $.getJSON("pedido/AddProdCompra/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
+                $("#ProdutoDesc").val('');
             });
-            $(this).val('');
-        });
-
-        $("#ProdutoDesc").click(function () {
-            $(this).val('');
         });
 
         // ALTERA QUATIDADE DE PRODUTOS
         $(document).on('change', '#quantidade', function () {
             ListPedido = $(this).parents('tr').attr('id');
-            var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Estoq_id: Estoque_id, qtd: $(this).val()};
-            $.ajax({
-                type: "POST",
-                url: "pedido/AtualizaQntItems",
-                dataType: "json",
-                data: dados,
-                success: function (response) {
-                    drawTable(response);
-                }
+            var dados = {
+                Pedido: $('#IdPed').val(),
+                ListPed: ListPedido,
+                qtd: $(this).val()
+            };
+            $.post('pedido/AtualizaQntItems', dados, function (response) {
+                drawTable(response);
             });
             return false;
         });
@@ -99,15 +94,12 @@
         $(document).on("keypress", ".ValorCompra", function (event) {
             if (event.which === 13) {
                 ListPedido = $(this).parents('tr').attr('id');
-                var dados = {Pedido: $('#IdPed').val(), ListPed: ListPedido, Valor: $(this).val()};
-                $.ajax({
-                    type: "POST",
-                    url: "financeiro/VlrCstPedido",
-                    dataType: "json",
-                    data: dados,
-                    success: function (response) {
-                        drawTable(response);
-                    }
+                var dados = {Pedido: $('#IdPed').val(),
+                    ListPed: ListPedido,
+                    Valor: $(this).val()
+                };
+                $.post('financeiro/VlrCstPedido', dados, function (response) {
+                    drawTable(response);
                 });
             }
         });
@@ -127,8 +119,7 @@
 
         function drawTable(data) {
             if (data.msg !== undefined) {
-                $("#Modal .modal-content").text(data.msg).css('text-align', 'center');
-                $('#Modal').modal('show');
+                MensagemModal(data.msg);
             } else {
                 Total = data.pop();
                 $("#total").text(Total.Total);
@@ -152,58 +143,19 @@
             }
         }
 
-        ///////////////// comportamento despesa/abs
-
-        $(document).on("submit", '#SalvaDespesas', function () {
-            $.ajax({
-                type: "POST",
-                url: $(this).attr('action'),
-                dataType: "html",
-                data: $(this).serialize(),
-                // enviado com sucesso
-                success: function (response) {
-                    $(".modal-content").html(response);
-                }
-            });
-            return false;
-        });
-
-        //////////////// comportamento Receber compras
-        $(document).on("submit", '#SubmitPedido', function () {
-            $.ajax({
-                type: "POST",
-                url: $(this).attr('action'),
-                dataType: "html",
-                data: $(this).serialize(),
-                // enviado com sucesso
-                success: function (response) {
-                    $("#ComprasConteiner").load("compras/listar");
-                    $(".modal-content").html(response);
-                }
-            });
-            return false;
-        });
-
         // Altera o valor
         $(document).on("keypress", ".ValorVenda", function (event) {
             if (event.which === 13) {
                 valor = $(this);
                 ListPedido = $(this).parents('tr').attr('id');
-                var dados = {Pedido: $('#id_pedido').val(), ListPed: ListPedido, Valor: $(this).val()};
-                $.ajax({
-                    type: "POST",
-                    url: "financeiro/VlrVendaPedido",
-                    dataType: "html",
-                    data: dados,
-                    success: function () {
-                        $('input').eq($('input').index(valor) + 1).focus();
+                var dados = {Pedido: $('#id_pedido').val(),
+                    ListPed: ListPedido,
+                    Valor: $(this).val()
+                };
+                $.post('financeiro/VlrVendaPedido', dados, function () {
+                    $('input').eq($('input').index(valor) + 1).focus();
                         valor.removeClass("alert-danger");
                         valor.addClass("alert-success");
-                    },
-                    error: function () {
-                        valor.removeClass("alert-success");
-                        valor.addClass("alert-danger");
-                    }
                 });
                 return false;
             }

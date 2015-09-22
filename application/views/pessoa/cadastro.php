@@ -116,3 +116,73 @@
 
     </fieldset>
 </form>
+
+<script>
+    $(document).ready(function () {
+
+        $(document).on('change', 'select[name="ESTA_ID"]', function () {
+            estado = $(this).val();
+            if (estado === '')
+                return false;
+            $.getJSON('endereco/pegacidades/' + estado, function (data) {
+                var option = new Array();
+                $.each(data, function (i, obj) {
+                    option[i] = document.createElement('option');
+                    $(option[i]).attr({value: obj.CIDA_ID});
+                    $(option[i]).append(obj.CIDA_NOME);
+                });
+                $('select[name="CIDA_ID"]').html(option);
+            });
+        });
+        $(document).on('change', 'select[name="CIDA_ID"]', function () {
+            bairro = $(this).val();
+            if (bairro === '')
+                return false;
+            $.getJSON('endereco/pegabairros/' + bairro, function (data) {
+                var option = new Array();
+                $.each(data, function (i, obj) {
+                    option[i] = document.createElement('option');
+                    $(option[i]).attr({value: obj.BAIRRO_ID});
+                    $(option[i]).append(obj.BAIRRO_NOME);
+                });
+                $('select[name="BAIRRO_ID"]').html(option);
+            });
+        });
+        $(document).on('change', 'select[name="BAIRRO_ID"]', function () {
+            rua = $(this).val();
+            if (rua === '')
+                return false;
+            $.getJSON('endereco/pegaruas/' + rua, function (data) {
+                var option = new Array();
+                $.each(data, function (i, obj) {
+                    option[i] = document.createElement('option');
+                    $(option[i]).attr({value: obj.RUA_ID});
+                    $(option[i]).append(obj.RUA_NOME);
+                });
+                $('select[name="RUA_ID"]').html(option);
+            });
+        });
+        $(document).on('change', 'select[name="PES_TIPO"]', function () {
+            if ($(this).val() === "f") {
+                $('#cpf-cnpj').attr("class", "cpf");
+                $('.cpf-cnpj-label').html('CPF *:');
+                $('input[name="PES_NASC_DATA"]').prop('disabled', false);
+                $('input[name="PES_NOME_PAI"]').prop('disabled', false);
+                $('input[name="PES_NOME_MAE"]').prop('disabled', false);
+                $('input[name="PES_NASC_DATA"]').prop('required', true);
+            } else {
+                $('#cpf-cnpj').attr("class", "cnpj");
+                $('.cpf-cnpj-label').html('CNPJ *:');
+                $('input[name="PES_NASC_DATA"]').prop('disabled', true);
+                $('input[name="PES_NOME_PAI"]').prop('disabled', true);
+                $('input[name="PES_NOME_MAE"]').prop('disabled', true);
+                $('input[name="PES_NASC_DATA"]').empty();
+                $('input[name="PES_NOME_PAI"]').empty();
+                $('input[name="PES_NOME_MAE"]').empty();
+                $('input[name="PES_NASC_DATA"]').prop('required', false);
+            }
+            $(".cpf-cnpj").focus();
+        });
+
+    });
+</script>

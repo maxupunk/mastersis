@@ -17,7 +17,7 @@ class Pessoa extends CI_Controller {
     public function index() {
         // validar o formulario
 
-        $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required');
+        $this->form_validation->set_rules('PES_NOME', 'NOME DE PESSOA', 'required|is_unique[PESSOAS.PES_NOME]');
 
         $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|is_unique[PESSOAS.PES_CPF_CNPJ]');
         $this->form_validation->set_message('is_unique', 'Esse %s já esta cadastrado no banco de dados!');
@@ -54,12 +54,11 @@ class Pessoa extends CI_Controller {
                     $data_nasc = array('PES_NASC_DATA' => $this->convert->DataParaDB($this->input->post('PES_NASC_DATA')));
                     $post_pessoa = array_replace($post_pessoa, $data_nasc);
                 }
-                // faz a atualização do array com os dados assima
-                $post_pessoa = array_replace($post_pessoa, $id_ende);
-                $post_pessoa = array_replace($post_pessoa, $data_atual);
+                // faz a atualização do array com o ID do endereço e a data atual
+                $pessoa_array = array_replace($post_pessoa, $id_ende, $data_atual);
 
-                $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA', 'PES_EMAIL'), $post_pessoa);
-                if ($this->crud_model->inserir('PESSOAS', $pessoa) === TRUE) {
+                $elemento = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'END_ID', 'PES_DATA', 'PES_EMAIL'), $pessoa_array);
+                if ($this->crud_model->inserir('PESSOAS', $elemento) === TRUE) {
                     $this->mensagem = "Cadastrado com sucesso!";
                 } else {
                     $this->mensagem = "Erro: problema ao gravar no banco de dados";
@@ -98,16 +97,16 @@ class Pessoa extends CI_Controller {
 
             $pessoa = elements(array('PES_NOME', 'PES_CPF_CNPJ', 'PES_NOME_PAI', 'PES_NOME_MAE', 'PES_NASC_DATA', 'PES_FONE', 'PES_CEL1', 'PES_CEL2', 'PES_DATA', 'PES_EMAIL', 'PES_TIPO'), $this->input->post());
             if ($this->crud_model->update("PESSOAS", $pessoa, array('PES_ID' => $this->input->post('id_pessoa'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_editar_sucesso");
 
+                $PessDados = $this->crud_model->pega("PESSOAS", array('PES_ID' => $this->input->post('id_pessoa')))->row();
                 $endereco = elements(array('END_NUMERO', 'END_REFERENCIA'), $this->input->post());
-                if ($this->crud_model->update("ENDERECOS", $endereco, array('DESREC_ID' => $this->input->post('id_pessoa'))) === TRUE) {
-                    $this->mensagem .= $this->lang->line("msg_editar_sucesso");
+                if ($this->crud_model->update("ENDERECOS", $endereco, array('END_ID' => $PessDados->END_ID)) === TRUE) {
+                    $this->mensagem .= "Alterações salvas com sucesso!";
                 } else {
-                    $this->mensagem .= $this->lang->line("msg_editar_erro");
+                    $this->mensagem .= "Erro: Falha ao gravar no banco de dados!";
                 }
             } else {
-                $this->mensagem = $this->lang->line("msg_editar_erro");
+                $this->mensagem = "Erro: Falha ao gravar no banco de dados!";
             }
         endif;
 
@@ -159,8 +158,9 @@ class Pessoa extends CI_Controller {
         $rows = $this->crud_model->buscar("PESSOAS", array('PES_ID' => $busca, 'PES_NOME' => $busca, 'PES_CPF_CNPJ' => $busca))->result();
 
         $json_array = array();
-        foreach ($rows as $row)
+        foreach ($rows as $row) {
             array_push($json_array, array('id' => $row->PES_ID, 'value' => $row->PES_NOME));
+        }
 
 
         $this->load->view('json', array('query' => $json_array));

@@ -63,20 +63,21 @@ class Usuario extends CI_Controller {
 
     public function editar($id_usuario) {
 
-        $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required');
+        $Usuario = $this->crud_model->pega("USUARIOS", array('PES_ID' => $id_usuario))->row();
+        $is_unique = ($this->input->post('USUARIO_LOGIN') != $Usuario->USUARIO_LOGIN) ? '|is_unique[USUARIOS.USUARIO_LOGIN]' : '';
+        
+        $this->form_validation->set_rules('USUARIO_APELIDO', 'APELIDO', 'required' . $is_unique);
         $this->form_validation->set_rules('CARG_ID', 'CARGO', 'required');
-
 
         $this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span>');
 
-
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE):
-            $dados = elements(array('USUARIO_APELIDO', 'CARG_ID', 'USUARIO_ESTATUS'), $this->input->post());
+            $dados = elements(array('USUARIO_LOGIN','USUARIO_APELIDO', 'CARG_ID', 'USUARIO_ESTATUS'), $this->input->post());
             if ($this->crud_model->update("USUARIOS", $dados, array('USUARIO_ID' => $this->input->post('usuario_id'))) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_editar_sucesso");
+                $this->mensagem = "Alterações salvas com sucesso!";
             } else {
-                $this->mensagem = $this->lang->line("msg_editar_erro");
+                $this->mensagem = "Erro: Falha ao grava no banco de dados";
             }
         endif;
 

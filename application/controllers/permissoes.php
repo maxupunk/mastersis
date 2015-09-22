@@ -6,6 +6,7 @@ if (!defined('BASEPATH'))
 class Permissoes extends CI_Controller {
 
     var $mensagem;
+
     public function __construct() {
         parent::__construct();
         $this->load->model('crud_model');
@@ -16,7 +17,7 @@ class Permissoes extends CI_Controller {
     public function index() {
 
         $dados = array(
-            'tela' => "permissoes",
+            'tela' => "permissoes/permissoes",
         );
         $this->load->view('home', $dados);
     }
@@ -28,7 +29,7 @@ class Permissoes extends CI_Controller {
             array_push($array, $row->METOD_ID);
 
         $dados = array(
-            'tela' => 'permissoes_gerenciar',
+            'tela' => 'permissoes/gerenciar',
             'usuario' => $this->crud_model->pega("USUARIOS", array('USUARIO_ID' => $id_usuario))->row(),
             'permissoes' => $array,
             'metodos' => $this->crud_model->pega_tudo("METODOS", "0", "0", "METOD_CLASS asc")->result(),
@@ -36,41 +37,53 @@ class Permissoes extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function inserir($id_usuario, $id_metodo) {
-        
-        if ($this->crud_model->pega("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo))->row() == NULL) {
-            $dados = array(
-                'USUARIO_ID' => $id_usuario,
-                'METOD_ID' => $id_metodo);
-            if ($this->crud_model->inserir('PERMISSOES', $dados) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_permissao_add_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_permissao_add_erro");
-            }
+    public function Adiciona() {
+
+        $this->form_validation->set_rules('USU_ID', 'USUARIO', 'required');
+        $this->form_validation->set_rules('METOD_ID', 'METODO', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
 
             $dados = array(
-                'tela' => "permissoes_mensagem",
-                'mensagem' => $this->mensagem,
-            );
-            $this->load->view('contente', $dados);
+                'USUARIO_ID' => $post['USU_ID'],
+                'METOD_ID' => $post['METOD_ID']);
+            if ($this->crud_model->inserir('PERMISSOES', $dados) !== TRUE) {
+                $this->mensagem = "Erro: Erro ao grava no banco de dados";
+            }
+
+            $this->load->view('json', array('query' => $this->mensagem));
         }
     }
 
-    public function retirar($id_usuario, $id_metodo) {
-        
-        if ($this->crud_model->pega("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo))->row() != NULL) {
+    public function Remove() {
 
-            if ($this->crud_model->excluir("PERMISSOES", array('USUARIO_ID' => $id_usuario, 'METOD_ID' => $id_metodo)) === TRUE) {
-                $this->mensagem = $this->lang->line("msg_permissao_rm_sucesso");
-            } else {
-                $this->mensagem = $this->lang->line("msg_permissao_rm_erro");
+        $this->form_validation->set_rules('USU_ID', 'USUARIO', 'required');
+        $this->form_validation->set_rules('METOD_ID', 'METODO', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+
+            if ($this->crud_model->excluir("PERMISSOES", array('USUARIO_ID' => $post['USU_ID'], 'METOD_ID' => $post['METOD_ID'])) !== TRUE) {
+                $this->mensagem = "Erro: Erro ao apagar no banco de dados";
             }
 
-            $dados = array(
-                'tela' => "permissoes_mensagem",
-                'mensagem' => $this->mensagem,
-            );
-            $this->load->view('contente', $dados);
+            $this->load->view('json', array('query' => $this->mensagem));
+        }
+    }
+
+    public function RemoveTodas() {
+
+        $this->form_validation->set_rules('USU_ID', 'USU_ID', 'required');
+
+        if ($this->form_validation->run() == TRUE) {
+            $post = $this->input->post();
+
+            if ($this->crud_model->excluir("PERMISSOES", array('USUARIO_ID' => $post['USU_ID'])) !== TRUE) {
+                $this->mensagem = "Erro: Erro ao apagar no banco de dados";
+            }
+
+            $this->load->view('json', array('query' => $this->mensagem));
         }
     }
 

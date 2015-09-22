@@ -20,6 +20,9 @@ endif;
 
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
+        <label>LOGIN</label>
+        <input type="text" name="USUARIO_LOGIN" value="<?php echo set_value('USUARIO_LOGIN', $usuario->USUARIO_LOGIN); ?>" maxlength="45" />
+
         <label>APELIDO (como é conhecido)</label>
         <input type="text" name="USUARIO_APELIDO" value="<?php echo set_value('USUARIO_APELIDO', $usuario->USUARIO_APELIDO); ?>" maxlength="45" />
 
@@ -36,6 +39,7 @@ endif;
         echo form_dropdown('CARG_ID', $options, $cargo->CARG_NOME);
         ?>
 
+        <label>ESTATUS:</label>
         <?php echo form_dropdown('USUARIO_ESTATUS', array('a' => 'Ativo', 'd' => 'Desativo'), set_value('PRO_ESTATUS', $usuario->USUARIO_ESTATUS)); ?>
         
         <input type="hidden" name="usuario_id" value="<?php echo $usuario->USUARIO_ID; ?>"/>

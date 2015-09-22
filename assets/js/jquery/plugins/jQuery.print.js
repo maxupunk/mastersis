@@ -43,4 +43,4 @@ jQuery.fn.printDiv = function() {
     objFrame.focus();
     objFrame.print();
     jFrame.remove();
-}
+};

@@ -148,6 +148,24 @@ class Geral_model extends CI_Model {
         return $this->db->get('PEDIDOS');
     }
 
+    public function BaixaEstoque($id, $qnt) {
+
+        $this->db->query('UPDATE ESTOQUES
+            SET ESTOQ_ATUAL = ESTOQ_ATUAL - ' . $qnt . '
+            WHERE ESTOQ_ID=' . $id);
+
+        return $this->db->affected_rows();
+    }
+
+    public function IncrementEstoque($id, $qnt) {
+
+        $this->db->query('UPDATE ESTOQUES
+            SET ESTOQ_ATUAL = ESTOQ_ATUAL + ' . $qnt . '
+            WHERE ESTOQ_ID=' . $id);
+
+        return $this->db->affected_rows();
+    }
+
     public function BaixaPg($desrec_id, $estatus = 'pg') {
 
         $this->db->query('UPDATE DESPESA_RECEITA SET
