@@ -22,5 +22,7 @@ class Relatorios extends CI_Controller {
         );
         $this->load->view('home', $dados);
     }
+    
+    
 
 }

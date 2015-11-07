@@ -65,7 +65,7 @@ a:active {text-decoration: none;}
 }
 
 .btn-label {
-    margin-top: 28px;
+    margin-top: 24px;
 }
 
 .rodape-finance {
@@ -363,7 +363,7 @@ input[type="email"] {
     padding-left:0;
     list-style:none
 }
-.relatorio-list li{
+.relatorio-list a{
     float:left;
     width:20%;
     //height:90px;
@@ -373,9 +373,10 @@ input[type="email"] {
     text-align:center;
     alignment-baseline: middle;
     background-color:#f9f9f9;
+    color: #555;
     border:2px solid #fff
 }
-.relatorio-list li:hover{
+.relatorio-list a:hover{
     color:#fff;
     background-color:#ccc;
 }

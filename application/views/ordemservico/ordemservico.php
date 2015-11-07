@@ -13,7 +13,7 @@
                     <a href="ordemservico/cadastrar" class="btn btn-link" data-toggle="modal" data-target="#Modal">
                         <span class="glyphicon glyphicon-plus"></span> Nova</a>
 
-                    <a href="ordemservico/gerenciaitens" class="btn btn-link" id="Opcao">
+                    <a href="" class="btn btn-link" data-toggle="modal" data-target="#ModalGrcItens">
                         <span class="glyphicon glyphicon-shopping-cart"></span> Itens</a>
 
                     <a href="ordemservico/imprimir" class="btn btn-link" id="Opcao">
@@ -41,136 +41,31 @@
 
     </div>
 </div>
-<script>
-    $(document).ready(function () {
+<div class="modal fade" id="ModalGrcItens">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="text" name="PRO_DESCRICAO" id="ProdutoServico" autocomplete="off" placeholder="Produto/Serviço"/>
+                    <input type="hidden" name="OS_ID" id="os_id" value=""/>
+                </div>
+            </div>
 
-        setInterval(function () {
-            CarregaJson(MenuSelect);
-        }, 3000);
+            <table class="table table-hover" data-sortable>
+                <thead>
+                    <tr>
+                        <th width="5%">#</th><th>DESCRIÇÃO (Disponibilidade)</th><th width="14%">QNT</th><th width="10%">VALOR</th><th width="8%">SUBTOTAL</th><th width="1%"></th>
+                    </tr>
+                </thead>
+                <tbody class="lista-produto"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"></td><td><b>TOTAL:</b></td><td colspan="2"><b id="total"></b></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-        var json = {};
-        var idSelect = 1;
-        var MenuSelect = 1;
-
-        CarregaJson(MenuSelect);
-
-        // comportamento do Model apos fechar
-        $(document).on('hidden.bs.modal', function () {
-            CarregaJson(MenuSelect);
-        });
-
-        // compoetamento do menu
-        $(document).on('click', '.submenu-os>li', function () {
-            href = $(this).find("a").attr('href');
-            $(this).tab('show');
-            MenuSelect = href;
-            CarregaJson(href);
-            return false;
-        });
-
-        // sistema de seleção das ordens
-        $(document).on('click', '#LstEmOrdens tr', function () {
-            $(this).siblings('tr.active').removeClass("active");
-            $(this).addClass("active");
-            idSelect = $(this).children().first().text();
-        });
-
-        // comportamento do menu opções
-        $(document).on('click', '#Opcao', function () {
-            if (idSelect === null) {
-                MensagemModal("Você não selecionou um item!");
-            } else {
-                $('#Modal').modal({remote: $(this).attr('href') + "/" + idSelect})
-            }
-            return false;
-        });
-
-        // comportamento dos formularios
-        $(document).on("submit", '#SubmitAjax', function () {
-            $.ajax({
-                type: "POST",
-                url: $(this).attr('action'),
-                dataType: "html",
-                data: $(this).serialize(),
-                // enviado com sucesso
-                success: function (response) {
-                    $("#Modal .modal-content").html(response);
-                    CarregaJson(MenuSelect);
-                }
-            });
-            return false;
-        });
-
-        // Carrega a lista de ordem das tabelas 
-        function CarregaJson(href) {
-            $.getJSON("ordemservico/ordens/" + href, function (data) {
-                if (!comparaArray(json, data)) {
-                    $('#LstEmOrdens').empty();
-                    if (data !== "") {
-                        $.each(data, function (key, value) {
-                            $('#LstEmOrdens').append(
-                                    $('<tr>').append(
-                                    $('<td>').text(value.OS_ID),
-                                    $('<td>').text(value.PES_NOME),
-                                    $('<td>').text(value.OS_EQUIPAMENT),
-                                    $('<td>').text(value.OS_DATA_ENT)
-                                    ));
-                        });
-                    }
-                    json = data;
-                    idSelect = null;
-                    $('.nav-tabs a[href="' + MenuSelect + '"]').tab('show');
-                }
-            });
-        }
-
-        $("#buscar").keyup(function () {
-            input = $(this);
-            // Mostra somente a TR, ocuta o restante
-            $.each($("#LstEmOrdens").find("tr"), function () {
-                if ($(this).text().toLowerCase().indexOf(input.val().toLowerCase()) === -1) {
-                    $(this).hide();
-                    if ($(this).children().first().text() === idSelect) {
-                        $(this).removeClass("active");
-                        idSelect = null;
-                    }
-                } else {
-                    $(this).show();
-                }
-            });
-        });
-
-        ////////////////////////////////////
-        // Gerenciar itens (precisa está nessa pagina para evitar carregar + de 1x)
-        ///////////////////////////////////
-        // ALTERA QUATIDADE DE PRODUTOS
-        $(document).on('change', '#quantidade', function () {
-            ListPedido = $(this).parents('tr').attr('id');
-            var dados = {Os: $('#os_id').val(), ListPed: ListPedido, qtd: $(this).val()};
-            $.ajax({
-                type: "POST",
-                url: "pedido/AtualizaQntItemOs",
-                dataType: "json",
-                data: dados,
-                success: function (response) {
-                    drawTable(response);
-                }
-            });
-            return false;
-        });
-        // EXCLUIR PRODUTOS
-        $(document).on('click', '#excluir-item', function () {
-            ListPedido = $(this).parents('tr').attr('id');
-            $.getJSON("pedido/RemoverItemOs/" + $('#os_id').val() + "/" + ListPedido, function (data) {
-                if (!data.msn) {
-                    $('#' + ListPedido).remove();
-                    $("#total").text(data.Total);
-                } else {
-                    alert(data.msg);
-                }
-            });
-        });
-
-
-    });
-</script>
+<script src="<?php echo base_url('assets/js/ordemservico.js'); ?>"></script>

@@ -127,17 +127,6 @@ class Ordemservico extends CI_Controller {
         $this->load->view('contente', $dados);
     }
 
-    public function gerenciaitens($id) {
-        $dados = array(
-            'tela' => 'ordemservico/gerenciaitem',
-            'mensagem' => $this->mensagem,
-            'id_os' => $id,
-            'LstProd' => $this->join_model->ListaProdOs($id)->result(),
-            'Total' => $this->geral_model->TotalProdOS($id)->row(),
-        );
-        $this->load->view('contente', $dados);
-    }
-
     public function entregar($id) {
         $this->form_validation->set_rules('PEDIDO_ID', 'ID DO PEDIDO', 'required');
         if ($this->form_validation->run() === TRUE) {

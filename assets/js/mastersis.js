@@ -19,8 +19,8 @@ $(document).ready(function () {
         error: function (x, request, settings)
         {
             console.log(x);
-            console.log("2 - " + request);
-            console.log("3 - " + settings);
+            console.log(request);
+            console.log(settings);
             $('#Modal').removeData('bs.modal');
             $("#Modal .modal-content").html(x.responseText);
             $('#Modal').modal('show');

@@ -29,11 +29,11 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Outros</a>
                     <ul class="dropdown-menu">
-                        <li><a href="permissoes">permissoes</a></li>
-                        <li><a href="ferramentas">Ferramentas</a></li>
+                        <li><?php echo anchor('permissoes', 'Permissoes'); ?></li>
+                        <li><?php echo anchor('ferramentas', 'Ferramentas'); ?></li>
                         <li><a href="#">Configuraçoes</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">Perfil</a></li>
+                        <li><?php echo anchor('perfil', 'Perfil'); ?></li>
                         <li>
                             <?php
                             if ($this->session->userdata('USUARIO_APELIDO') != "") {

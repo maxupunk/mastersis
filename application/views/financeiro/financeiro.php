@@ -8,7 +8,6 @@
         </ul>
 
         <div class="tab-content">
-
             <div class="tab-pane active" id="receita-despesa">
                 <div class="row">
                     <div class="col-sm-6 espacamento">

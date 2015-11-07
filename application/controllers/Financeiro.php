@@ -16,7 +16,6 @@ class Financeiro extends CI_Controller {
     }
 
     public function index() {
-
         $dados = array(
             'tela' => "financeiro/financeiro",
         );

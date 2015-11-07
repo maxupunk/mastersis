@@ -19,7 +19,7 @@
 
     <div class="col-sm-6">
         <div class="row BordaCad">
-            <input type="text" name="buscar" id="busca" itemref="#" placeholder="Busca">
+            <input type="text" name="buscar" id="busca" itemref="" placeholder="Busca">
             <div id="resultado"><!--resultado da busca --></div>
         </div>
     </div>
@@ -38,8 +38,8 @@
         $(document).on("keyup", "#busca", function() {
             url = $(this).attr('itemref');
             valor = $(this).val();
-            if (valor.length > 0 && url != "#") {
-                $("#resultado").load(url + encodeURI(valor));
+            if (valor.length > 0) {
+                $("#resultado").load(url + valor);
             }
         });
         $(document).on("click", ".submenu-cadastro>li", function() {
