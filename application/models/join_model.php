@@ -155,6 +155,17 @@ class Join_model extends CI_Model {
         return $this->db->get();
     }
 
+    public function PedidosPorUsuario($id_usuario = "1", $dataInicial = "2015-11-15", $dataFinal = "2015-11-15") {
+        $this->db->select('*');
+        $this->db->from('USUARIOS', 'PESSOAS', 'PEDIDOS');
+        $this->db->join('PESSOAS', 'PESSOAS.PES_ID = PESSOAS.PES_ID');
+        $this->db->join('PEDIDOS', 'PESSOAS.PES_ID = PEDIDOS.PES_ID');
+        $this->db->where('PEDIDOS.USUARIO_ID = ' . $id_usuario);
+        //$this->db->where('PEDIDOS.PEDIDO_DATA >= ' . $dataInicial);
+        //$this->db->where('PEDIDOS.PEDIDO_DATA <= ' . $dataFinal);
+        return $this->db->get();
+    }
+
     public function Historico($id, $selecao) {
         $this->db->select('USUARIO_LOGIN, HISTORICO_CMD, HISTORICO_DATA');
         $this->db->from('HISTORICO', 'USUARIOS');

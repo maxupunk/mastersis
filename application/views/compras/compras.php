@@ -16,7 +16,7 @@
             <div class="col-sm-4">
                 <div class="btn-group">
                     <?php echo anchor('pessoa', 'Nova pessoa', 'class="btn btn-success" data-toggle="modal" data-target="#Modal"'); ?>
-                    <?php echo anchor('compras/listar', 'Pendentes', 'class="btn btn-default" id="lista-compras"'); ?>
+                    <?php echo anchor('pedido/pendentes', 'Pendentes', 'class="btn btn-default" id="lista-compras"'); ?>
                 </div>
             </div>
         </div>

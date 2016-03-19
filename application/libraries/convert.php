@@ -28,7 +28,18 @@ class Convert {
 
     function DataParaDB($campo = NULL) {
         if ($campo != NULL) {
-        return implode("-", array_reverse(explode("/", $campo)));
+            return implode("-", array_reverse(explode("/", $campo)));
+        }
+    }
+
+    function CompareData($dataInicio = NULL, $dataFinal = NULL) {
+        // verifica se a data inicial é menor que a final
+        if ($dataInicio != NULL and $dataFinal != NULL) {
+            $dataInicio = implode("-", array_reverse(explode("/", $dataInicio)));
+            $dataFinal = implode("-", array_reverse(explode("/", $dataFinal)));
+            if ($dataInicio < $dataFinal) {
+                return true;
+            }
         }
     }
 
@@ -72,5 +83,3 @@ class Convert {
     }
 
 }
-
-?>

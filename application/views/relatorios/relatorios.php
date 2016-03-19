@@ -1,6 +1,6 @@
 <div class="row">
     <div class="relatorio-list">
-        <a itemref="teste">
+        <a href="relatorios/vendas">
             <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
             <span class="titulo">Vendas</span>
         </a>

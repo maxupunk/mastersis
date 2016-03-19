@@ -51,7 +51,7 @@ class Venda extends CI_Controller {
         $post = $this->input->post();
 
         $this->form_validation->set_rules('PES_ID', 'cliente', 'required');
-        $this->form_validation->set_message('required', 'Em vendas parceladas é obrigatoria a identificação do %s');
+        $this->form_validation->set_message('required', 'O campo %s é obrigatoria a identificação');
 
         $this->form_validation->set_rules('FPG', 'Forma de pagamento', 'required');
 
@@ -140,45 +140,6 @@ class Venda extends CI_Controller {
                 $this->load->view('contente', $dados);
             }
         }
-    }
-
-    public function Listar($IdCliente) {
-
-        $this->load->library('pagination');
-        $config['base_url'] = base_url('venda/listar/' . $IdCliente);
-        $config['total_rows'] = $this->geral_model->PedidosCliente($IdCliente)->num_rows();
-        $config['per_page'] = 10;
-        $config['uri_segment'] = 4;
-        $config['num_links'] = 30;
-
-        $config['num_tag_open'] = '<li>';
-        $config['num_tag_close'] = '</li>';
-        $config['cur_tag_open'] = '<li class="disabled"><a>';
-        $config['cur_tag_close'] = '</a></li>';
-        $config['next_link'] = '&gt;';
-        $config['next_tag_open'] = '<li>';
-        $config['next_tag_close'] = '</li>';
-        $config['prev_link'] = '&lt;';
-        $config['prev_tag_open'] = '<li>';
-        $config['prev_tag_close'] = '</li>';
-        $config['first_tag_open'] = '<li>';
-        $config['first_tag_close'] = '</li>';
-        $config['last_tag_open'] = '<li>';
-        $config['last_tag_close'] = '</li>';
-        $config['first_link'] = 'Primeira';
-        $config['last_link'] = 'Ultima';
-
-        $this->uri->segment(4) != '' ? $inicial = $this->uri->segment(4) : $inicial = 0;
-
-        $this->pagination->initialize($config);
-
-
-        $dados = array(
-            'pedidos_cliente' => $this->geral_model->PedidosCliente($IdCliente, $config['per_page'], $inicial, 'PEDIDO_DATA desc')->result(),
-            'tela' => 'venda/listar',
-            'paginacao' => $this->pagination->create_links(),
-        );
-        $this->load->view('contente', $dados);
     }
 
 }

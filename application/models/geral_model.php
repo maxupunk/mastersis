@@ -122,8 +122,8 @@ class Geral_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function PedidosCliente($id_cliente, $quant = 0, $inicial = 0, $ordeby = NULL) {
-        if ($id_cliente != NULL) {
+    public function PedidosPessoa($id_pessoa, $quant = 0, $inicial = 0, $ordeby = NULL) {
+        if ($id_pessoa != NULL) {
             if ($ordeby != NULL) {
                 $this->db->order_by($ordeby);
             }
@@ -131,7 +131,7 @@ class Geral_model extends CI_Model {
                 $this->db->limit($quant, $inicial);
             }
 
-            $this->db->where('PEDIDOS.PES_ID', $id_cliente);
+            $this->db->where('PEDIDOS.PES_ID', $id_pessoa);
             $this->db->where('PEDIDOS.PEDIDO_ESTATUS >=', '2');
             return $this->db->get('PEDIDOS');
         }
