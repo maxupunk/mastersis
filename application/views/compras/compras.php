@@ -64,7 +64,7 @@
         //////////////// comportamento Receber compras
         $(document).on("submit", '#SubmitPedido', function () {
             $.post($(this).attr('action'), $(this).serialize(), function (response) {
-                $("#ComprasConteiner").load("compras/listar");
+                $("#ComprasConteiner").load("pedido/pendentes");
                 $(".modal-content").html(response);
             });
             return false;
