@@ -14,6 +14,7 @@
                 echo form_dropdown('tipo', array(
                     'f' => 'Funcionario',
                     'e' => 'Estatus',
+                    'f' => 'Forma PG',
                     'l' => 'Local'
                         ), set_value('tipo', 'f'));
                 ?>
@@ -37,7 +38,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
+        <button type="submit" class="btn btn-primary">Prosseguir</button>
         <input type="reset" class="btn btn-warning" value="Limpar"/>
 
     </fieldset>

@@ -27,6 +27,7 @@ class Pessoa extends CI_Controller {
             $this->form_validation->set_rules('PES_NOME_PAI', 'NOME DO PAI', 'required');
             $this->form_validation->set_rules('PES_NOME_MAE', 'NOME DA MAE', 'required');
             $this->form_validation->set_rules('PES_NASC_DATA', 'DATA DE NASCIMENTO', 'required');
+            $this->form_validation->set_rules('PES_CPF_CNPJ', 'CPF/CNPJ', 'required|is_unique[PESSOAS.PES_CPF_CNPJ]');
         }
 
         $this->form_validation->set_rules('PES_CEL1', 'CELULAR 1', 'required');

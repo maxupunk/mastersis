@@ -154,8 +154,17 @@ class Join_model extends CI_Model {
         $this->db->join('USUARIOS', 'AVARIAS.USUARIO_ID = USUARIOS.USUARIO_ID');
         return $this->db->get();
     }
+    
+    public function LstPedido() { // inda em contrução
+        $this->db->select('*');
+        $this->db->from('PEDIDOS', 'PESSOAS', 'USUARIOS');
+        $this->db->join('ESTOQUES', 'AVARIAS.ESTOQ_ID = ESTOQUES.ESTOQ_ID');
+        $this->db->join('PRODUTOS', 'ESTOQUES.PRO_ID = PRODUTOS.PRO_ID');
+        $this->db->join('USUARIOS', 'AVARIAS.USUARIO_ID = USUARIOS.USUARIO_ID');
+        return $this->db->get();
+    }
 
-    public function PedidosPorUsuario($id_usuario = "1", $dataInicial = "2015-11-15", $dataFinal = "2015-11-15") {
+    public function PedidosPorUsuario($id_usuario = "1") {
         $this->db->select('*');
         $this->db->from('USUARIOS', 'PESSOAS', 'PEDIDOS');
         $this->db->join('PESSOAS', 'PESSOAS.PES_ID = PESSOAS.PES_ID');

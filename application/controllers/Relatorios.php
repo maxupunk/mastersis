@@ -31,12 +31,30 @@ class Relatorios extends CI_Controller {
 
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE) {
+            
             $post = $this->input->post();
-            $this->crud_model->update("ESTOQUES", $atualizar, $condicao);
+            print_r($post);
+            
+            switch ($post['LstTotal']) {
+                case 'l':
+                    $tela = 'relatorios/vendas_lst';
+                    break;
+                case 't':
+                    $tela = 'relatorios/vendas_total';
+                    break;
+            }
+            
+            $dados = array(
+                'tela' => $tela,
+                '' => $post,
+                'pedidos' => $this->geral_model->PedidosPessoa('PEDIDO_DATA desc')->result(),
+            );
+            
         } else {
             $dados = array(
                 'tela' => 'relatorios/vendas_form',
                 'mensagem' => validation_errors(),
+                'FormaPg' => $this->crud_model->pega_tudo("FORMA_PG")->result(),
             );
         }
 

@@ -68,10 +68,10 @@ a:active {text-decoration: none;}
     margin-top: 24px;
 }
 
-.rodape-finance {
-    max-height: 80px;
-    overflow: scroll;
-}
+//.rodape-finance {
+    //max-height: 80px;
+    //overflow: scroll;
+//}
 .rodape-finance table {
     width:100%;
 }

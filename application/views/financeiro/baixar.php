@@ -60,7 +60,7 @@ $TotalParc = isset($query->PEDIDO_NPARC) ? $query->PEDIDO_NPARC : '1';
         <label>DESCRIÇÃO</label>
         <input type="text" name="DESREC_DESCR" value="<?php echo set_value('DESREC_DESCR', $query->DESREC_DESCR); ?>" disabled />
 
-        <input type="hidden" name="DESREC_ID" value="<?php echo $query->DESREC_ID ?>"/>
+        <input type="hidden" name="DESREC_ID" value="<?php echo $query->DESREC_ID ?>"/><br>
 
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Baixar</button>

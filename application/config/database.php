@@ -63,12 +63,12 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'dsn'	=> 'mysql:host=localhost;dbname=sgc',
+	#'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => 'root',
-	'database' => 'sgc',
-	'dbdriver' => 'mysqli',
+	#'database' => 'sgc',
+	'dbdriver' => 'PDO',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => TRUE,
