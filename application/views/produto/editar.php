@@ -12,6 +12,10 @@ endif;
 
         <?php if (isset($mensagem) and $mensagem != NULL) echo '<div class="alert alert-info">' . $mensagem . '</div>'; ?>
 
+        <label>Codigo Barra:</label>
+        <?php echo form_error('PRO_CODBARRA'); ?>
+        <input type="text" name="PRO_CODBARRA" value="<?php echo set_value('PRO_CODBARRA', $query->PRO_CODBARRA); ?>" maxlength="45" autofocus />
+        
         <label>Descrição do produto:</label>
         <?php echo form_error('PRO_DESCRICAO'); ?>
         <input type="text" name="PRO_DESCRICAO" value="<?php echo set_value('PRO_DESCRICAO', $query->PRO_DESCRICAO); ?>"/>

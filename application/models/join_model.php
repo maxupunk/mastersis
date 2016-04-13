@@ -49,6 +49,7 @@ class Join_model extends CI_Model {
         $this->db->select('PRODUTOS.PRO_ID, PRODUTOS.PRO_DESCRICAO, PRODUTOS.PRO_TIPO, ESTOQUES.ESTOQ_ATUAL, ESTOQUES.ESTOQ_PRECO');
         $this->db->from('PRODUTOS', 'ESTOQUES');
         $this->db->join('ESTOQUES', 'PRODUTOS.PRO_ID = ESTOQUES.PRO_ID');
+        $this->db->where('PRODUTOS.PRO_CODBARRA = ', $busca);
         $this->db->or_like('PRODUTOS.PRO_DESCRICAO', $busca);
         $this->db->or_like('PRODUTOS.PRO_CARAC_TEC', $busca);
 

@@ -16,6 +16,7 @@ class Produto extends CI_Controller {
 
     public function index() {
         // validar o formulario
+        $this->form_validation->set_rules('PRO_CODBARRA', 'CODIGO DE BARRA', 'max_length[45]|is_unique[PRODUTOS.PRO_CODBARRA]');
         $this->form_validation->set_rules('PRO_DESCRICAO', 'DESCRIÇÃO DO PRODUTO', 'required|max_length[100]|is_unique[PRODUTOS.PRO_DESCRICAO]');
         $this->form_validation->set_message('is_unique', 'Essa %s já esta cadastrado no banco de dados!');
         $this->form_validation->set_rules('CATE_ID', 'CATEGORIA', 'required');
@@ -27,7 +28,7 @@ class Produto extends CI_Controller {
         // se for valido ele chama o inserir dentro do produto_model
         if ($this->form_validation->run() == TRUE) {
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
+            $dados = elements(array('PRO_CODBARRA', 'PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             $this->db->trans_begin();
             if ($this->crud_model->inserir('PRODUTOS', $dados) === TRUE) {
                 $produto_id = $this->db->insert_id();
@@ -66,13 +67,12 @@ class Produto extends CI_Controller {
 
         $this->form_validation->set_error_delimiters('<p class="text-error">', '</p>');
 
-
         // se for valido ele faz o update
         if ($this->form_validation->run() == TRUE) {
             // inicia a trasação
             $this->db->trans_begin();
 
-            $dados = elements(array('PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
+            $dados = elements(array('PRO_CODBARRA', 'PRO_DESCRICAO', 'PRO_CARAC_TEC', 'CATE_ID', 'MEDI_ID', 'PRO_PESO', 'PRO_TIPO', 'PRO_ESTATUS'), $this->input->post());
             $this->crud_model->update("PRODUTOS", $dados, array('PRO_ID' => $this->input->post('id_produto')));
             if ($dados['PRO_TIPO'] == "s") {
                 $estoque = array('ESTOQ_MIN' => -1, 'ESTOQ_ATUAL' => 1);

@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="col-sm-7">
-            <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off" placeholder="Nome ou descrição do produtos" disabled/>
+            <input type="text" name="PRO_DESCRICAO" id="ProdutoDesc" autocomplete="off" placeholder="Codigo de barra, nome ou descrição do produtos" disabled/>
         </div>
         <div class="col-sm-2">
             <input type="number" id="IdPed" class="IdPed" placeholder="Pedido" autocomplete="off"/>
@@ -108,12 +108,23 @@
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
             display: 'value',
-            source: Produto
-        }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
+            source: Produto,
+            autoselect: true
+        }).on('typeahead:selected typeahead:autocompleted', function (e, data) {
             $.getJSON("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
                 $("#ProdutoDesc").val('');
             });
+        });
+        
+        $('#ProdutoDesc').on('keydown', function (event) {
+            if (event.which === 13) {
+                $(".tt-suggestion:first").trigger('click');
+            }
+        });
+        
+        $('#ProdutoDesc').click(function () {
+            $(this).val('');
         });
 
         // ALTERA QUATIDADE DE PRODUTOS
