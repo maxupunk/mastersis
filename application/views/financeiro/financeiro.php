@@ -215,11 +215,7 @@
             FiltroRecDes();
         }, 10000);
 
-        $.getScript("<?php echo base_url('assets/js/financeiro.js'); ?>", function (data, textStatus, jqxhr) {
-            //console.log(data); // Data returned
-            //console.log("Carregando scripts: "+textStatus); // Success
-            //console.log(jqxhr.status); // 200
-        });
+        $.getScript("<?php echo base_url('assets/js/financeiro.js'); ?>");
 
     });
 </script>

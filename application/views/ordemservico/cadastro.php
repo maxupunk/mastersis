@@ -35,4 +35,6 @@
     </fieldset>
 
 </form>
-<script src="<?php echo base_url('assets/js/pessoa.js'); ?>"></script>
+<script>
+    $.getScript("<?php echo base_url('assets/js/pessoa.js'); ?>");
+</script>

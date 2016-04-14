@@ -108,21 +108,18 @@
         // inicialisa typeahead UI
         $('#ProdutoDesc').typeahead(null, {
             display: 'value',
-            source: Produto,
-            autoselect: true
+            source: Produto
         }).on('typeahead:selected typeahead:autocompleted', function (e, data) {
             $.getJSON("pedido/AddProdVenda/" + $('#IdPed').val() + "/" + data.id, function (data) {
                 drawTable(data);
                 $("#ProdutoDesc").val('');
             });
-        });
-        
-        $('#ProdutoDesc').on('keydown', function (event) {
+        }).on('keydown', function (event) {
             if (event.which === 13) {
                 $(".tt-suggestion:first").trigger('click');
             }
         });
-        
+
         $('#ProdutoDesc').click(function () {
             $(this).val('');
         });

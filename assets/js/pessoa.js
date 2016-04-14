@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     var ListaUsuario = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -11,8 +11,12 @@ $(document).ready(function() {
     $('#pessoa').typeahead(null, {
         display: 'value',
         source: ListaUsuario
-    }).on('typeahead:selected typeahead:autocompleted', function(object, data) {
+    }).on('typeahead:selected typeahead:autocompleted', function (object, data) {
         $("#PES_ID").val(data.id);
         $("#pessoa-selec").text(data.id + " - " + data.value);
+    }).on('keydown', function (event) {
+        if (event.which === 13) {
+            $(".tt-suggestion:first").trigger('click');
+        }
     });
 });
